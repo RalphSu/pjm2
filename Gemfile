@@ -62,10 +62,7 @@ platforms :mri, :mingw, :rbx do
     gem "mysql2", "~> 0.2.7"
   end
 
-  group :postgres do
-    gem "pg"
-    #   gem "postgres-pr"
-  end
+
 
   group :sqlite do
     gem "sqlite3"
