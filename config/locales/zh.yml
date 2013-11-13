@@ -1021,3 +1021,9 @@ zh:
   label_time_entries: Time entries
   label_new_time_entry: New time entry
   label_time_entry_report: Time entry report
+
+  html_title : KeYi Media
+
+  field_project_manager : xiang mu guan li yuan
+  field_project_client : ke hu mingzi
+  field_project_emails : ke hu youxiang (duoge)
