@@ -475,7 +475,7 @@ zh:
   label_login_with_open_id_option: 或使用OpenID登录
   label_password_lost: 忘记密码
   label_home: 主页
-  label_my_page: 我的工作台
+  label_my_page: 我的工作
   label_my_account: 我的帐号
   label_my_projects: 我的项目
   label_administration: 管理
@@ -1003,7 +1003,7 @@ zh:
   text_display_subprojects: Display subprojects
   text_current_project: Current project
   label_toc: Contents
-  search_input_placeholder: search ...
+  search_input_placeholder: 搜索 ...
   setting_mail_handler_confirmation_on_success: Send confirmation email on successful incoming email
   label_mail_handler_confirmation: "Confirmation of email submission: %{subject}"
   label_mail_handler_errors_with_submission: "There were errors with your email submission:"

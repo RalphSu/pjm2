@@ -15,8 +15,8 @@
 module ChiliProject
   module Info
     class << self
-      def app_name; 'ChiliProject' end
-      def url; 'https://www.chiliproject.org/' end
+      def app_name; '科翼文化传播' end
+      def url; 'http://www.keyimedia.com/' end
       def help_url
         "https://www.chiliproject.org/help/v#{ChiliProject::VERSION::MAJOR.to_s}"
       end
