@@ -33,7 +33,7 @@
 <div id="wrapper">
   <div id="top-menu">
     <div id="header">
-      <div id="logo"><%= link_to(h(Setting.app_title), home_path) %></div>
+      <div id="logo"><%= link_to("科翼文化传播", home_path) %></div>
       <div id="top-menu-items">
       <% if User.current.logged? || !Setting.login_required? %>
       <div id="search">
