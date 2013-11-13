@@ -733,7 +733,7 @@ zh:
   label_age: 年龄
   label_change_properties: 修改属性
   label_general: 一般
-  label_more: 更多
+  label_more: 管理设置
   label_scm: SCM
   label_plugins: 插件
   label_ldap_authentication: LDAP 认证
