@@ -173,35 +173,17 @@ html > body #content {
 }
 
 #login-form table {
-  margin-top: 5em;
-  padding: 1em;
+  margin-top:5em;
+  padding:1em;
   margin-left: auto;
   margin-right: auto;
-  border: 2px solid #FDBF3B;
-  background-color: #FFEBC1;
-}
+  border: 2px solid
+  #FDBF3B; background-color:#FFEBC1; }
+#login-form table td {padding: 6px;}
+#login-form label {font-weight: bold;}
+#login-form input#username, #login-form input#password { width: 300px; }
 
-#login-form table td {
-  padding: 6px;
-}
 
-#login-form label {
-  font-weight: bold;
-}
-
-#login-form input#username,
-#login-form input#password {
-  width: 300px;
-}
-
-#login-form form {
-  border: 1px solid #6DABC2;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  display: block;
-  padding: 10px;
-}
 
 input#openid_url {
   background: url(../images/openid-bg.gif) no-repeat;
@@ -3805,20 +3787,8 @@ ul.projects div.root a.project {
   font-family: inherit;
 }
 
-#content #login-form table {
-  border: 0 none;
-  background: none;
-  margin: 0;
-}
 
-#content #login-form table tr:hover {
-  background: none;
-}
 
-#login-form table td,
-#login-form table th {
-  border: 0 none;
-}
 
 /* tables don't all need border you know */
 #relations table td,
