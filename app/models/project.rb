@@ -20,7 +20,7 @@ class Project < ActiveRecord::Base
   STATUS_ARCHIVED   = 9
 
   # Maximum length for project identifiers
-  IDENTIFIER_MAX_LENGTH = 100
+  IDENTIFIER_MAX_LENGTH = 256
 
   # Specific overidden Activities
   has_many :time_entry_activities
@@ -66,6 +66,7 @@ class Project < ActiveRecord::Base
   attr_protected :status
 
   validates_presence_of :name, :identifier
+  validates_uniqueness_of :name
   validates_uniqueness_of :identifier
   validates_associated :repository, :wiki
   validates_length_of :name, :maximum => 255

@@ -11,22 +11,24 @@
 -->
 
 <p><%= f.text_area :description, :rows => 10, :class => 'wiki-edit' %></p>
-<!-- <p><%= f.text_field :identifier, :required => true, :size => 60, :disabled => @project.identifier_frozen? %> -->
-<!-- <% unless @project.identifier_frozen? %>
+<%= f.hidden_field :identifier, :required => true, :disabled => @project.identifier_frozen? %>
+<!-- <% unless @project.identifier_frozen? %> -->
 <script type="text/javascript" charset="utf-8">
   projectIdentifierMaxLength = <%= Project::IDENTIFIER_MAX_LENGTH %>;
   projectIdentifierDefault = '<%= @project.identifier %>';
-  projectIdentifierLocked = <%= !@project.identifier.blank? %>;
-  observeProjectIdentifier();
+  // set locked as false : make identifier same as the name
+  projectIdentifierLocked = false;
+  //observeProjectIdentifier();
   observeProjectName();
 </script>
-<br /><!-- Ralph:: move english tip <%= l(:text_project_identifier_info) %></em>
-<% end %></p>
+<!-- Ralph:: move english tip <%= l(:text_project_identifier_info) %></em>
+<% end %> -->
 
 <!-- Ralph:: temp -change to add FIXME:: with project model -->
-<p><label for="project_identifier">管理员<span class="required"> </span></label><input id="project_identifier" name="project[identifier]" size="60" type="text">
-<p><label for="project_identifier">用户<span class="required"> </span></label><input id="project_identifier" name="project[identifier]" size="60" type="text">
-<p><label for="project_identifier">邮件通知列表<span class="required"> </span></label><input id="project_identifier" name="project[identifier]" size="60" type="text">
+<p><label for="project_identifier">管理员<span class="required"> </span></label><input id="project_identifier" name="project[1identifier]" size="60" type="text"></p>
+<p><label for="project_identifier">客户名称<span class="required"> </span></label><input id="project_identifier" name="project[1identifier]" size="60" type="text"></p>
+<p><label for="project_identifier">客户邮件通知列表<span class="required"> </span></label><input id="project_identifier" name="project[1identifier]" size="60" type="text"></p>
+
 <!-- Ralph:: remove is_public
 <p><%= f.check_box :is_public %></p>
 -->
@@ -40,6 +42,7 @@
 
 <% if @project.new_record? %>
 <!--  Ralph:: hide the modules and trackers for screen mock -->
+<!--
 <fieldset class="box" id="project_modules" style="display:none;"><legend><%= l(:label_module_plural) %> <span style="font-size:0.9em">(<%= check_all_links 'project_modules' %>)</span></legend>
 <% Redmine::AccessControl.available_project_modules.each do |m| %>
     <label class="floating">
@@ -50,10 +53,12 @@
 <%= hidden_field_tag 'project[enabled_module_names][]', '' %>
 <%= javascript_tag 'observeProjectModules()' %>
 </fieldset>
+-->
 <% end %>
 
+
 <!--  Ralph:: hide the modules and trackers for screen mock  if false @project.new_record? || @project.module_enabled?('issue_tracking') -->
-<% if false %>
+
 <% unless @trackers.empty? %>
 <fieldset class="box" id="project_trackers" style="display:none;"><legend><%=l(:label_tracker_plural)%> <span style="font-size:0.9em">(<%= check_all_links 'project_trackers' %>)</span></legend>
 <% @trackers.each do |tracker| %>
@@ -66,6 +71,8 @@
 </fieldset>
 <% end %>
 
+
+
 <% unless @issue_custom_fields.empty? %>
 <fieldset class="box" id="project_issue_custom_fields"><legend><%=l(:label_custom_field_plural)%> <span style="font-size:0.9em">(<%= check_all_links 'project_issue_custom_fields' %>)</span></legend>
 <% @issue_custom_fields.each do |custom_field| %>
@@ -77,5 +84,5 @@
 <%= hidden_field_tag 'project[issue_custom_field_ids][]', '' %>
 </fieldset>
 <% end %>
-<% end %>
+
 <!--[eoform:project]-->
