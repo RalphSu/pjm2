@@ -11,6 +11,9 @@ wget http://rubyforge.org/frs/download.php/76729/rubygems-1.8.25.tgz ruby setup.
 install rails
 gem install rails -v 3.2.13
 
+// source.index is deprecated in ROR
+gem update --system 1.8.25
+
 setup pjm
 sudo apt-get install libmagickwand-dev sudo apt-get install libmysql-ruby libmysqlclient-dev
 
