@@ -11,12 +11,7 @@
     <td align="right"><label for="password"><%=l(:field_password)%>:</label></td>
     <td align="left"><%= password_field_tag 'password', nil, :tabindex => '2' %></td>
 </tr>
-<% if Setting.openid? %>
-<tr>
-  <td align="right"><label for="openid_url"><%=l(:field_identity_url)%></label></td>
-  <td align="left"><%= text_field_tag "openid_url", nil, :tabindex => '3' %></td>
-</tr>
-<% end %>
+
 <tr>
     <td></td>
     <td align="left">
@@ -27,9 +22,7 @@
 </tr>
 <tr>
     <td align="left">
-        <% if Setting.lost_password? %>
-            <%= link_to l(:label_password_lost), :controller => 'account', :action => 'lost_password' %>
-        <% end %>
+
     </td>
     <td align="right">
         <input type="submit" name="login" value="<%=l(:button_login)%> &#187;" tabindex="5"/>

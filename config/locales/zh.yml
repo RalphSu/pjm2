@@ -772,6 +772,7 @@ zh:
   label_api_access_key: API访问键
   label_missing_api_access_key: 缺少API访问键
   label_api_access_key_created_on: API访问键是在 %{value} 之前建立的
+  label_lostpassword: 请联系系统管理员
 
   button_login: 登录
   button_submit: 提交
