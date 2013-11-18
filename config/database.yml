@@ -5,7 +5,7 @@ production:
   database: chiliproject
   host: localhost
   username: chiliproject
-  password: chili
+  password: "my_password"
   encoding: utf8
 
 development:
