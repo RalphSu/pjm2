@@ -18,7 +18,7 @@ module ChiliProject
       def app_name; '科翼文化传播' end
       def url; 'http://www.keyimedia.com/' end
       def help_url
-        "https://www.chiliproject.org/help/v#{ChiliProject::VERSION::MAJOR.to_s}"
+        "http://www.keyimedia.com/contact.shtml"
       end
       def versioned_name; "#{app_name} #{Redmine::VERSION}" end
 
