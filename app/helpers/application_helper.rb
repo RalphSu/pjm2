@@ -19,6 +19,10 @@ module ApplicationHelper
   include Redmine::I18n
   include Gravatarify::Helper
 
+  def current_language
+    ::I18n.locale = 'zh'
+  end
+
   extend Forwardable
   def_delegators :wiki_helper, :wikitoolbar_for, :heads_for_wiki_formatter
 

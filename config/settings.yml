@@ -2,9 +2,9 @@
 # Settings can be defined through the application in Admin -> Settings
 
 app_title:
-  default: KeYi Media
+  default: 科翼项目管理
 app_subtitle:
-  default: KeYi Media Project management
+  default: 科翼项目管理
 welcome_text:
   default:
 login_required:
@@ -40,7 +40,7 @@ cache_formatted_text:
 wiki_compression:
   default: ""
 default_language:
-  default: en
+  default: zh
 host_name:
   default: localhost:6000
 protocol:
