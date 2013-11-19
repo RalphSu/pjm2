@@ -19,12 +19,14 @@ module ApplicationHelper
   include Redmine::I18n
   include Gravatarify::Helper
 
-  def current_language
-    ::I18n.locale = 'zh'
-  end
-
   extend Forwardable
   def_delegators :wiki_helper, :wikitoolbar_for, :heads_for_wiki_formatter
+
+  def current_language
+    ::I18n.locale=:zh
+    ::I18n.default_locale=:zh
+  end
+
 
   # Return true if user is authorized for controller/action, otherwise false
   def authorize_for(controller, action)

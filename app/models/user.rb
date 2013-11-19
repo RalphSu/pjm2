@@ -438,7 +438,7 @@ class User < Principal
   def self.anonymous
     anonymous_user = AnonymousUser.find(:first)
     if anonymous_user.nil?
-      anonymous_user = AnonymousUser.create(:lastname => 'Anonymous', :firstname => '', :mail => '', :login => '', :status => 0)
+      anonymous_user = AnonymousUser.create(:lastname => 'Anonymous', :firstname => '', :mail => '', :login => '', :status => 0, :language=> 'zh')
       raise 'Unable to create the anonymous user.' if anonymous_user.new_record?
     end
     anonymous_user
@@ -516,5 +516,6 @@ class AnonymousUser < User
   def name(*args); I18n.t(:label_user_anonymous) end
   def mail; nil end
   def time_zone; nil end
+  def language; 'zh' end
   def rss_key; nil end
 end

@@ -40,6 +40,8 @@ rescue LoadError
 end
 
 Rails::Initializer.run do |config|
+  config.i18n.default_locale = :zh
+  
   # Settings in config/environments/* take precedence those specified here
 
   # Skip frameworks you're not going to use

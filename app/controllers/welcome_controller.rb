@@ -16,11 +16,13 @@ class WelcomeController < ApplicationController
   caches_action :robots
 
   def index
+  	::I18n.locale=:zh
     @news = News.latest User.current
     @projects = Project.latest User.current
   end
 
   def robots
+  	::I18n.locale=:zh
     @projects = Project.all_public.active
     render :layout => false, :content_type => 'text/plain'
   end
