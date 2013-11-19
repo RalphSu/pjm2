@@ -13,7 +13,7 @@ development:
   database: chiliproject
   host: localhost
   username: chiliproject
-  password: chili
+  password: "my_password"
   encoding: utf8
 
 # Warning: The database defined as "test" will be erased and
