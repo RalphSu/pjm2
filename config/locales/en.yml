@@ -217,6 +217,7 @@ en:
   field_firstname: User name
   field_lastname: User name
   field_mail: Email
+  field_phone_number: Phone Number
   field_filename: File
   field_filesize: Size
   field_downloads: Downloads

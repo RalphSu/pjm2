@@ -196,7 +196,7 @@ end
 Redmine::MenuManager.map :admin_menu do |menu|
   menu.push :projects, {:controller => 'admin', :action => 'projects'}, :caption => :label_project_plural
   menu.push :users, {:controller => 'users'}, :caption => :label_user_plural
-  menu.push :roles, {:controller => 'roles'}, :caption => :label_role_and_permissions
+
 end
 
 Redmine::MenuManager.map :project_menu do |menu|
