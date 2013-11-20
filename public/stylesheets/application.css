@@ -745,6 +745,24 @@ div.square {
   font-size: 0.9em;
 }
 
+.autoscroll .contextualadduser {
+  float: left;
+  white-space: nowrap;
+  line-height: 1.4em;
+  margin: 5px;
+  padding: 10px;
+  font-size: 0.9em;
+}
+
+.contextualadduser {
+  float: left;
+  white-space: nowrap;
+  line-height: 1.4em;
+  margin-top: 5px;
+  padding-left: 10px;
+  font-size: 0.9em;
+}
+
 .contextual input,
 .contextual select {
   font-size: 0.9em;

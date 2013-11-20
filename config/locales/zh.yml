@@ -221,8 +221,8 @@ zh:
   field_description: 描述
   field_summary: 摘要
   field_is_required: 必填
-  field_firstname: 名字
-  field_lastname: 姓氏
+  field_firstname: 用户名称
+  field_lastname: 用户名称
   field_mail: 邮件地址
   field_filename: 文件
   field_filesize: 大小
