@@ -127,6 +127,8 @@ class ProjectsController < ApplicationController
 
   # Show @project
   def show
+    ## hack
+    I18n.locale=:zh
     @users_by_role = @project.users_by_role
     @subprojects = @project.children.visible.all
     @news = @project.news.find(:all, :limit => 5, :include => [ :author, :project ], :order => "#{News.table_name}.created_on DESC")
@@ -152,6 +154,8 @@ class ProjectsController < ApplicationController
   end
 
   def settings
+    # hack...
+    I18n.locale=:zh
   end
 
   def edit

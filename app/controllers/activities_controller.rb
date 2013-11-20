@@ -18,6 +18,7 @@ class ActivitiesController < ApplicationController
   accept_key_auth :index
 
   def index
+    I18n.locale=:zh
     @days = Setting.activity_days_default.to_i
 
     if params[:from]
@@ -43,15 +44,16 @@ class ActivitiesController < ApplicationController
           @events_by_day = events.group_by(&:event_date)
           render :layout => false if request.xhr?
         }
-        format.atom {
-          title = l(:label_activity)
-          if @author
-            title = @author.name
-          elsif @activity.scope.size == 1
-            title = l("label_#{@activity.scope.first.singularize}_plural")
-          end
-          render_feed(events, :title => "#{@project || Setting.app_title}: #{title}")
-        }
+        
+        # format.atom {
+        #   title = l(:label_activity)
+        #   if @author
+        #     title = @author.name
+        #   elsif @activity.scope.size == 1
+        #     title = l("label_#{@activity.scope.first.singularize}_plural")
+        #   end
+        #   render_feed(events, :title => "#{@project || Setting.app_title}: #{title}")
+        # }
       end
     end
 

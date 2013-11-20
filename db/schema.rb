@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120320220031) do
+ActiveRecord::Schema.define(:version => 20131120113354) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -357,18 +357,35 @@ ActiveRecord::Schema.define(:version => 20120320220031) do
     t.string  "salt",       :null => false
   end
 
+  create_table "project_admins", :force => true do |t|
+    t.integer "project_id", :null => false
+    t.integer "user_id",    :null => false
+    t.integer "role_id"
+  end
+
+  create_table "project_reviewers", :force => true do |t|
+    t.integer "project_id", :null => false
+    t.integer "user_id",    :null => false
+    t.integer "role_id"
+  end
+
   create_table "projects", :force => true do |t|
-    t.string   "name",        :default => "",   :null => false
+    t.string   "name",            :default => "",   :null => false
     t.text     "description"
-    t.string   "homepage",    :default => ""
-    t.boolean  "is_public",   :default => true, :null => false
+    t.string   "homepage",        :default => ""
+    t.boolean  "is_public",       :default => true, :null => false
     t.integer  "parent_id"
     t.datetime "created_on"
     t.datetime "updated_on"
     t.string   "identifier"
-    t.integer  "status",      :default => 1,    :null => false
+    t.integer  "status",          :default => 1,    :null => false
     t.integer  "lft"
     t.integer  "rgt"
+    t.string   "key"
+    t.string   "keywords"
+    t.string   "keywords_except"
+    t.date     "end_time"
+    t.date     "start_time"
   end
 
   add_index "projects", ["lft"], :name => "index_projects_on_lft"
