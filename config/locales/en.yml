@@ -214,8 +214,8 @@ en:
   field_description: Description
   field_summary: Summary
   field_is_required: Required
-  field_firstname: First name
-  field_lastname: Last name
+  field_firstname: User name
+  field_lastname: User name
   field_mail: Email
   field_filename: File
   field_filesize: Size
