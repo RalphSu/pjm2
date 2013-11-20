@@ -23,6 +23,17 @@ class User < Principal
   STATUS_REGISTERED = 2
   STATUS_LOCKED     = 3
 
+  USER_NORMAL =l(:label_user_normal)
+  USER_CLIENT =l(:label_user_client)
+  USER_ADMIN  =l(:label_user_admin)
+
+  USER_TYPES = {
+      USER_NORMAL => {:name => :label_user_normal,:sym_name=> :label_user_normal,:sym=> USER_NORMAL},
+      USER_CLIENT => {:name => :label_user_client,:sym_name=> :label_user_client,:sym=> USER_CLIENT},
+      USER_ADMIN => {:name => :label_user_admin,:sym_name=> :label_user_admin,:sym=> USER_ADMIN},
+    }.freeze
+
+
   USER_FORMATS = {
     :firstname_lastname => '#{firstname} #{lastname}',
     :firstname => '#{firstname}',
@@ -59,7 +70,7 @@ class User < Principal
   # Prevents unauthorized assignments
   attr_protected :login, :admin, :password, :password_confirmation, :hashed_password
 
-  validates_presence_of :login, :firstname, :lastname, :mail, :if => Proc.new { |user| !user.is_a?(AnonymousUser) }
+  validates_presence_of :login, :firstname,:phone_number,  :mail, :if => Proc.new { |user| !user.is_a?(AnonymousUser) }
   validates_uniqueness_of :login, :if => Proc.new { |user| !user.login.blank? }, :case_sensitive => false
   validates_uniqueness_of :mail, :if => Proc.new { |user| !user.mail.blank? }, :case_sensitive => false
   # Login must contain lettres, numbers, underscores only
@@ -100,6 +111,10 @@ class User < Principal
 
   def mail=(arg)
     write_attribute(:mail, arg.to_s.strip)
+  end
+
+  def phone_number=(arg)
+    write_attribute(:phone_number, arg.to_s.strip)
   end
 
   def identity_url=(url)
@@ -370,10 +385,12 @@ class User < Principal
     'firstname',
     'lastname',
     'mail',
+    'phone_number ',
     'mail_notification',
     'language',
     'custom_field_values',
     'custom_fields',
+    'user_type',
     'identity_url'
 
   safe_attributes 'status',

@@ -223,8 +223,10 @@ zh:
   field_is_required: 必填
   field_firstname: 用户名称
   field_lastname: 用户名称
+  field_user_type: 角色
   field_mail: 邮件地址
   field_filename: 文件
+  field_phone_number: 电话号码
   field_filesize: 大小
   field_downloads: 下载次数
   field_author: 作者
@@ -259,7 +261,8 @@ zh:
   field_is_in_roadmap: 在路线图中显示问题
   field_login: 登录名
   field_mail_notification: 邮件通知
-  field_admin: 管理员
+  field_admin: 超级管理员
+  field_client: 客户
   field_last_login_on: 最后登录
   field_language: 语言
   field_password: 密码
@@ -429,6 +432,9 @@ zh:
   label_project: 项目
   label_project_new: 新建项目
   label_project_plural: 项目
+  label_user_normal: 员工
+  label_user_client: 客户
+  label_user_admin: 超级管理员
   label_x_projects:
     zero:  无项目
     one:   1 个项目
@@ -789,7 +795,7 @@ zh:
   button_apply: 应用
   button_clear: 清除
   button_lock: 锁定
-  button_unlock: 解锁
+  button_unlock: 激活
   button_download: 下载
   button_list: 列表
   button_view: 查看
@@ -884,9 +890,9 @@ zh:
   text_wiki_page_destroy_children: 删除子页面及其所有下级页面
   text_own_membership_delete_confirmation: 你正在删除你现有的某些或全部权限，如果这样做了你可能将会再也无法编辑该项目了。你确定要继续吗？
 
-  default_role_manager: 管理人员
-  default_role_developer: 开发人员
-  default_role_reporter: 报告人员
+  default_role_manager: 项目管理员
+  default_role_developer: 项目管理员
+  default_role_reporter: 项目审核员
   default_role_non_member: Non member
   default_role_anonymous: Anonymous
   default_tracker_bug: 错误
@@ -948,7 +954,7 @@ zh:
   field_member_of_group: Assignee's group
   field_assigned_to_role: Assignee's role
   notice_not_authorized_archived_project: The project you're trying to access has been archived.
-  label_principal_search: "Search for user or group:"
+  label_principal_search: "搜索用户"
   label_user_search: "Search for user:"
   field_visible: Visible
   setting_emails_header: Emails header

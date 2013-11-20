@@ -36,7 +36,7 @@ class UsersController < ApplicationController
     scope = User
     scope = scope.in_group(params[:group_id].to_i) if params[:group_id].present?
 
-    @status = params[:status] ? params[:status].to_i : 1
+    @status = params[:status] ? params[:status].to_i : 0
     c = ARCondition.new(@status == 0 ? "status <> 0" : ["status = ?", @status])
 
     unless params[:name].blank?
@@ -93,6 +93,7 @@ class UsersController < ApplicationController
     @user.safe_attributes = params[:user]
     @user.admin = params[:user][:admin] || false
     @user.login = params[:user][:login]
+    @user.phone_number = params[:user][:phone_number]
     @user.password, @user.password_confirmation = params[:user][:password], params[:user][:password_confirmation] if @user.change_password_allowed?
 
     # TODO: Similar to My#account
