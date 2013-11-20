@@ -1091,7 +1091,7 @@ module ApplicationHelper
       @top_menu_split = {
         :main => items_for_main_level,
         :more => items_for_more_level,
-        :help => help_menu
+        #:help => help_menu
       }
     end
     @top_menu_split
