@@ -17,8 +17,8 @@
   projectIdentifierMaxLength = <%= Project::IDENTIFIER_MAX_LENGTH %>;
   projectIdentifierDefault = '<%= @project.identifier %>';
   // set locked as false : make identifier same as the name
-  projectIdentifierLocked = false;
-  //observeProjectIdentifier();
+  // projectIdentifierLocked = true;
+  observeProjectIdentifier();
   observeProjectName();
 </script>
 <!-- Ralph:: move english tip <%= l(:text_project_identifier_info) %></em>
