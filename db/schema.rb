@@ -523,7 +523,7 @@ ActiveRecord::Schema.define(:version => 20131120123612) do
     t.string   "identity_url"
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
-    t.string   "phone_number",                                       :null => false
+    t.string   "phone_number"
     t.boolean  "client"
     t.string   "user_type"
   end

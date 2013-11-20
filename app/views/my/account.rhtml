@@ -14,7 +14,7 @@
 <div class="box tabular">
 <p><%= f.text_field :firstname, :required => true %></p>
 <p><%= f.text_field :mail, :required => true %></p>
-<p><%= f.select :language, lang_options_for_select %></p>
+<!-- <p><%= f.select :language, lang_options_for_select %></p> -->
 <% if Setting.openid? %>
 <p><%= f.text_field :identity_url  %></p>
 <% end %>
@@ -27,7 +27,7 @@
 
 <%= submit_tag l(:button_save) %>
 </div>
-
+<!-- 
 <div class="splitcontentright">
 <h3><%=l(:field_mail_notification)%></h3>
 <div class="box">
@@ -38,7 +38,7 @@
 <div class="box tabular">
 <%= render :partial => 'users/preferences' %>
 </div>
-
+ -->
 </div>
 <% end %>
 

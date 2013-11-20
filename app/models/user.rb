@@ -70,7 +70,7 @@ class User < Principal
   # Prevents unauthorized assignments
   attr_protected :login, :admin, :password, :password_confirmation, :hashed_password
 
-  validates_presence_of :login, :firstname,:phone_number,  :mail, :if => Proc.new { |user| !user.is_a?(AnonymousUser) }
+  validates_presence_of :login, :firstname, :mail, :if => Proc.new { |user| !user.is_a?(AnonymousUser) }
   validates_uniqueness_of :login, :if => Proc.new { |user| !user.login.blank? }, :case_sensitive => false
   validates_uniqueness_of :mail, :if => Proc.new { |user| !user.mail.blank? }, :case_sensitive => false
   # Login must contain lettres, numbers, underscores only
