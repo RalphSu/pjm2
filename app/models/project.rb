@@ -65,7 +65,7 @@ class Project < ActiveRecord::Base
 
   attr_protected :status
 
-  validates_presence_of :name,
+  validates_presence_of :name
   validates_uniqueness_of :name
   validates_uniqueness_of :identifier
   validates_associated :repository, :wiki
