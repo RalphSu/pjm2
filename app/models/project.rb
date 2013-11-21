@@ -15,6 +15,7 @@
 class Project < ActiveRecord::Base
   include Redmine::SafeAttributes
 
+  START = 'project1'
   # Project statuses
   STATUS_ACTIVE     = 1
   STATUS_ARCHIVED   = 9
@@ -65,17 +66,17 @@ class Project < ActiveRecord::Base
 
   attr_protected :status
 
-  validates_presence_of :name
+  validates_presence_of :name, :identifier
   validates_uniqueness_of :name
   validates_uniqueness_of :identifier
   validates_associated :repository, :wiki
   validates_length_of :name, :maximum => 255
   validates_length_of :homepage, :maximum => 255
-  #validates_length_of :identifier, :in => 1..IDENTIFIER_MAX_LENGTH
+  validates_length_of :identifier, :in => 1..IDENTIFIER_MAX_LENGTH
   # donwcase letters, digits, dashes but not digits only
-  #validates_format_of :identifier, :with => /^(?!\d+$)[a-z0-9\-_]*$/, :if => Proc.new { |p| p.identifier_changed? }
+  validates_format_of :identifier, :with => /^(?!\d+$)[a-z0-9\-_]*$/, :if => Proc.new { |p| p.identifier_changed? }
   # reserved words
-  #validates_exclusion_of :identifier, :in => %w( new )
+  validates_exclusion_of :identifier, :in => %w( new )
 
   before_destroy :delete_all_members
 
@@ -100,6 +101,9 @@ class Project < ActiveRecord::Base
     initialized = (attributes || {}).stringify_keys
     if !initialized.key?('identifier') && Setting.sequential_project_identifiers?
       self.identifier = Project.next_identifier
+      if self.identifier.blank?
+          self.identifier = START 
+      end
     end
     if !initialized.key?('is_public')
       self.is_public = Setting.default_projects_public?

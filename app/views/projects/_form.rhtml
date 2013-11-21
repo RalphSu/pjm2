@@ -4,25 +4,18 @@
 <!--[form:project]-->
 <p><%= f.text_field :name, :required => true, :size => 60 %></p>
 
-<!-- Ralph:: hide parent project
-<% unless @project.allowed_parents.compact.empty? %>
-    <p><%= label(:project, :parent_id, l(:field_parent)) %><%= parent_project_select_tag(@project) %></p>
-<% end %>
--->
-
 <p><%= f.text_area :description, :rows => 10, :class => 'wiki-edit' %></p>
 <%= f.hidden_field :identifier, :required => true, :disabled => @project.identifier_frozen? %>
-<!-- <% unless @project.identifier_frozen? %> -->
+<% unless @project.identifier_frozen? %>
 <script type="text/javascript" charset="utf-8">
   projectIdentifierMaxLength = <%= Project::IDENTIFIER_MAX_LENGTH %>;
   projectIdentifierDefault = '<%= @project.identifier %>';
-  // set locked as false : make identifier same as the name
-  // projectIdentifierLocked = true;
+  projectIdentifierNil = '<%= @project.identifier.nil? %>';
+  projectIdentifierLocked = <%= !@project.identifier.blank? %>;
   observeProjectIdentifier();
   observeProjectName();
 </script>
-<!-- Ralph:: move english tip <%= l(:text_project_identifier_info) %></em>
-<% end %> -->
+<% end %>
 
 <!-- Ralph:: temp -change to add FIXME:: with project model -->
 <p><label for="project_identifier">管理员<span class="required"> </span></label><input id="project_identifier" name="project[1identifier]" size="60" type="text"></p>

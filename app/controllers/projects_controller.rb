@@ -72,7 +72,6 @@ class ProjectsController < ApplicationController
     @trackers = Tracker.all
     @project = Project.new
     @project.safe_attributes = params[:project]
-    @project.identifier = Project.next_identifier
 
     if validate_parent_id && @project.save
       @project.set_allowed_parent!(params[:project]['parent_id']) if params[:project].has_key?('parent_id')
