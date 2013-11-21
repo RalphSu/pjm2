@@ -1034,5 +1034,6 @@ zh:
   html_title : 科翼文化传播
 
   field_project_manager : 项目管理员
+  field_project_reviewer: 项目审核员
   field_project_client : 客户
   field_project_emails : 客户邮箱
