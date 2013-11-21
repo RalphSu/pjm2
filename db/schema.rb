@@ -381,7 +381,6 @@ ActiveRecord::Schema.define(:version => 20131120123612) do
     t.integer  "status",          :default => 1,    :null => false
     t.integer  "lft"
     t.integer  "rgt"
-    t.string   "key"
     t.string   "keywords"
     t.string   "keywords_except"
     t.date     "end_time"
