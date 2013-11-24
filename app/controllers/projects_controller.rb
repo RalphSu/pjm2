@@ -70,7 +70,14 @@ class ProjectsController < ApplicationController
     @project = Project.new
     @project.safe_attributes = params[:project]
 
-    if validate_parent_id && @project.save
+    saved = @project.save
+    if saved
+        @project.set_project_manager(params[:project][:project_manager])
+        @project.set_project_reviewer(params[:project][:reviewer])
+        @project.set_project_client(params[:project][:client])
+    end
+
+    if validate_parent_id && saved
       @project.set_allowed_parent!(params[:project]['parent_id']) if params[:project].has_key?('parent_id')
       add_current_user_to_project_if_not_admin(@project)
       respond_to do |format|
@@ -89,41 +96,41 @@ class ProjectsController < ApplicationController
 
   end
 
-  def copy
-    @issue_custom_fields = IssueCustomField.find(:all, :order => "#{CustomField.table_name}.position")
-    @trackers = Tracker.all
-    @root_projects = Project.find(:all,
-                                  :conditions => "parent_id IS NULL AND status = #{Project::STATUS_ACTIVE}",
-                                  :order => 'name')
-    @source_project = Project.find(params[:id])
-    if request.get?
-      @project = Project.copy_from(@source_project)
-      if @project
-        @project.identifier = Project.next_identifier if Setting.sequential_project_identifiers?
-      else
-        redirect_to :controller => 'admin', :action => 'projects'
-      end
-    else
-      Mailer.with_deliveries(params[:notifications] == '1') do
-        @project = Project.new
-        @project.safe_attributes = params[:project]
-        @project.enabled_module_names = params[:enabled_modules]
-        if validate_parent_id && @project.copy(@source_project, :only => params[:only])
-          @project.set_allowed_parent!(params[:project]['parent_id']) if params[:project].has_key?('parent_id')
-          flash[:notice] = l(:notice_successful_create)
-          redirect_to :controller => 'projects', :action => 'settings', :id => @project
-        elsif !@project.new_record?
-          # Project was created
-          # But some objects were not copied due to validation failures
-          # (eg. issues from disabled trackers)
-          # TODO: inform about that
-          redirect_to :controller => 'projects', :action => 'settings', :id => @project
-        end
-      end
-    end
-  rescue ActiveRecord::RecordNotFound
-    redirect_to :controller => 'admin', :action => 'projects'
-  end
+  # def copy
+  #   @issue_custom_fields = IssueCustomField.find(:all, :order => "#{CustomField.table_name}.position")
+  #   @trackers = Tracker.all
+  #   @root_projects = Project.find(:all,
+  #                                 :conditions => "parent_id IS NULL AND status = #{Project::STATUS_ACTIVE}",
+  #                                 :order => 'name')
+  #   @source_project = Project.find(params[:id])
+  #   if request.get?
+  #     @project = Project.copy_from(@source_project)
+  #     if @project
+  #       @project.identifier = Project.next_identifier if Setting.sequential_project_identifiers?
+  #     else
+  #       redirect_to :controller => 'admin', :action => 'projects'
+  #     end
+  #   else
+  #     Mailer.with_deliveries(params[:notifications] == '1') do
+  #       @project = Project.new
+  #       @project.safe_attributes = params[:project]
+  #       @project.enabled_module_names = params[:enabled_modules]
+  #       if validate_parent_id && @project.copy(@source_project, :only => params[:only])
+  #         @project.set_allowed_parent!(params[:project]['parent_id']) if params[:project].has_key?('parent_id')
+  #         flash[:notice] = l(:notice_successful_create)
+  #         redirect_to :controller => 'projects', :action => 'settings', :id => @project
+  #       elsif !@project.new_record?
+  #         # Project was created
+  #         # But some objects were not copied due to validation failures
+  #         # (eg. issues from disabled trackers)
+  #         # TODO: inform about that
+  #         redirect_to :controller => 'projects', :action => 'settings', :id => @project
+  #       end
+  #     end
+  #   end
+  # rescue ActiveRecord::RecordNotFound
+  #   redirect_to :controller => 'admin', :action => 'projects'
+  # end
 
   # Show @project
   def show
@@ -161,7 +168,14 @@ class ProjectsController < ApplicationController
   verify :method => [:post, :put], :only => :update, :render => {:nothing => true, :status => :method_not_allowed }
   def update
     @project.safe_attributes = params[:project]
-    if validate_parent_id && @project.save
+    updated = @project.save
+    if updated
+        @project.set_project_manager(params[:project][:project_manager])
+        @project.set_project_reviewer(params[:project][:reviewer])
+        @project.set_project_client(params[:project][:client])
+     end
+
+    if validate_parent_id && updated
       @project.set_allowed_parent!(params[:project]['parent_id']) if params[:project].has_key?('parent_id')
       respond_to do |format|
         format.html {

@@ -72,4 +72,5 @@ module UsersHelper
     end
     tabs
   end
+
 end

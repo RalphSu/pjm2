@@ -351,6 +351,25 @@ class User < Principal
     end
   end
 
+  def self.allManagers
+    # TODO
+    admins = User.find_by_user_type("")
+  end
+
+  def self.allReviewers
+    #  TODO
+    admins = User.find_by_user_type("")
+  end
+
+  def self.allClients
+    clients = User.find_by_client(true)
+    if clients.nil?
+      []
+    else
+      clients
+    end
+  end
+
   def logged?
     true
   end
