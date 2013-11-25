@@ -72,9 +72,13 @@ class ProjectsController < ApplicationController
 
     saved = @project.save
     if saved
-        @project.set_project_manager(params[:project][:project_manager])
-        @project.set_project_reviewer(params[:project][:reviewer])
-        @project.set_project_client(params[:project][:client])
+      if params[:project][:reviewer] == params[:project][:project_manager]
+        @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_REVIEWER, Role::SYSTEM_PROJECT_MANAGER], :user_id => params[:project][:reviewer])
+      else 
+        @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_REVIEWER], :user_id => params[:project][:reviewer])
+        @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_MANAGER], :user_id =>params[:project][:project_manager])
+      end
+      @project.set_project_client(params[:project][:client])
     end
 
     if validate_parent_id && saved
@@ -170,8 +174,7 @@ class ProjectsController < ApplicationController
     @project.safe_attributes = params[:project]
     updated = @project.save
     if updated
-        @project.set_project_manager(params[:project][:project_manager])
-        @project.set_project_reviewer(params[:project][:reviewer])
+        # only handle client setting for update. reviewer/manager is handled through  members controller
         @project.set_project_client(params[:project][:client])
      end
 

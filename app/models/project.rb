@@ -127,39 +127,21 @@ class Project < ActiveRecord::Base
     end
   end
 
-###
-  def set_project_manager(manager_user_id)
-    manager = User.find_by_id(manager_user_id)
-    if manager.nil?
-      self.project_manager.clear
-    else
-      self.project_manager = [manager]
+  def get_project_singlerole_uid(role_id)
+    if  not self.members.blank?
+      result=[]
+      self.members.each do |m|
+          m.roles.each do |r|
+            if r.id == role_id
+              result << m.user.id
+            end
+          end
+      end
+      if result.blank?
+        return result[0]
+      end
     end
-  end
-
-  def get_project_manager_id
-    if  not self.project_manager.blank?
-      self.project_manager[0].id
-    else
-      ""
-    end
-  end
-
-  def set_project_reviewer(reviewer_user_id)
-    reviewer = User.find_by_id(reviewer_user_id)
-    if reviewer.nil?
-      self.reviewer.clear
-    else 
-      self.reviewer = [reviewer]
-    end
-  end
-
-  def get_project_reviewer_id
-    if not self.reviewer.blank?
-      self.reviewer[0].id
-    else
-      ""
-    end
+    ""
   end
 
   def set_project_client(client_user_id)
@@ -170,7 +152,6 @@ class Project < ActiveRecord::Base
       self.client = [client]
     end
   end
-
   def get_project_client_id
     if not self.client.blank?
       self.client[0].id
@@ -178,7 +159,6 @@ class Project < ActiveRecord::Base
        ""
     end
   end
-###
 
   def identifier=(identifier)
     super unless identifier_frozen?

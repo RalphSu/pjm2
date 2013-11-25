@@ -17,8 +17,11 @@
 </script>
 <% end %>
 
-<p><%= f.select :project_manager,  options_for_select(User.all.collect {|u| [u.lastname,  u.id] }, @project.get_project_manager_id) %></p>
-<p><%= f.select :reviewer,  User.all.collect {|u| [u.lastname,  u.id] } , :selected=>@project.get_project_reviewer_id %></p>
+<!-- only show manager&reviewer when new project -->
+<% if @project.new_record? %>
+  <p><%= f.select :project_manager,  User.nonClients.collect {|u| [u.lastname,  u.id] }, :selected=> @project.get_project_singlerole_uid(Role::SYSTEM_PROJECT_MANAGER) %></p>
+  <p><%= f.select :reviewer,  User.nonClients.collect {|u| [u.lastname,  u.id] } , :selected=>@project.get_project_singlerole_uid(Role::SYSTEM_PROJECT_REVIEWER) %></p>
+<% end %>
 <p><%= f.select :client,  User.allClients.collect {|u| [u.lastname,  u.id] },  :selected=>@project.get_project_client_id %></p>
 <p><%= label(:project, :start_time, l(:field_start_time)) %><%= f.date_field :start_time %></p>
 <p><%= label(:project, :end_time, l(:field_end_time)) %><%= f.date_field :end_time %></p>
@@ -29,7 +32,8 @@
 	<p><%= custom_field_tag_with_label :project, value %></p>
 <% end %>
 <%= call_hook(:view_projects_form, :project => @project, :form => f) %>
-</div> -->
+</div> 
+-->
 
 <% if @project.new_record? %>
 <!--  Ralph:: hide the modules and trackers for screen mock -->

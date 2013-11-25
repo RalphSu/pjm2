@@ -16,6 +16,9 @@ class Role < ActiveRecord::Base
   # Built-in roles
   BUILTIN_NON_MEMBER = 1
   BUILTIN_ANONYMOUS  = 2
+  #
+  SYSTEM_PROJECT_MANAGER=3
+  SYSTEM_PROJECT_REVIEWER=4
 
   named_scope :givable, { :conditions => "builtin = 0", :order => 'position' }
   named_scope :builtin, lambda { |*args|

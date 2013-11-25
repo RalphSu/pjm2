@@ -351,14 +351,13 @@ class User < Principal
     end
   end
 
-  def self.allManagers
-    # TODO
-    admins = User.find_by_user_type("")
-  end
-
-  def self.allReviewers
-    #  TODO
-    admins = User.find_by_user_type("")
+  def self.nonClients
+    clients = User.all
+    if clients.nil?
+      []
+    else
+      clients
+    end
   end
 
   def self.allClients
