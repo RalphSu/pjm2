@@ -102,4 +102,6 @@ module ProjectsHelper
     sharing = 'none' unless Version::VERSION_SHARINGS.include?(sharing)
     l("label_version_sharing_#{sharing}")
   end
+
+  
 end

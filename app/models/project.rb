@@ -33,6 +33,17 @@ class Project < ActiveRecord::Base
   has_many :users, :through => :members
   has_many :principals, :through => :member_principals, :source => :principal
 
+  # project reviewer/manager/clients
+  has_many :project_admin, :dependent => :destroy
+  has_many :project_manager, :class_name => "User", :through=>:project_admin, :source=>"user"
+  has_many :project_client, :dependent => :destroy
+  has_many :client,  :class_name => "User", :through =>:project_client, :source=>"user"
+  has_many :project_reviewer, :dependent => :destroy
+  has_many :reviewer, :class_name => "User",  :through=>:project_reviewer, :source=>"user"
+  #has_and_belongs_to_many :project_admin, :class_name => "User", :join_table => "project_admins"
+  #has_and_belongs_to_many :client,  :class_name=> "User", :join_table => "project_clients"
+  #has_and_belongs_to_many :reviewer, :class_name => "User", :join_table => "project_reviewers"
+
   has_many :enabled_modules, :dependent => :delete_all
   has_and_belongs_to_many :trackers, :order => "#{Tracker.table_name}.position"
   has_many :issues, :dependent => :destroy, :order => "#{Issue.table_name}.created_on DESC", :include => [:status, :tracker]
@@ -113,6 +124,39 @@ class Project < ActiveRecord::Base
     end
     if !initialized.key?('trackers') && !initialized.key?('tracker_ids')
       self.trackers = Tracker.all
+    end
+  end
+
+  def get_project_singlerole_uid(role_id)
+    if  not self.members.blank?
+      result=[]
+      self.members.each do |m|
+          m.roles.each do |r|
+            if r.id == role_id
+              result << m.user.id
+            end
+          end
+      end
+      if result.blank?
+        return result[0]
+      end
+    end
+    ""
+  end
+
+  def set_project_client(client_user_id)
+    client = User.find_by_id(client_user_id)
+    if client.nil?
+      self.client.clear
+    else
+      self.client = [client]
+    end
+  end
+  def get_project_client_id
+    if not self.client.blank?
+      self.client[0].id
+    else
+       ""
     end
   end
 
@@ -556,9 +600,6 @@ class Project < ActiveRecord::Base
     'issue_custom_field_ids',
     "start_time",
     "end_time"
-
-  safe_attributes 'start_time', 'end_time'
-
 
   safe_attributes 'enabled_module_names',
     :if => lambda {|project, user| project.new_record? || user.allowed_to?(:select_project_modules, project) }

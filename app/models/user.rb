@@ -351,6 +351,24 @@ class User < Principal
     end
   end
 
+  def self.nonClients
+    clients = User.all
+    if clients.nil?
+      []
+    else
+      clients
+    end
+  end
+
+  def self.allClients
+    clients = User.find_by_client(true)
+    if clients.nil?
+      []
+    else
+      clients
+    end
+  end
+
   def logged?
     true
   end

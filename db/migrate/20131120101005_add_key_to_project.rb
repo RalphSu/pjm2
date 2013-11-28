@@ -6,8 +6,8 @@ class AddKeyToProject < ActiveRecord::Migration
   end
 
   def self.down
-  	remove_column :projects, :key
-  	remove_column :projects, :key_except
+  	remove_column :projects, :keywords
+  	remove_column :projects, :keywords_except
   	remove_column :projects, :end_time
   end
 end

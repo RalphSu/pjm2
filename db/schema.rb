@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131120123612) do
+ActiveRecord::Schema.define(:version => 20131124120413) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -360,13 +360,16 @@ ActiveRecord::Schema.define(:version => 20131120123612) do
   create_table "project_admins", :force => true do |t|
     t.integer "project_id", :null => false
     t.integer "user_id",    :null => false
-    t.integer "role_id"
+  end
+
+  create_table "project_clients", :force => true do |t|
+    t.integer "project_id", :null => false
+    t.integer "user_id",    :null => false
   end
 
   create_table "project_reviewers", :force => true do |t|
     t.integer "project_id", :null => false
     t.integer "user_id",    :null => false
-    t.integer "role_id"
   end
 
   create_table "projects", :force => true do |t|
