@@ -134,7 +134,7 @@ h5,
   width: 75%;
   background-color: #fff;
   margin: 0px;
-  border: 1px #ddd;
+  border: 1px #FFFFFF;
   border-style: none solid solid solid;
   padding: 6px 10px 10px 10px;
   z-index: 10;
@@ -2596,6 +2596,8 @@ a:hover {
   background: url(../images/background_top_navigation.png) repeat-x left top;
 }
 
+
+
 #logo {
   float: left;
   width: 200px;
@@ -2821,8 +2823,8 @@ input: -moz-placeholder {
 }
 
 #breadcrumb {
-  height: 38px;
-  line-height: 38px;
+  height: 43px;
+  line-height: 43px;
   background: url(../images/background_breadcrumb.png) repeat-x left top;
   border-bottom: 1px #d9d9d9;
   color: #777777;
@@ -2833,9 +2835,46 @@ input: -moz-placeholder {
   font-weight: normal;
 }
 
+#breadcrumb ul {
+  line-height: 43px;
+  float: center;
+  font-size: 13px;
+  font-family: "Arial", Arial, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: #ffffff;
+  height: 43px;
+  border-top: 0;
+  position: relative;
+}
+
 #breadcrumb a {
-  text-decoration: underline;
-  color: #777777;
+  font-weight: normal;
+  color: #FFFFFF;
+}
+
+#account-nav1 {
+  display: block;
+padding-left: 15px;
+
+}
+
+#account-nav1 li {
+
+  padding-left: 15px;
+   background: url(../images/background_active_button.png) repeat-x  left center;
+}
+
+#account-nav1 li a {
+  display: block;
+  padding: 0px 9px 0px;
+}
+
+#account-nav1 > a {
+  text-decoration: none;
+  color: #FFFFFF;
+  height: 43px;
+  font-weight: normal;
 }
 
 #nav-search {
@@ -3058,7 +3097,7 @@ div#optional_login_fields {
  * This section includes the layout and styles for the main content area.
  ------------------------------------------------------------------------------*/
 #main {
-  background: #f3f3f3;
+  background: #FFFFFF;
   position: relative;
   z-index: 20;
 }
