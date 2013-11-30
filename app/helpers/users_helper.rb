@@ -22,7 +22,7 @@ module UsersHelper
   end
 
   def collection_for_user_type_select
-    values = User::USER_TYPES
+    User::USER_TYPES.keys.sort
   end
 
   # Options for the new membership projects combo-box

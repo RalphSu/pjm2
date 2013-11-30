@@ -35,16 +35,21 @@
     <div id="header">
       <div id="logo"><%= link_to(l(:html_title), home_path) %></div>
       <div id="top-menu-items">
+      <!--  remove search box
       <% if User.current.logged? || !Setting.login_required? %>
       <div id="search">
         <%= render :partial => 'search/quick_search', :locals => {:search_term => @question} %>
       </div>
       <% end %>
+    -->
        <ul id="account-nav">
+        <!-- remove home page
         <% if User.current.logged? || !Setting.login_required? %>
         <% main_top_menu_items.each do |item| %>
             <%= render_menu_node(item) %>
         <% end %>
+        -->
+        <!-- remove projects
         <li class="drop-down">
           <%= link_to l(:label_project_plural), { :controller => 'projects', :action => 'index' }, :class => "projects" %>
           <ul style="display:none;">
@@ -60,6 +65,8 @@
             <%= project_content %>
           </ul>
         </li>
+      -->
+      <!-- remove management setting tab
         <% if more_top_menu_items.present? || User.current.admin? %>
         <li class="drop-down" id="more-menu">
           <a class="more" href="#"><%= l(:label_more) %></a>
@@ -75,8 +82,8 @@
             <% end %>
           </ul>
         </li>
+      -->
         <% end %>
-
         <% end %>
           <% unless User.current.logged? %>
             <% if Setting.self_registration? %>
