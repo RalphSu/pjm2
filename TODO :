@@ -1,0 +1,12 @@
+TODO
+1. remove all button  at the base TOP. Only search box and user button.  
+	:: -done
+2. Better tabs in base.rhtml
+	:: 
+3. Show members in projects'  member tab
+	:: done
+4. Make client=true works in user creation
+	:: remove client -done
+	::  user_type = 员工／客户／超级管理员  -done
+5. User role_id =3/5 as two basic role (reviewer and manager)
+	:: deployment need to make the label to  -done, migration added
