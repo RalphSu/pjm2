@@ -13,12 +13,16 @@ sudo ln -s /opt/Sublime\ Text\ 2/sublime_text /usr/bin/subl
 
 set up rvm&ruby
 ``` shell
-\curl -L https://get.rvm.io | bash rvm get head && rvm reload source /home/jiangh/.rvm/scripts/rvm rvm install 1.9.3 rvm use 1.9.3@rails3 --create --default
+\curl -L https://get.rvm.io | bash stable
+source /home/jiangh/.rvm/scripts/rvm 
+rvm install 1.9.3 
+rvm use 1.9.3@rails3 --create --default
 ```
 
 setup gems
 ``` shell
-wget http://rubyforge.org/frs/download.php/76729/rubygems-1.8.25.tgz ruby setup.rb
+wget http://rubyforge.org/frs/download.php/76729/rubygems-1.8.25.tgz 
+ruby setup.rb
 ``` 
 
 install rails
