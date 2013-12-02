@@ -9,3 +9,21 @@ TODO
 	::  user_type = 员工／客户／超级管理员  -done
 5. User role_id =3/5 as two basic role (reviewer and manager)
 	:: deployment need to make the label to  -done, migration added
+	
+Schedule:
+12.6  user management and base project management  
+12.10 project archive 
+12.10  project data  format management 
+12.14 blog  
+12.16 forum 
+12.18 twitter
+12.20 event/activity 
+12.24 news 
+12.26 search back end 
+12.28 tweak 
+ 12.30 client UI 
+1.5  export data format management 
+ 1.8 export 
+ 1.14 flow of publish  
+ 1.15 email notification 
+ 1.18 UI tweak
