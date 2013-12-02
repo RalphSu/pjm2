@@ -1076,16 +1076,15 @@ module ApplicationHelper
     unless @top_menu_split
       items_for_main_level = []
       items_for_more_level = []
-      help_menu = nil
       menu_items_for(:top_menu) do |item|
         if item.name == :home #|| item.name == :my_page
           items_for_main_level << item
-        elsif item.name == :help
-          help_menu = item
+        elsif item.name == :administration
+          items_for_main_level << item
+        elsif item.name == :report
+          items_for_main_level << item
         elsif item.name == :projects
-          # Remove, present in layout
-        else
-          items_for_more_level << item
+          items_for_main_level << item
         end
       end
       @top_menu_split = {

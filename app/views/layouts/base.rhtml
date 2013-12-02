@@ -66,37 +66,8 @@
         <% main_top_menu_items.each do |item| %>
             <%= render_menu_node(item) %>
         <% end %>
-        <li class="drop-down">
-          <%= link_to l(:label_project_plural), { :controller => 'projects', :action => 'index' }, :class => "projects" %>
-          <ul style="display:none;">
-            <li><%= link_to l(:label_project_all), { :controller => 'projects', :action => 'index' }, :class => "projects separator" %></li>
-            <%
-            project_content = ''
-            project_tree(User.current.projects.all) do |project, level|
-              name_prefix = (level > 0 ? ('&nbsp;' * 2 * level + '&#187; ') : '')
-              project_content << content_tag(:li,
-                                     link_to(name_prefix + h(project), {:controller => 'projects', :action => 'show', :id => project, :jump => current_menu_item}))
-            end
-            %>
-            <%= project_content %>
-          </ul>
-        </li>
-        <% if more_top_menu_items.present? || User.current.admin? %>
-        <li class="drop-down" id="more-menu">
-          <a class="more" href="#"><%= l(:label_more) %></a>
-          <ul style="display:none;">
-            <% more_top_menu_items.each do |item| %>
-            <%= render_menu_node(item) %>
-            <% end %>
-            <%# TODO: Extract to helper %>
-            <% if User.current.admin? %>
-              <% menu_items_for(:admin_menu) do |item| -%>
-                <li><%= link_to h(item.caption), item.url, item.html_options %></li>
-              <% end -%>
-            <% end %>
-          </ul>
-        </li>
-        <% end %>
+        
+      
 
         <% end %>
       </ul>

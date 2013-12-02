@@ -2701,12 +2701,7 @@ a:hover {
   color: #FFFFFF;
 }
 
-li a.home {
-  text-indent: -999em;
-  width: 20px;
-  height: 43px;
-  background: url(../images/icon_home.png) no-repeat 50% 50%;
-}
+
 
 li a.help {
   text-indent: -999em;
