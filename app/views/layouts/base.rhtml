@@ -33,64 +33,11 @@
 <div id="wrapper">
   <div id="top-menu">
     <div id="header">
-      <div id="logo"><%= link_to(l(:html_title), home_path) %></div>
+      <div id="logo"></div>
       <div id="top-menu-items">
-      <!--  remove search box
-      <% if User.current.logged? || !Setting.login_required? %>
-      <div id="search">
-        <%= render :partial => 'search/quick_search', :locals => {:search_term => @question} %>
-      </div>
-      <% end %>
-    -->
        <ul id="account-nav">
-        <!-- remove home page
-        <% if User.current.logged? || !Setting.login_required? %>
-        <% main_top_menu_items.each do |item| %>
-            <%= render_menu_node(item) %>
-        <% end %>
-        -->
-        <!-- remove projects
-        <li class="drop-down">
-          <%= link_to l(:label_project_plural), { :controller => 'projects', :action => 'index' }, :class => "projects" %>
-          <ul style="display:none;">
-            <li><%= link_to l(:label_project_all), { :controller => 'projects', :action => 'index' }, :class => "projects separator" %></li>
-            <%
-            project_content = ''
-            project_tree(User.current.projects.all) do |project, level|
-              name_prefix = (level > 0 ? ('&nbsp;' * 2 * level + '&#187; ') : '')
-              project_content << content_tag(:li,
-                                     link_to(name_prefix + h(project), {:controller => 'projects', :action => 'show', :id => project, :jump => current_menu_item}))
-            end
-            %>
-            <%= project_content %>
-          </ul>
-        </li>
-      -->
-      <!-- remove management setting tab
-        <% if more_top_menu_items.present? || User.current.admin? %>
-        <li class="drop-down" id="more-menu">
-          <a class="more" href="#"><%= l(:label_more) %></a>
-          <ul style="display:none;">
-            <% more_top_menu_items.each do |item| %>
-            <%= render_menu_node(item) %>
-            <% end %>
-            <%# TODO: Extract to helper %>
-            <% if User.current.admin? %>
-              <% menu_items_for(:admin_menu) do |item| -%>
-                <li><%= link_to h(item.caption), item.url, item.html_options %></li>
-              <% end -%>
-            <% end %>
-          </ul>
-        </li>
-      -->
-        <% end %>
-        <% end %>
+  
           <% unless User.current.logged? %>
-            <% if Setting.self_registration? %>
-            <li>
-              <%= link_to l(:label_register), { :controller => 'account', :action => 'register' } %>
-            </li>
-            <% end %>
             <li id="login-menu" class="drop-down last-child">
               <%= link_to l(:label_login), {:controller => 'account', :action => 'login'}, :class => 'login' %>
               <div id="nav-login" style="display:none;">
@@ -112,7 +59,7 @@
     </div>
     </div>
     <div id="breadcrumb">
-
+      <div>
         <ul id="account-nav1">
         <% if User.current.logged? || !Setting.login_required? %>
         
@@ -153,17 +100,8 @@
 
         <% end %>
           <% unless User.current.logged? %>
-            <% if Setting.self_registration? %>
-            <li>
-              <%= link_to l(:label_register), { :controller => 'account', :action => 'register' } %>
-            </li>
-            <% end %>
-            <li id="login-menu" class="drop-down last-child">
-              <%= link_to l(:label_login), {:controller => 'account', :action => 'login'}, :class => 'login' %>
-              <div id="nav-login" style="display:none;">
-                <%= render :partial => 'account/login' %>
-              </div>
-            </li>
+              <%=l(:label_login) %>
+            
           <% else %>
             <li class="drop-down last-child">
             <%= link_to_user(User.current) %>
@@ -175,6 +113,7 @@
             </li>
           <% end %>
       </ul>
+    </div>
     </div>
   </div>
 
@@ -191,7 +130,7 @@
           <%= main_menu %>
           <%= yield :main_menu %>
         </div>
-
+      <% end %>
       <% if display_sidebar %>
         <!-- Sidebar -->
         <div id="sidebar">
@@ -202,7 +141,7 @@
       </div>
 
       <%= expand_current_menu %>
-    <% end %>
+    
     <div class="<%= side_displayed ? '' : "nosidebar" %>" id="content">
       <%= render_flash_messages %>
       <%= yield %>

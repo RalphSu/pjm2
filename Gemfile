@@ -64,9 +64,9 @@ platforms :mri, :mingw, :rbx do
 
 
 
-  group :sqlite do
-    gem "sqlite3"
-  end
+ # group :sqlite do
+ #   gem "sqlite3"
+ # end
 end
 
 platforms :jruby do
