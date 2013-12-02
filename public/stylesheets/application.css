@@ -60,7 +60,7 @@ h5,
 }
 
 #top-menu {
-  background: #2C4056;
+  background: #ffffff;
   color: #fff;
   height: 1.8em;
   font-size: 0.8em;
@@ -165,6 +165,7 @@ html > body #content {
 }
 
 #footer {
+  background: url(../images/background_header.png) repeat-x 20px;
   clear: both;
   font-size: 0.9em;
   color: #aaa;
@@ -2532,7 +2533,7 @@ h2 img {
  ------------------------------------------------------------------------------*/
 body {
   font: normal normal normal 12px/1.5 arial,'lucida grandriale','lucida sans unicode',tahoma,sans-serif;
-  background: #f3f3f3;
+  background: #FFFFFF;
   color: #333;
 }
 
@@ -2593,17 +2594,18 @@ a:hover {
 
 #account-nav {
   display: block;
-  background: url(../images/background_top_navigation.png) repeat-x left top;
+  
 }
+
 
 
 
 #logo {
   float: left;
-  width: 200px;
+  width: 247px;
   height: 43px;
-  font-size: 3em;
-  padding-left: 15px;
+  
+   background: url(../images/keyilogo4.png) no-repeat;
 }
 
 #logo a,
@@ -2617,12 +2619,12 @@ a:hover {
   padding-right: 15px;
 }
 
+
 #header {
   background: url(../images/background_header.png) repeat-x 20px;
   height: 43px;
   font: arial,19px,white;
 }
-
 #header ul {
   line-height: 43px;
   float: left;
@@ -2642,7 +2644,7 @@ a:hover {
 
 #header li {
   float: left;
-  border-left: 1px solid #450308;
+  border-left: 0px solid #450308;
   position: relative;
   z-index: 5;
 }
@@ -2667,9 +2669,7 @@ a:hover {
   padding-right: 35px;
 }
 
-#header li > a:hover {
-  background-color: #700407;
-}
+
 
 #header li.drop-down > a:hover {
   background: #700407 url(../images/arrow-down-grey.png) no-repeat right center;
@@ -2825,7 +2825,7 @@ input: -moz-placeholder {
 #breadcrumb {
   height: 43px;
   line-height: 43px;
-  background: url(../images/background_breadcrumb.png) repeat-x left top;
+  overflow:hidden;
   border-bottom: 1px #d9d9d9;
   color: #777777;
   padding-left: 15px;
@@ -2833,11 +2833,18 @@ input: -moz-placeholder {
   font-family: "Arial", Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
+  position:relative;
 }
+
+#breadcrumb > div {
+    position:relative;
+    left:50%;
+    float:left;
+}
+
 
 #breadcrumb ul {
   line-height: 43px;
-  float: center;
   font-size: 13px;
   font-family: "Arial", Arial, sans-serif;
   font-style: normal;
@@ -2846,6 +2853,16 @@ input: -moz-placeholder {
   height: 43px;
   border-top: 0;
   position: relative;
+   left:-50%;
+    float:left;
+}
+
+#breadcrumb li {
+    float:left;
+}
+
+#breadcrumb li + li {
+    margin-left:20px;
 }
 
 #breadcrumb a {
