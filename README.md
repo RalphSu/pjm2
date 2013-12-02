@@ -62,5 +62,5 @@ mysql> GRANT ALL PRIVILEGES ON chiliproject.* TO 'chiliproject'@'localhost';
 
 bundle install --without development test 
 RAILS_ENV=production rake db:migrate 
-rake generate_secret_token
+rake generate_session_store
 ``` 
