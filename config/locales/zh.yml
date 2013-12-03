@@ -482,11 +482,11 @@ zh:
   label_register: 注册
   label_login_with_open_id_option: 或使用OpenID登录
   label_password_lost: 忘记密码
-  label_home: 主页
+  label_home: 我的首页
   label_my_page: 我的工作
   label_my_account: 我的帐号
   label_my_projects: 我的项目
-  label_administration: 管理
+  label_administration: 管理配置
   label_login: 登录
   label_logout: 退出
   label_help: 帮助
@@ -781,7 +781,7 @@ zh:
   label_missing_api_access_key: 缺少API访问键
   label_api_access_key_created_on: API访问键是在 %{value} 之前建立的
   label_lostpassword: 请联系系统管理员
-
+  label_report_analyse: 报表分析
   button_login: 登录
   button_submit: 提交
   button_save: 保存

@@ -835,6 +835,7 @@ en:
   label_time_entries: Time entries
   label_new_time_entry: New time entry
   label_time_entry_report: Time entry report
+  label_report_analyse: Report Center
   label_lostpassword: please contact administrator
 
   button_login: Login
