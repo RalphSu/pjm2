@@ -165,7 +165,7 @@ html > body #content {
 }
 
 #footer {
-  background: url(../images/background_header.png) repeat-x 20px;
+  /*background: url(../images/background_header.png) repeat-x 20px;*/
   clear: both;
   font-size: 0.9em;
   color: #aaa;
@@ -175,7 +175,7 @@ html > body #content {
 
 #login-form table {
   margin-top:5em;
-  padding:1em;
+  padding:3em;
   margin-left: auto;
   margin-right: auto;
   border: 2px solid
@@ -2623,6 +2623,7 @@ a:hover {
 #header {
   background: url(../images/background_header.png) repeat-x 20px;
   height: 43px;
+  background:  #3d3935;
   font: arial,19px,white;
 }
 #header ul {
@@ -3121,7 +3122,6 @@ div#optional_login_fields {
 
 #footer {
   color: #aaa;
-  padding-left: 186px;
 }
 
 h1.title {
