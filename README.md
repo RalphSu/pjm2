@@ -1,6 +1,5 @@
 PJM
 
-Add by Ralph
 set up sublime
 ``` shell
 wget http://c758482.r82.cf2.rackcdn.com/Sublime\ Text\ 2.0.2\ x64.tar.bz2
@@ -55,7 +54,7 @@ sudo apt-get install libmysql-ruby libmysqlclient-dev
 # sudo yum install ImageMagick-devel
 # sudo yum install mysql-devel
 
-#sudo yum install 
+# mysql -u root -p 
 mysql> CREATE DATABASE chiliproject CHARACTER SET utf8;
 mysql> CREATE USER 'chiliproject'@'localhost' IDENTIFIED BY 'chili'; 
 mysql> GRANT ALL PRIVILEGES ON chiliproject.* TO 'chiliproject'@'localhost';
