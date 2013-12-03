@@ -72,11 +72,15 @@ class ProjectsController < ApplicationController
 
     saved = @project.save
     if saved
-      if params[:project][:reviewer] == params[:project][:project_manager]
-        @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_REVIEWER, Role::SYSTEM_PROJECT_MANAGER], :user_id => params[:project][:reviewer])
-      else 
-        @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_REVIEWER], :user_id => params[:project][:reviewer])
-        @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_MANAGER], :user_id =>params[:project][:project_manager])
+      begin
+        if params[:project][:reviewer] == params[:project][:project_manager]
+          @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_REVIEWER, Role::SYSTEM_PROJECT_MANAGER], :user_id => params[:project][:reviewer])
+        else 
+          @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_REVIEWER], :user_id => params[:project][:reviewer])
+          @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_MANAGER], :user_id =>params[:project][:project_manager])
+        end
+      rescue => error
+        # project has been created, when member assignment failed, just let the creation succeed.
       end
       @project.set_project_client(params[:project][:client])
     end
