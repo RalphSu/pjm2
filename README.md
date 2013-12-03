@@ -1,6 +1,5 @@
 PJM
 
-Add by Ralph
 set up sublime
 ``` shell
 wget http://c758482.r82.cf2.rackcdn.com/Sublime\ Text\ 2.0.2\ x64.tar.bz2
