@@ -2819,7 +2819,7 @@ input: -moz-placeholder {
 }
 
 #breadcrumb {
-  height: 43px;
+  height: 46px;
   line-height: 43px;
   overflow:hidden;
   border-bottom: 1px #d9d9d9;
@@ -2840,7 +2840,7 @@ input: -moz-placeholder {
 
 
 #breadcrumb ul {
-  line-height: 43px;
+  line-height: 46px;
   font-size: 13px;
   font-family: "Arial", Arial, sans-serif;
   font-style: normal;
@@ -2851,6 +2851,7 @@ input: -moz-placeholder {
   position: relative;
    left:-50%;
     float:left;
+    padding-top: 3px;
 }
 
 #breadcrumb li {
@@ -2863,29 +2864,34 @@ input: -moz-placeholder {
 
 #breadcrumb a {
   font-weight: normal;
-  color: #FFFFFF;
+  /*color: #FFFFFF;*/
 }
 
 #account-nav1 {
   display: block;
-padding-left: 15px;
-
+  padding-left: 15px;
 }
 
 #account-nav1 li {
-
+  padding-top: 5px;
   padding-left: 15px;
-   background: url(../images/background_active_button.png) repeat-x  left center;
+  padding-right: 15px;
+  height: 43px;
+  width: 120px;
+  /*border-width: 1px;
+  border-color: #000000;*/
+  background-color: #98A5ED;
+  /*background: url(../images/background_active_button.png) repeat-x  left center;*/
 }
 
 #account-nav1 li a {
   display: block;
-  padding: 0px 9px 0px;
+  padding: 3px 9px 0px;
 }
 
 #account-nav1 > a {
   text-decoration: none;
-  color: #FFFFFF;
+  color: #000000;
   height: 43px;
   font-weight: normal;
 }
