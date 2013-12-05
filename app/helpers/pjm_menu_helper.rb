@@ -23,6 +23,11 @@ module PjmMenuHelper
     render_menu((project && !project.new_record?) ? :project_menu : :application_menu, project)
   end
 
+  # Renders the contents main menu.
+  def render_content_menu(project)
+    render_menu(:content_menu, project)
+  end
+
   def display_main_menu?(project)
     menu_name = project && !project.new_record? ? :project_menu : :application_menu
     Redmine::MenuManager.items(menu_name).size > 1 # 1 element is the root

@@ -190,6 +190,12 @@ Redmine::MenuManager.map :account_menu do |menu|
   menu.push :logout, :signout_path, :if => Proc.new { User.current.logged? }
 end
 
+Redmine::MenuManager.map :content_menu do |menu|
+  menu.push :news, { :controller => 'contents', :action => 'news' }, :caption => :label_news
+  menu.push :weibo,  { :controller => 'contents', :action => 'weibo' }, :caption => :label_weibo
+  ## TODO: add more for the contents
+end
+
 Redmine::MenuManager.map :application_menu do |menu|
   # Empty
 end

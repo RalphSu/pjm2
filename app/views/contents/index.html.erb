@@ -1,18 +1,17 @@
 
 <h2><%=l(:label_my_projects)%></h2>
 
-<p>
-<% @projects.each  do |p| %>
-	<%= p.name %> 
-<% end%>
-</p>
-
 <div class="splitcontentleft">
-  <% @projects.each  do |p| %>
-	<%= call_hook(:view_projects_show_left, :project => p) %>
-<% end%>
+<% content_for :main_menu  do %>
+	 <% @projects.each  do |p| %>
+	 	<% project_content_menu = render_content_menu(p)%>
+	  	<% if project_content_menu.nil? %>
+	  		<%= p.name %>
+	  	<% end %>
+	<% end%>
+<%end%>
 </div>
 
-<div class="splitcontentright">
+<div>
 	<p>TODO :: news/microwebs/</p>
 </div>
