@@ -180,7 +180,7 @@ Redmine::MenuManager.map :top_menu do |menu|
   menu.push :my_page, { :controller => 'my', :action => 'page' }, :if => Proc.new { User.current.logged? }
   menu.push :projects, { :controller => 'contents', :action => 'index' }, :caption => :label_my_projects
   menu.push :administration, { :controller => 'admin', :action => 'index' }, :if => Proc.new { User.current.admin? }, :last => true
-  menu.push :report , { :controller => 'admin', :action => 'index' },:caption=>:label_report_analyse
+  menu.push :report , { :controller => 'projects', :action => 'index' },:caption=>:label_report_analyse
   # remove help in top-menu
   # menu.push :help, Redmine::Info.help_url, :last => true, :caption => "?"
 end
@@ -188,12 +188,6 @@ end
 Redmine::MenuManager.map :account_menu do |menu|
   menu.push :my_account, { :controller => 'my', :action => 'account' }, :if => Proc.new { User.current.logged? }
   menu.push :logout, :signout_path, :if => Proc.new { User.current.logged? }
-end
-
-Redmine::MenuManager.map :content_menu do |menu|
-  menu.push :news, { :controller => 'contents', :action => 'news' }, :caption => :label_news
-  menu.push :weibo,  { :controller => 'contents', :action => 'weibo' }, :caption => :label_weibo
-  ## TODO: add more for the contents
 end
 
 Redmine::MenuManager.map :application_menu do |menu|
@@ -204,6 +198,25 @@ Redmine::MenuManager.map :admin_menu do |menu|
   menu.push :projects, {:controller => 'admin', :action => 'projects'}, :caption => :label_project_plural
   menu.push :users, {:controller => 'users'}, :caption => :label_user_plural
 
+end
+
+Redmine::MenuManager.map :content_menu do |menu|
+    include ContentsHelper
+    menu.push(:project_content, { :controller => 'contents', :action => 'project_content' }, {
+              :children => Proc.new { |p|
+                #@project = p # @project used in the helper
+                project_content_tabs.collect do |tab|
+                  #raise ArgumentError
+                  Redmine::MenuManager::MenuItem.new("project_content-#{tab[:name]}".to_sym,
+                                                     { :controller => 'contents', :action => :name, :id => p, :tab => tab[:name] },
+                                                     {
+                                                       :caption => tab[:label],
+                                                       :parent => :project_content
+                                                     })
+                end
+              },
+            :caption => Proc.new { |p| p.name }
+            })
 end
 
 Redmine::MenuManager.map :project_menu do |menu|
