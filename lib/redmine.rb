@@ -203,16 +203,16 @@ end
 Redmine::MenuManager.map :content_menu do |menu|
     include ContentsHelper
     menu.push(:project_content, { :controller => 'contents', :action => 'project_content' }, {
+              :last => true,
               :children => Proc.new { |p|
                 #@project = p # @project used in the helper
                 project_content_tabs.collect do |tab|
-                  #raise ArgumentError
-                  Redmine::MenuManager::MenuItem.new("project_content-#{tab[:name]}".to_sym,
-                                                     { :controller => 'contents', :action => :name, :id => p, :tab => tab[:name] },
-                                                     {
-                                                       :caption => tab[:label],
-                                                       :parent => :project_content
-                                                     })
+                  Redmine::MenuManager::MenuItem.new(:name,
+                           { :controller => 'contents', :action => ":name", :id => p, :tab => tab[:name] },
+                           {
+                             :caption => tab[:label],
+                             :parent => :project_content
+                           })
                 end
               },
             :caption => Proc.new { |p| p.name }

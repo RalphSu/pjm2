@@ -71,6 +71,8 @@ class Principal < ActiveRecord::Base
       return false unless context.active?
       # No action allowed on disabled modules
       return false unless context.allows_to?(action)
+      #      raise ArgumentError 
+
       # Admin users are authorized for anything else
       return true if admin?
 
