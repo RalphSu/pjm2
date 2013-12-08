@@ -208,7 +208,7 @@ Redmine::MenuManager.map :content_menu do |menu|
               :children => Proc.new { |p|
                 #@project = p # @project used in the helper
                 project_content_tabs.collect do |tab|
-                  Redmine::MenuManager::MenuItem.new("settings-#{tab[:name]}",
+                  Redmine::MenuManager::MenuItem.new("project_content-#{tab[:name]}",
                            { :controller => 'contents', :action => "project_content", :id => p, :tab => tab[:name] },
                            {
                              :caption => tab[:label],

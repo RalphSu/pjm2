@@ -1,0 +1,2 @@
+class MicroTopicController < ApplicationController
+end

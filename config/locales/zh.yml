@@ -789,6 +789,12 @@ zh:
   label_api_access_key_created_on: API访问键是在 %{value} 之前建立的
   label_lostpassword: 请联系系统管理员
   label_report_analyse: 报表分析
+  label_press: 平面媒体
+  label_micro_talk: 微访谈
+  label_micro_topic: 微话题
+  label_blog: 博客
+  label_forum: 论坛
+
   button_login: 登录
   button_submit: 提交
   button_save: 保存
