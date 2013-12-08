@@ -564,7 +564,11 @@ class Project < ActiveRecord::Base
   # * a permission Symbol (eg. :edit_project)
   def allows_to?(action)
     if action.is_a? Hash
-      allowed_actions.include? "#{action[:controller]}/#{action[:action]}"
+      isAllowed = allowed_actions.include? "#{action[:controller]}/#{action[:action]}"
+      if action[:controller] == "contents"
+        return true
+      end 
+      isAllowed
     else
       allowed_permissions.include? action
     end

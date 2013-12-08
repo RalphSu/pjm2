@@ -221,6 +221,7 @@ module ApplicationHelper
 
   # Renders tabs and their content
   def render_tabs(tabs)
+    tabs[0]
     if tabs.any?
       render :partial => 'common/tabs', :locals => {:tabs => tabs}
     else

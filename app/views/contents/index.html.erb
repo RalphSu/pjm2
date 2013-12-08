@@ -1,5 +1,5 @@
 
-<h2><%=l(:label_my_projects)%></h2>
+<!-- <h2><%=l(:label_my_projects)%></h2> -->
 
 <div class="splitcontentleft">
 <% content_for :main_menu  do %>
@@ -12,5 +12,6 @@
 </div>
 
 <div>
-	<p>TODO :: news/microwebs/</p>
+	
+	<%= render_tabs project_content_tabs %>
 </div>
