@@ -208,8 +208,8 @@ Redmine::MenuManager.map :content_menu do |menu|
               :children => Proc.new { |p|
                 #@project = p # @project used in the helper
                 project_content_tabs.collect do |tab|
-                  Redmine::MenuManager::MenuItem.new(:name,
-                           { :controller => 'contents', :action => ":name", :id => p, :tab => tab[:name] },
+                  Redmine::MenuManager::MenuItem.new("settings-#{tab[:name]}",
+                           { :controller => 'contents', :action => "project_content", :id => p, :tab => tab[:name] },
                            {
                              :caption => tab[:label],
                              :parent => :project_content
@@ -404,6 +404,8 @@ Redmine::Activity.map do |activity|
   activity.register :wiki_edits, :class_name => 'WikiContent', :default => false
   activity.register :messages, :default => false
   activity.register :time_entries, :default => false
+  activity.register :news
+  activity.register :weibo
 end
 
 Redmine::Search.map do |search|
