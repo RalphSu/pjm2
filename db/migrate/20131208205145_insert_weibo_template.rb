@@ -1,7 +1,7 @@
 #encoding: utf-8
 class InsertWeiboTemplate < ActiveRecord::Migration
   def self.up
-  	    weibo_platform = Template.create! :template_type => "微薄类模板",
+        weibo_platform = Template.create! :template_type => "微薄类模板",
                                  :column_name => "平台"
         weibo_platform.save!
       

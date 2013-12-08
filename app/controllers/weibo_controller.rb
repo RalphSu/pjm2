@@ -1,0 +1,2 @@
+class WeiboController < ApplicationController
+end
