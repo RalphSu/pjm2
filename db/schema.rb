@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131130124015) do
+ActiveRecord::Schema.define(:version => 20131203064648) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -388,6 +388,7 @@ ActiveRecord::Schema.define(:version => 20131130124015) do
     t.string   "keywords_except"
     t.date     "end_time"
     t.date     "start_time"
+    t.string   "pj_keywords"
   end
 
   add_index "projects", ["lft"], :name => "index_projects_on_lft"
@@ -462,6 +463,13 @@ ActiveRecord::Schema.define(:version => 20131130124015) do
     t.string "name"
   end
 
+  create_table "templates", :force => true do |t|
+    t.string   "template_type"
+    t.string   "column_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "time_entries", :force => true do |t|
     t.integer  "project_id",  :null => false
     t.integer  "user_id",     :null => false
@@ -526,8 +534,8 @@ ActiveRecord::Schema.define(:version => 20131130124015) do
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
     t.string   "phone_number"
-    t.string   "user_type"
     t.boolean  "client"
+    t.string   "user_type"
   end
 
   add_index "users", ["auth_source_id"], :name => "index_users_on_auth_source_id"
