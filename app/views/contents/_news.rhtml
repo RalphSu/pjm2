@@ -1,4 +1,4 @@
-<h2><%=@p.name unless @p.nil? %>    ---    <%=l(:label_news)%></h2>
+<h2> <%=l(:label_news)%></h2>
 
 <% form_tag({}, :method => :get) do %>
 <fieldset><legend><%= l(:label_filter_plural) %></legend>
@@ -11,7 +11,6 @@
 <% end %>
 
 <% unless @p.nil? %>
-	<h2>Show project ### <%=@p.name%> ### details</h2>
 	<table>
 		<thead>
 			<tr>

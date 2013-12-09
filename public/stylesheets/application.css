@@ -96,10 +96,8 @@ h5,
 
 #side-container {
   position: absolute;
-  bottom: auto;
   left: 6px;
   margin-right: -500px;
-
 }
 
 #main-menu ul {
@@ -3028,6 +3026,7 @@ div#optional_login_fields {
    color: #DDDDDD;
     height: 497px;
     left: 3px;
+    overflow:auto;
     margin: 3px auto;
     position: absolute;
     width: 185px;

@@ -1,4 +1,5 @@
 class NewsReleaseController < ApplicationController
+	layout 'content'
 
 	before_filter :find_project_by_project_id
 	

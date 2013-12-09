@@ -1,4 +1,5 @@
 class WeiboController < ApplicationController
+	layout 'content'
 
 	def new
 	end
