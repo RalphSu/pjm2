@@ -1124,4 +1124,8 @@ module ApplicationHelper
     end
   end
 
+  def show_project_main_menu(controller) 
+    (not @project.nil?) && (controller == 'projects')
+  end 
+
 end

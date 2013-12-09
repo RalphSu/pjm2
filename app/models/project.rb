@@ -20,6 +20,16 @@ class Project < ActiveRecord::Base
   STATUS_ACTIVE     = 1
   STATUS_ARCHIVED   = 9
 
+  ## Temp  solution :: hard coded allowed actions:
+  ## TODO : move the initial config redmine.rb
+  HARD_CODE_ALLOWED_CONTROLLERS = {
+    'contents' => 1,
+    'news_release' => 1, 
+    'weibo' => 1, 
+    'blog' => 1, 
+    'forum' => 1
+  }
+
   # Maximum length for project identifiers
   IDENTIFIER_MAX_LENGTH = 256
 
@@ -565,7 +575,7 @@ class Project < ActiveRecord::Base
   def allows_to?(action)
     if action.is_a? Hash
       isAllowed = allowed_actions.include? "#{action[:controller]}/#{action[:action]}"
-      if action[:controller] == "contents"
+      if HARD_CODE_ALLOWED_CONTROLLERS.has_key?(action[:controller])
         return true
       end 
       isAllowed

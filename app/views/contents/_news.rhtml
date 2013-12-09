@@ -1,1 +1,16 @@
-<h2><%= l(:label_news)%></h2>
+<h2><%=@p.name unless @p.nil? %>    ---    <%=l(:label_news)%></h2>
+
+<% form_tag({}, :method => :get) do %>
+<fieldset><legend><%= l(:label_filter_plural) %></legend>
+<label for='category'><%= l(:label_category) %> :</label>
+<%= select_tag 'category', news_release_option_for_select(@category), :class => "large", :onchange => "this.form.submit(); return false;"  %>
+<div class="contextual">
+<%= link_to l(:label_news_new), {:controller => 'news_release', :action => 'new'}, :class => 'icon icon-add' %>
+</div>
+</fieldset>
+<% end %>
+
+<% unless @p.nil? %>
+	<h2>Show project ## <%=@p.name%> ## details</h2>
+<% end %>
+

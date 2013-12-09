@@ -70,6 +70,24 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
+# content routes
+  map.with_options :controller => 'contents' do |content_routes|
+    content_routes.with_options :conditions => {:method => :get} do |content_views|
+      content_views.connect 'contents/project_content/:project_id/', :action => 'show'
+      content_views.connect 'contents/project_content/', :action => 'index'
+    end
+    # content_routes.with_options :conditions => {:method => :post} do |content_actions|
+    #   content_actions.connect 'projects/:project_id/boards', :action => 'new'
+    #   content_actions.connect 'projects/:project_id/boards/:id/:action', :action => /edit|destroy/
+    # end
+  end
+
+  map.with_options :controller => 'news_release' do |news_release_routes|
+    news_release_routes.with_options :conditions => {:method => :get} do |news_relase_views|
+      news_relase_views.connect 'news_release/index/:project_id/', :action => 'index'
+    end
+  end
+
   map.with_options :controller => 'documents' do |document_routes|
     document_routes.with_options :conditions => {:method => :get} do |document_views|
       document_views.connect 'projects/:project_id/documents', :action => 'index'

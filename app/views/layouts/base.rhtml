@@ -83,7 +83,9 @@
     <% if (side_displayed) %>
       <div id="side-container">
         <div id="main-menu">
-          <%= main_menu %>
+          <% if show_project_main_menu(params[:controller]) %>
+            <%= main_menu %>
+          <% end %>
           <%= yield :main_menu %>
         </div>
       <% end %>
