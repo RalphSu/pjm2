@@ -2867,6 +2867,22 @@ input: -moz-placeholder {
 
 }
 
+
+#topmenu {
+  margin-top:20px;
+}
+
+
+#topmenu-background {
+  height: 10px;
+  margin-top:20px;
+  background: url(../images/line_04.png) ;
+  background-repeat: repeat-x
+  display:inline;
+
+
+}
+
 #breadcrumb > div {
     position:relative;
     left:50%;
@@ -2905,6 +2921,9 @@ input: -moz-placeholder {
 #account-nav1 {
   display: block;
   padding-left: 15px;
+  position: absolute;
+    right: 10px;
+  top: 0px;
 }
 
 #account-nav1 li {
@@ -3154,6 +3173,7 @@ div#optional_login_fields {
   background: #FFFFFF;
   position: relative;
   z-index: 20;
+  margin:10px;
 }
 
 #footer {
