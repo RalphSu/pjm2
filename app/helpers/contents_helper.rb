@@ -1,3 +1,5 @@
+require 'csv'
+
 module ContentsHelper
 
   def project_content_tabs
@@ -17,4 +19,51 @@ module ContentsHelper
   def get_project_name(id)
   	return id
   end 
+
+  ## represents a activity like news adding
+  class UploadLine
+    attr_accessor :entity, :items
+
+    @entity
+    @items
+  end
+
+  def deserializeCSV(csvContent)
+    header = []
+    headLine = true
+    activityItems=[]
+    unless csvContent.blank?
+      arr_of_arrs = CSV.parse(csvContent)
+      
+      arr_of_arrs.each do |row|
+        if headLine
+          headLine = false
+          row.each do |h|
+            ## TODO check header existence??
+            header << h
+          end
+        else
+          ai = UploadLine.new
+          news = NewsRelease.new
+          ai.entity = news
+          ai.items = []
+          for i in 0...header.length
+            unless row[i].nil?
+              f = NewsReleaseField.new
+              f.column_name=header[i]
+              f.body=row[i]
+              ai.items<<f
+            end
+          end
+          activityItems << ai
+        end
+      end
+      activityItems
+    end
+  end
+
+  def deserializeExcel(excelContent)
+    ## TODO :: add support for excel
+  end
+
 end

@@ -1,0 +1,22 @@
+
+<h2><%= l(:label_news_new) %></h2>
+<% form_tag({}, :method => :get) do %>
+<fieldset><legend><%= l(:label_filter_plural) %></legend>
+	<label for='category'><%= l(:label_category) %> :</label>
+	<%= select_tag 'category', news_release_option_for_select(@category), :class => "large", :onchange => "this.form.submit(); return false;"  %>
+	<p/>
+	<%= hidden_field_tag :project_id , @project.identifier %>
+	<p/>
+</fieldset>
+<% end %>
+
+<div id='form_submit'>
+<% form_tag(url_for(controller: 'news_release', action: 'create') , :method => :post, :multipart => true ) do %>
+<fieldset>
+	<%= hidden_field_tag :category , @category %>
+	<%= hidden_field_tag :project_id , @project.identifier %>
+	<label for="file"><%=l(:label_import)%> :</label><%= file_field_tag :record %>
+	<%= submit_tag l(:button_upload) %>
+</fieldset>
+<% end %>
+</div>

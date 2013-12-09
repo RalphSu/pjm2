@@ -17,7 +17,8 @@ class ContentsController < ApplicationController
 
   # show @project
   def show
-    @category=params['category']
+    @category = params['category']
+    @tab = params['tab'].nil? ? 'news' : params['tab']
     @p = Project.find(params[:project_id])
     @projects=[]
     @projects << @p unless @p.nil?
