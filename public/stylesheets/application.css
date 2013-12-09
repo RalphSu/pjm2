@@ -2958,14 +2958,14 @@ input: -moz-placeholder {
 #account-nav1 .report{
   height: 43px;
   width: 140px;
-  background: url(../images/small_configuration.png) no-repeat;
+  background: url(../images/small_report.png) no-repeat;
   
 }
 
 #account-nav1 .administration{
   height: 43px;
   width: 140px;
-  background: url(../images/small_report.png) no-repeat;
+  background: url(../images/small_configuration.png) no-repeat;
   
 }
 
@@ -3206,7 +3206,7 @@ div#optional_login_fields {
 }
 
 #main-border{
-  height: 512px;
+  height: 630px;
     margin: 10px auto auto;
     position: relative;
     width: 1178px;
