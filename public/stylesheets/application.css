@@ -179,7 +179,7 @@ html > body #content {
   text-align: center;
 }
 #footer-border{
-  height: 30px;
+  height: 10px;
   margin:5px;
   background: url(../images/line_04.png) ;
   background-repeat: repeat-x
