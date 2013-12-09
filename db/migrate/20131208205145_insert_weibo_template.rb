@@ -46,7 +46,7 @@ class InsertWeiboTemplate < ActiveRecord::Migration
         weibo_date= Template.create! :template_type => "微薄类模板",
                                  :column_name => "日期"
         weibo_date.save!
-
+        
 
   end
 

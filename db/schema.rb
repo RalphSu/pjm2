@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131208222914) do
+ActiveRecord::Schema.define(:version => 20131209031816) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -47,6 +47,13 @@ ActiveRecord::Schema.define(:version => 20131208222914) do
   end
 
   add_index "auth_sources", ["id", "type"], :name => "index_auth_sources_on_id_and_type"
+
+  create_table "blog_classifieds", :force => true do |t|
+    t.string   "classified"
+    t.integer  "template_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "boards", :force => true do |t|
     t.integer "project_id",                      :null => false
@@ -184,6 +191,13 @@ ActiveRecord::Schema.define(:version => 20131208222914) do
 
   add_index "enumerations", ["id", "type"], :name => "index_enumerations_on_id_and_type"
   add_index "enumerations", ["project_id"], :name => "index_enumerations_on_project_id"
+
+  create_table "forum_classifieds", :force => true do |t|
+    t.string   "classified"
+    t.integer  "template_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "groups_users", :id => false, :force => true do |t|
     t.integer "group_id", :null => false
@@ -395,6 +409,7 @@ ActiveRecord::Schema.define(:version => 20131208222914) do
     t.string   "keywords_except"
     t.date     "end_time"
     t.date     "start_time"
+    t.string   "pj_keywords"
   end
 
   add_index "projects", ["lft"], :name => "index_projects_on_lft"
@@ -540,8 +555,8 @@ ActiveRecord::Schema.define(:version => 20131208222914) do
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
     t.string   "phone_number"
-    t.string   "user_type"
     t.boolean  "client"
+    t.string   "user_type"
   end
 
   add_index "users", ["auth_source_id"], :name => "index_users_on_auth_source_id"
@@ -573,6 +588,13 @@ ActiveRecord::Schema.define(:version => 20131208222914) do
   add_index "watchers", ["user_id", "watchable_type"], :name => "watchers_user_id_type"
   add_index "watchers", ["user_id"], :name => "index_watchers_on_user_id"
   add_index "watchers", ["watchable_id", "watchable_type"], :name => "index_watchers_on_watchable_id_and_watchable_type"
+
+  create_table "weibo_classifieds", :force => true do |t|
+    t.string   "classified"
+    t.integer  "template_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "wiki_content_versions", :force => true do |t|
     t.integer  "wiki_content_id",                                       :null => false
