@@ -9,6 +9,8 @@ body {
   min-width: 900px;
 }
 
+html, body {height: 100%;}
+
 h1,
 h2,
 h3,
@@ -57,6 +59,7 @@ h5,
 /***** Layout *****/
 #wrapper {
   background: none;
+  min-height: 100%;
 }
 
 #top-menu {
@@ -64,7 +67,8 @@ h5,
   color: #fff;
   height: 1.8em;
   font-size: 0.8em;
-  padding: 0px;
+
+  
 }
 
 #top-menu ul {
@@ -130,7 +134,7 @@ h5,
   text-decoration: none;
 }
 
-#content {
+#Content {
   width: 75%;
   background-color: #fff;
   margin: 0px;
@@ -138,6 +142,8 @@ h5,
   border-style: none solid solid solid;
   padding: 6px 10px 10px 10px;
   z-index: 10;
+  min-height: 100%;
+  
 }
 
 * html #content {
@@ -172,17 +178,48 @@ html > body #content {
   padding: 5px;
   text-align: center;
 }
+#footer-border{
+  height: 30px;
+  margin:5px;
+  background: url(../images/line_04.png) ;
+  background-repeat: repeat-x
+}
+#login-form {
+  weight:500px;
+  height: 500px;
+  background: url(../images/login_form.png) no-repeat center top;
+}
+
+#login-form form {
+  display: inline;
+  margin: 30px;
+  font-size: 0.9em;
+}
+
+
 
 #login-form table {
-  margin-top:5em;
+  margin-top:8em;
   padding:3em;
   margin-left: auto;
   margin-right: auto;
-  border: 2px solid
-  #FDBF3B; background-color:#FFEBC1; }
+  font-size: 0.9em;
+}
 #login-form table td {padding: 6px;}
 #login-form label {font-weight: bold;}
-#login-form input#username, #login-form input#password { width: 300px; }
+#login-form input#username, #login-form input#password {
+  width: 252px;
+  height: 45px; 
+  background: url(../images/input.png) no-repeat center center;
+  border:0px;
+}
+
+#login-btn {
+  width: 119px;
+  height: 40px; 
+  background: url(../images/confirm_button.png) no-repeat center center;
+  border:0px;
+}
 
 
 
@@ -2602,10 +2639,10 @@ a:hover {
 
 #logo {
   float: left;
-  width: 247px;
-  height: 43px;
-  
-   background: url(../images/keyilogo4.png) no-repeat;
+  width: 310px;
+  height: 71px;
+  background: url(../images/logo.png) no-repeat;
+  margin:10px;
 }
 
 #logo a,
@@ -2616,14 +2653,16 @@ a:hover {
 
 #top-menu-items {
   float: right;
+  font: arial,19px,black;
+    margin: 30px 15px 15px;
   padding-right: 15px;
+  padding-top: 15px;
 }
 
 
 #header {
-  background: url(../images/background_header.png) repeat-x 20px;
-  height: 43px;
-  background:  #3d3935;
+  height: 80px;
+  background:  #FFFFFF;
   font: arial,19px,white;
 }
 #header ul {
@@ -2648,6 +2687,7 @@ a:hover {
   border-left: 0px solid #450308;
   position: relative;
   z-index: 5;
+  color: #3D3D3D;
 }
 
 #header li: last-child {
@@ -2656,7 +2696,7 @@ a:hover {
 
 #header li > a {
   text-decoration: none;
-  color: #FFFFFF;
+  color: #3D3D3D;
   height: 43px;
   font-weight: normal;
 }
@@ -2819,17 +2859,12 @@ input: -moz-placeholder {
 }
 
 #breadcrumb {
-  height: 46px;
-  line-height: 43px;
-  overflow:hidden;
-  border-bottom: 1px #d9d9d9;
-  color: #777777;
-  padding-left: 15px;
-  font-size: 16px;
-  font-family: "Arial", Arial, sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  position:relative;
+  height: 10px;
+  margin:5px;
+  background: url(../images/line_04.png) ;
+  background-repeat: repeat-x
+
+
 }
 
 #breadcrumb > div {

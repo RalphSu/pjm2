@@ -40,36 +40,24 @@
        <ul id="account-nav">
   
           <% unless User.current.logged? %>
-            <li id="login-menu" class="drop-down last-child">
-              <%= link_to l(:label_login), {:controller => 'account', :action => 'login'}, :class => 'login' %>
-              <div id="nav-login" style="display:none;">
-                <%= render :partial => 'account/login' %>
-              </div>
-            </li>
-          <% else %>
-            <li class="drop-down last-child">
+           
+         
+         <% else %>
+          <li> <label for="user"> <%= l(:label_user_full_name) %>:</label></li>
+          <li >
             <%= link_to_user(User.current) %>
-            <ul style="display:none;">
-            <% menu_items_for(:account_menu) do |item| %>
-              <%= render_menu_node(item) %>
-            <% end %>
-            </ul>
-            </li>
-          <% end %>
+           
+          </li>
+          <li >
+            <%= link_to l(:label_logout), {:controller => 'account', :action => 'logout'} %>
+           
+          </li>
+        <% end %>
       </ul>
 
     </div>
     </div>
     <div id="breadcrumb">
-      <div>
-        <ul id="account-nav1">
-        <% if User.current.logged? || !Setting.login_required? %>
-          <% main_top_menu_items.each do |item| %>
-              <%= render_menu_button(item) %>
-          <% end %>
-        <% end %>
-      </ul>
-    </div>
     </div>
   </div>
 
@@ -107,6 +95,7 @@
   </div>
 
   <div id="footer">
+    <div id="footer-border"></div>
     <div class="bgl"><div class="bgr">
         <%= l(:text_powered_by, :link => link_to(Redmine::Info.app_name, Redmine::Info.url)) %>
       </div></div>

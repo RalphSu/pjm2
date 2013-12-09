@@ -467,6 +467,7 @@ zh:
   label_member_new: 新建成员
   label_member_plural: 成员
   label_tracker: 跟踪标签
+  label_user_full_name: 用户
   label_tracker_plural: 跟踪标签
   label_tracker_new: 新建跟踪标签
   label_workflow: 工作流程
