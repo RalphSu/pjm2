@@ -25,7 +25,16 @@ module PjmMenuHelper
     end
     caption, url, selected = extract_node_details(node, project)
     html = [].tap do |html|
-      html << '<li class="btn btn-outline-inverse btn-shadow btn-lg">'
+      if node.name == :home
+        html << '<li class="btn btn-outline-inverse btn-shadow btn-lg btn-home">'
+      elsif node.name == :administration
+        html << '<li class="btn btn-outline-inverse btn-shadow btn-lg btn-configure">'
+      elsif node.name == :report
+        html << '<li class="btn btn-outline-inverse btn-shadow btn-lg btn-report">'
+      elsif node.name == :projects
+        html << '<li class="btn btn-outline-inverse btn-shadow btn-lg  btn-myprojects">'
+      end
+      
       html <<link_to(h(caption), url, node.html_options(:selected => selected))
       html << '</li>'
     end

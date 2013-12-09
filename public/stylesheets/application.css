@@ -99,6 +99,7 @@ h5,
   bottom: auto;
   left: 6px;
   margin-right: -500px;
+
 }
 
 #main-menu ul {
@@ -2868,20 +2869,9 @@ input: -moz-placeholder {
 }
 
 
-#topmenu {
-  margin-top:20px;
-}
 
 
-#topmenu-background {
-  height: 10px;
-  margin-top:20px;
-  background: url(../images/line_04.png) ;
-  background-repeat: repeat-x
-  display:inline;
 
-
-}
 
 #breadcrumb > div {
     position:relative;
@@ -2919,28 +2909,37 @@ input: -moz-placeholder {
 }
 
 #account-nav1 {
-  display: block;
+  
   padding-left: 15px;
-  position: absolute;
-    right: 10px;
-  top: 0px;
+  
 }
 
 #account-nav1 li {
-  padding-top: 5px;
-  padding-left: 15px;
-  padding-right: 15px;
   height: 43px;
-  width: 120px;
-  /*border-width: 1px;
-  border-color: #000000;*/
-  background-color: #98A5ED;
-  /*background: url(../images/background_active_button.png) repeat-x  left center;*/
+  width: 140px;
+  
 }
 
+#account-nav1 .btn-home{
+  background: url(../images/small_homepage.png) no-repeat;
+}
+
+#account-nav1 .btn-configure{
+  background: url(../images/small_configuration.png) no-repeat;
+}
+
+#account-nav1 .btn-report{
+  background: url(../images/small_report.png) no-repeat;
+}
+
+#account-nav1 .btn-myprojects{
+  background: url(../images/small_myprojects.png) no-repeat;
+}
+
+
 #account-nav1 li a {
-  display: block;
-  padding: 3px 9px 0px;
+  
+  display: none;
 }
 
 #account-nav1 > a {
@@ -2997,11 +2996,13 @@ div#optional_login_fields {
  * This section includes the layout and styles for the left navigation column and menu.
  ------------------------------------------------------------------------------*/
 #side-container {
-  width: 185px;
-  height: 100%;
-  position: absolute;
-  margin: 10px 0 0;
-  left: 0;
+   color: #DDDDDD;
+    height: 100%;
+    left: 3px;
+    margin: 3px auto;
+    position: absolute;
+    width: 185px;
+    background-color: #DDDDDD;
 }
 
 #main-menu ul {
@@ -3169,11 +3170,35 @@ div#optional_login_fields {
  *
  * This section includes the layout and styles for the main content area.
  ------------------------------------------------------------------------------*/
-#main {
+#main {     
   background: #FFFFFF;
   position: relative;
-  z-index: 20;
   margin:10px;
+}
+
+#main-border{
+  height: 492px;
+    margin: 10px auto auto;
+    position: relative;
+    width: 1178px;
+}
+/* IE */
+#main_wrapper.notlogged {
+  background: #FFFFFF;
+}
+
+#main_wrapper.logged {
+
+  margin:0px auto auto;
+  background: url(../images/background_2.png) no-repeat center top;
+}
+
+#topmenu{
+  
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  margin: 0px;
 }
 
 #footer {
@@ -3928,13 +3953,10 @@ ul.projects div.root a.project {
 
 /* sidebar cleanup */
 #sidebar {
-  padding: 10px 2px 2px 20px;
-  width: auto;
-  color: #888888;
-  font-weight: normal;
-  font-size: 11px;
-  font-family: "Arial", Arial, sans-serif;
-  font-style: normal;
+   background-color: #DDDDDD;
+   color: #DDDDDD;
+   height: 100%;
+   position: absolute;
 }
 
 #sidebar h3 {
