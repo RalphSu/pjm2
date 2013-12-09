@@ -2935,10 +2935,40 @@ input: -moz-placeholder {
   background: url(../images/small_myprojects.png) no-repeat;
 }
 
+#account-nav1 li a{
+   height: 43px;
+  width: 140px;
+  display: inline-block;
 
-#account-nav1 li a {
+}
+
+
+#account-nav1 .home{
+   height: 43px;
+  width: 140px;
+  background: url(../images/small_homepage.png) no-repeat;
   
-  display: none;
+}
+
+#account-nav1 .projects{
+   height: 43px;
+  width: 140px;
+  background: url(../images/small_myprojects.png) no-repeat;
+  
+}
+
+#account-nav1 .report{
+  height: 43px;
+  width: 140px;
+  background: url(../images/small_configuration.png) no-repeat;
+  
+}
+
+#account-nav1 .administration{
+  height: 43px;
+  width: 140px;
+  background: url(../images/small_report.png) no-repeat;
+  
 }
 
 #account-nav1 > a {
@@ -3198,7 +3228,7 @@ div#optional_login_fields {
   
   position: absolute;
   right: 20px;
-  top: 10px;
+  top: 5px;
   margin: 0px;
 }
 
