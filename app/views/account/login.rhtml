@@ -25,9 +25,10 @@
 
     </td>
     <td align="right">
-        <input type="submit" name="login" value="<%=l(:button_login)%> &#187;" tabindex="5"/>
+        <input id="login-btn" type="submit" name="login" value="" tabindex="5"/>
     </td>
 </tr>
+
 </table>
 <%= javascript_tag "Form.Element.focus('username');" %>
 <% end %>
