@@ -1,14 +1,8 @@
 
-<div class="splitcontentleft">
-<% content_for :main_menu  do %>
-	 <% @projects.each  do |p| %>
-	             <% menu_items_for(:content_menu) do |item| %>
-        		      <%= render_menu_node(item, p) %>
-  	             <% end %>
-	<% end%>
-<%end%>
-</div>
+<% render :partial=> 'contents/view_content_menu' %>
 
 <div>
 	<%= render_tabs project_content_tabs %>
 </div>
+
+<% render :partial=> 'contents/news' %>
