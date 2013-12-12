@@ -19,9 +19,9 @@
 
 <!-- only show manager&reviewer when new project -->
 <% if @project.new_record? %>
-  <p><%= f.select :project_manager,  User.nonClients.collect {|u| [u.lastname,  u.id] }, :selected=> @project.get_project_singlerole_uid(Role::SYSTEM_PROJECT_MANAGER) %></p>
-  <p><%= f.select :reviewer,  User.nonClients.collect {|u| [u.lastname,  u.id] } , :selected=>@project.get_project_singlerole_uid(Role::SYSTEM_PROJECT_REVIEWER) %></p>
-  <p><%= f.selected :client,  User.allClients.collect {|u| [u.lastname,  u.id] },  :selected=>@project.get_project_client_id %></p>
+  <p><%= f.select :project_manager,  User.nonClients.collect {|u| [u.firstname,  u.id] }, :selected=> @project.get_project_singlerole_uid(Role::SYSTEM_PROJECT_MANAGER) %></p>
+  <p><%= f.select :reviewer,  User.nonClients.collect {|u| [u.firstname,  u.id] } , :selected=>@project.get_project_singlerole_uid(Role::SYSTEM_PROJECT_REVIEWER) %></p>
+  <p><%= f.select :client,  User.allClients.collect {|u| [u.firstname,  u.id] },  :selected=>@project.get_project_client_id %></p>
 <% end %>
 <p><%= f.text_field :keywords, :required => true, :size => 60 %><%= l(:field_project_keyword_desc) %></p>
 <p><%= f.text_field :keywords_except, :required => false, :size => 60 %><%= l(:field_project_keyword_except_desc) %></p>
