@@ -78,7 +78,7 @@
     <% end %>
     <div style="clear:both;">&nbsp;</div>
     <div id="main_wrapper" class="<%= logged ? 'logged': "notlogged" %>">
-      
+       <% if (side_displayed) %>
       <div id="side-container">
         <div id="main-menu">
           <% if show_project_main_menu(params[:controller]) %>
@@ -86,12 +86,15 @@
           <% end %>
           <%= yield :main_menu %>
         </div>
+        <% end %>
         <!-- Sidebar -->
+        <% if display_sidebar %>
         <div id="sidebar">
           <%= yield :sidebar %>
           <%= call_hook :view_layouts_base_sidebar %>
         </div>
         </div>
+        <% end %>
       
 
       <%= expand_current_menu %>
