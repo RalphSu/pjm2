@@ -1,5 +1,6 @@
 class ContentsController < ApplicationController
-
+  layout 'content'
+  
   before_filter :find_project_by_project_id, :except => [ :index ]
   @show_project_main_menu=false
 

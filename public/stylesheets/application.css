@@ -96,7 +96,7 @@ h5,
 
 #side-container {
   position: absolute;
-  bottom: auto;
+  bottom : auto;
   left: 6px;
   margin-right: -500px;
 }
@@ -2978,7 +2978,8 @@ div#optional_login_fields {
  ------------------------------------------------------------------------------*/
 #side-container {
   width: 185px;
-  height: 100%;
+  height: 600px;
+  overflow: auto;
   position: absolute;
   margin: 10px 0 0;
   left: 0;
