@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131209031816) do
+ActiveRecord::Schema.define(:version => 20131212122323) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -51,6 +51,11 @@ ActiveRecord::Schema.define(:version => 20131209031816) do
   create_table "blog_classifieds", :force => true do |t|
     t.string   "classified"
     t.integer  "template_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "blogs", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -195,6 +200,11 @@ ActiveRecord::Schema.define(:version => 20131209031816) do
   create_table "forum_classifieds", :force => true do |t|
     t.string   "classified"
     t.integer  "template_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "forums", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -359,6 +369,11 @@ ActiveRecord::Schema.define(:version => 20131209031816) do
   create_table "news_classifieds", :force => true do |t|
     t.string   "classified"
     t.integer  "template_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "news_releases", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -591,6 +606,11 @@ ActiveRecord::Schema.define(:version => 20131209031816) do
   create_table "weibo_classifieds", :force => true do |t|
     t.string   "classified"
     t.integer  "template_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "weibos", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end

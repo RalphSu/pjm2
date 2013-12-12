@@ -404,8 +404,8 @@ Redmine::Activity.map do |activity|
   activity.register :wiki_edits, :class_name => 'WikiContent', :default => false
   activity.register :messages, :default => false
   activity.register :time_entries, :default => false
-  activity.register :news
-  activity.register :weibo
+  #activity.register :news
+  #activity.register :weibo
 end
 
 Redmine::Search.map do |search|

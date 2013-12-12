@@ -119,7 +119,6 @@ h5,
   text-decoration: none;
   font-weight: normal;
   background: none;
-  margin: 0;
   padding: 0 0 0 24px;
 
   /* Cap long menu entries with an ellipsis. TODO: http://www.bramstein.com/projects/text-overflow/ */
@@ -3061,6 +3060,7 @@ div#optional_login_fields {
 
 #main-menu li li a {
   font-weight: normal;
+  margin: 0px;
 }
 
 #main-menu li li.current a {
