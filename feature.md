@@ -25,3 +25,7 @@
 	/projects/:id/setting/info		修改名字、描述、开始时间，结束时间，关键字;非关键字
 	/projects/:id/setting/member	添加删除成员关系
 	/projects/:id/activity			没东西
+
+<h2>管理
+
+可以跳转到项目和用户
