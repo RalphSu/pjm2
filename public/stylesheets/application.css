@@ -177,7 +177,7 @@ html > body #content {
   text-align: center;
 }
 #footer-border{
-  height: 30px;
+  height: 10px;
   margin:5px;
   background: url(../images/line_04.png) ;
   background-repeat: repeat-x
@@ -2994,7 +2994,7 @@ div#optional_login_fields {
  ------------------------------------------------------------------------------*/
 #side-container {
    color: #DDDDDD;
-    height: 600px;
+    height: 497px;
     left: 3px;
     overflow:auto;
     margin: 3px auto;
@@ -3176,7 +3176,7 @@ div#optional_login_fields {
 }
 
 #main-border{
-  height: 492px;
+  height: 512px;
     margin: 10px auto auto;
     position: relative;
     width: 1178px;
@@ -3189,6 +3189,7 @@ div#optional_login_fields {
 #main_wrapper.logged {
 
   margin:0px auto auto;
+  height:497px;
   background: url(../images/background_2.png) no-repeat center top;
 }
 
@@ -3934,7 +3935,7 @@ tr.context-menu-selection td.priority {
 }
 
 .nosidebar ul {
-  margin: 12px 0 12px 18px;
+  margin: 0px 0 12px 18px;
 }
 
 ul.projects div.root a.project {
