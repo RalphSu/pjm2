@@ -108,7 +108,7 @@ module ChiliProject
       end
     end
 
-    Template.register_filter(OverriddenFilters)
-    Template.register_filter(Filters)
+    ChiliProject::Liquid::Template.register_filter(OverriddenFilters)
+    ChiliProject::Liquid::Template.register_filter(Filters)
   end
 end
