@@ -18,6 +18,8 @@
 # you don't control web/app server and can't set it the proper way
 # ENV['RAILS_ENV'] ||= 'production'
 
+require 'rjb'
+
 # use RACK_ENV if we are running as a simple rack app
 ENV['RAILS_ENV'] ||= ENV['RACK_ENV'] if ENV['RACK_ENV']
 
@@ -38,6 +40,27 @@ begin
 rescue LoadError
   # Not available
 end
+
+# JVM loading
+POI_LIB_HOME=File.join(File.dirname(__FILE__), '../lib/poi-3.9/')
+poi_jars = [
+  "#{POI_LIB_HOME}/poi-3.9-20121203.jar",
+  "#{POI_LIB_HOME}/poi-excelant-3.9-20121203.jar",
+  "#{POI_LIB_HOME}/poi-ooxml-3.9-20121203.jar",
+  "#{POI_LIB_HOME}/poi-ooxml-schemas-3.9-20121203.jar",
+  "#{POI_LIB_HOME}/poi-scratchpad-3.9-20121203.jar",
+  # common
+  "#{POI_LIB_HOME}/lib/commons-codec-1.5.jar",
+  "#{POI_LIB_HOME}/lib/commons-logging-1.1.jar",
+  "#{POI_LIB_HOME}/lib/log4j-1.2.13.jar",
+  # ooxml
+  "#{POI_LIB_HOME}/ooxml-lib/dom4j-1.6.1.jar",
+  "#{POI_LIB_HOME}/ooxml-lib/stax-api-1.0.1.jar",
+  "#{POI_LIB_HOME}/ooxml-lib/xmlbeans-2.3.0.jar"
+]
+# loading
+Rjb::load(poi_jars.join(":"),  ['-Xms256M', '-Xmx512M'])
+
 
 Rails::Initializer.run do |config|
   config.i18n.default_locale = :zh

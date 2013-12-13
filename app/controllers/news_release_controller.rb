@@ -6,9 +6,6 @@ class NewsReleaseController < ApplicationController
 	
 	@show_project_main_menu=false
 
-	def teplate_type
-		'新闻类模板'
-	end
 
 	def new
 		init(params)
@@ -29,8 +26,8 @@ class NewsReleaseController < ApplicationController
 		end
 
 		data = params['record'].read
-	  	uploadItems = deserializeCSV(data)
-	  	save(uploadItems)
+	  	uploadItems = ContentsHelper::read_excel(data)
+	  	#save(uploadItems)
 
 	  	redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
 	end
@@ -42,13 +39,17 @@ class NewsReleaseController < ApplicationController
 			ai.entity.project = @project # would it be saved??
 			ai.entity.save
 			# now the fields
+			if ai.items.nil?
+				raise ArgumentError
+			end
+
 			ai.items.each do |item|
 				template_ids = []
-				Template.where(:column_name=>item.column_name).each do |t|
+				Template.find(:all , :conditions => "column_name='#{item.column_name}'").each do |t|
 					ids << t.id
 				end
 
-				n = NewsClassified::where(:template_id => template_ids, :classified=>@category)
+				n = NewsClassified.find(:first,  :conditions=> ["template_id in ? and classified = '#{@category}'",   template_ids])
 				unless n.blank?
 					item.news_classfied = n
 					item.news_release = ai.entity

@@ -7,6 +7,7 @@ if RUBY_VERSION =~ /1.9/ # assuming you're running Ruby ~1.9
 end
 
 gem "rails", "2.3.18"
+gem "rjb", "1.4.8"
 
 gem "json", "~> 1.7.7"
 gem "coderay", "~> 1.0.0"
