@@ -1078,13 +1078,13 @@ module ApplicationHelper
       items_for_main_level = []
       items_for_more_level = []
       menu_items_for(:top_menu) do |item|
-        if item.name == :home #|| item.name == :my_page
+        if item.name == :welcome #|| item.name == :my_page
           items_for_main_level << item
-        elsif item.name == :administration
+        elsif item.name == :admin
           items_for_main_level << item
         elsif item.name == :report
           items_for_main_level << item
-        elsif item.name == :projects
+        elsif item.name == :contents
           items_for_main_level << item
         end
       end

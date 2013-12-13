@@ -24,9 +24,21 @@ module PjmMenuHelper
       return
     end
     caption, url, selected = extract_node_details(node, project)
+    
+    Rails.logger.info selected
+
+    Rails.logger.info node.name
     html = [].tap do |html|
       html << '<li class="btn btn-outline-inverse btn-shadow  ">'
-      html <<link_to("",url, node.html_options(:selected => selected))
+      if not selected.nil? and selected
+         selectedcss = node.name.to_s+"selected"
+          Rails.logger.info selectedcss
+           selectedhtml_options = { :class => selectedcss }
+          html <<link_to("",url, node.html_options.merge(selectedhtml_options))
+      else
+         html <<link_to("",url, node.html_options(:selected => selected))
+      end
+
       html << '</li>'
     end
     return html.join("\n")

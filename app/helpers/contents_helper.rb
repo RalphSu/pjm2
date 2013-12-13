@@ -35,7 +35,7 @@ module ContentsHelper
     def read_excel(data)
       
     end
-
+  end
 
   ## represents a activity like news adding
   class UploadLine

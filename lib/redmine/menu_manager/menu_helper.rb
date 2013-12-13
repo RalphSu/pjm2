@@ -132,6 +132,7 @@ module Redmine::MenuManager::MenuHelper
       item.url
     end
     caption = item.caption(project)
+
     return [caption, url, (current_menu_item == item.name)]
   end
 
