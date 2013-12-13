@@ -36,6 +36,7 @@ class PoiExcelReader
 	  @@row_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFRow')
 	  @@sheet_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFSheet')
 	  @@string_stream_class=Rjb::import('java.io.StringBufferInputStream')
+<<<<<<< HEAD
 	  @@jString = Rjb::import('java.lang.String')
           @@arraylist_class=Rjb::import('java.util.ArrayList')
 	  @@list_class=Rjb::import('java.util.List')
@@ -56,9 +57,93 @@ class PoiExcelReader
 		    	out.close();  
 		 end
 	
+=======
+	  @@byte_stream_class=Rjb::import('java.io.ByteArrayInputStream')
+	  @@hssf_picture_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFPicture')
 
+	def read_excel(data)
+		byte_stream = @@byte_stream_class.new(data)
+		wb = @@workbook_class.new(byte_stream)
+		sheet = wb.getSheetAt(0)
+		if sheet.nil?
+			raise ''
+		end
+		headrow = sheet.getRow(sheet.getFirstRowNum())
+		if headrow.nil?
+			raise ''
+		end
+
+		## images
+		## p wb.java_methods
+		read_pics(wb, sheet)
+
+		## texts
+		m = sheet.getFirstRowNum() + 1
+		#while m < sheet.getLastRowNum()
+			row = sheet.getRow(m)
+		  	i = row.getFirstCellNum()
+		  	# while i < row.getLastCellNum()
+		  		cell = row.getCell(i)
+		  		if (cell.nil?||cell.getRichStringCellValue().getString().nil?||cell.getRichStringCellValue().getString().length()==0)
+		  			# ignore this cell
+		  		end
+		  		p cell.getRichStringCellValue().getString()
+		  		i= i+1
+		  	# end
+		  	m = m+1
+		#end
+	end
+
+	def read_pics(wb, sheet)
+		pictures = wb.getAllPictures()
+		# it = pictures.iterator()
+		# while it.hasNext()
+	 # 		p "find a picture in the excel, now save it."
+		#   	#save 
+		#   	p = it.next()
+		#   	ext = p.suggestFileExtension();
+		#   	bytes = p.getData(); 
+		#   	# override
+		# 	out = @@file_class.new(File.join File.dirname(__FILE__), '/extraced_from_excel.png')
+		#     	out.write(bytes);  
+		#     	out.close();  
+	 # 	end
+
+	  	patriarch = sheet.getDrawingPatriarch();
+	  	if patriarch.nil?
+	  		return
+	  	end
+>>>>>>> 94b9346ade948d288666815b03f2a50255778d12
+
+	  	pic_num = 0
+	  	it = patriarch.getChildren().iterator()
+  	          while it.hasNext()
+  	         		shape = it.next()
+	           	anchor =  shape.getAnchor()
+	           	if (shape .getClass().equals(@@hssf_picture_class)) 
+			          row = anchor.getRow1()
+			          col = anchor.getCol1()
+			          p "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s
+			          pic_index = shape.getPictureIndex() - 1
+			          pic_data = pictures.get(pic_index)
+			          save_pic(row, col, pic_data)
+
+			          pic_num = pic_num + 1
+	            	end  
+	         end
+	         p "Total picture number : #{pic_num}"
+	end
+
+	def save_pic(row, col, pic_data)
+		file_name = "" + row.to_s + col.to_s + "." + pic_data.suggestFileExtension
+		p "Save image with name #{file_name}"
+		IO.binwrite(file_name, pic_data.getData())
 	end
 end
 
 pr = PoiExcelReader.new
-pr.read_excel('abc')
+file_name = File.join File.dirname(__FILE__), '/my_spreadsheet.xls'
+#f = File.open(file_name)
+data = IO.binread(file_name)
+p data.size
+pr.read_excel(data)
