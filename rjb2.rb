@@ -52,7 +52,7 @@ class PoiExcelReader
 		  	ext = pic.suggestFileExtension();
 		  	bytes = p.getData(); 
 			out = file_class.new(File.join File.dirname(__FILE__), '/extraced_from_excel.png')
-		    	out.write(data);  
+		    	out.write(bytes);  
 		    	out.close();  
 		 end
 	
