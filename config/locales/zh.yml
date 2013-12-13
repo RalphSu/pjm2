@@ -437,6 +437,7 @@ zh:
   label_user_anonymous: 匿名用户
   label_project: 项目
   label_project_new: 新建项目
+  label_news_template_new: 新建新闻类模板
   label_project_plural: 项目
   label_user_normal: 员工
   label_user_client: 客户
@@ -484,6 +485,10 @@ zh:
   label_enumeration_new: 新建枚举值
   label_information: 信息
   label_information_plural: 信息
+  label_news_template: 新闻类模板
+  label_weibo_template: 微薄类模板
+  label_forum_template: 论坛类模板
+  label_blog_template: 博客类模板
   label_please_login: 请登录
   label_register: 注册
   label_login_with_open_id_option: 或使用OpenID登录

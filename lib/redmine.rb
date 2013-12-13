@@ -393,6 +393,20 @@ Redmine::MenuManager.map :project_menu do |menu|
                 end
               }
             })
+
+  menu.push(:templates, { :controller => 'templates', :action => 'index' }, {
+              :last => true,
+              :children => Proc.new { |p|
+                @project = p # @project used in the helper
+                template_settings_tabs.collect do |tab|
+                  Redmine::MenuManager::MenuItem.new("settings-#{tab[:name]}".to_sym,
+                                                     { :controller => 'templates', :action => 'index', :id => p, :tab => tab[:name] },
+                                                     {
+                                                       :caption => tab[:label]
+                                                     })
+                end
+              }
+            })
 end
 
 Redmine::Activity.map do |activity|
