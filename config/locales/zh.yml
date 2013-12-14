@@ -505,7 +505,7 @@ zh:
   label_assigned_to_me_issues: 指派给我的问题
   label_last_login: 最后登录
   label_registered_on: 注册于
-  label_activity: 活动
+  label_activity: 日志
   label_overall_activity: 全部活动
   label_user_activity: "%{value} 的活动"
   label_new: 新建
@@ -548,8 +548,8 @@ zh:
   label_news_added: 新闻已添加
   label_weibo: 微博
   label_weibo_new: 添加微博
-  label_settings: 配置
-  label_overview: 概述
+  label_settings: 项目配置
+  label_overview: 项目详细信息
   label_version: 版本
   label_version_new: 新建版本
   label_version_plural: 版本
