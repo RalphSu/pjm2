@@ -4,30 +4,28 @@
 </div>
 </div>
 
-<% fields = distinct_news_templates()%>
+<% templates = distinct_news_templates()%>
 <div class="autoscroll">
 <table class="list">
   <thead><tr>
-    <th><%= l(:label_project)%></th>
-	  <% fields.each do |cls| %>
-     <th><%= cls.column_name%></th>
+    <th><%= l(:field_category)%></th>
+	  <% templates.each do |t| %>
+     <th><%= t.column_name %></th>
     <% end %>
   <th></th>
   </tr></thead>
   <tbody>
-  <% for classified in @groupClassifieds -%>
-
+  <% @news_field_map.each do |key, values| -%>
   <tr class="user <%= cycle("odd", "even") %> ">
-  	<td class="name"><span><%= h(user.firstname) %></span></td>
-    <% fields.each do |cls|%>
+  	<td class="name"><span><%= key %></span></td>
+    <% templates.each do |t|%>
       <td>
-      <label><%= check_box_tag '', project.id, true, {}%></label><br />
+        <!-- TODO: check box value might be changed??? -->
+      <label><%= check_box_tag '', "1", values.include?(t.column_name), {}%></label><br/>
       </td>
     <% end %>
     </tr>
-<% end %>
+  <% end %>
   </tbody>
 </table>
 </div>
-
-<% html_title(l(:label_project_plural)) -%>

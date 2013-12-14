@@ -5,29 +5,28 @@
 </div>
 </div>
 
-<% fields = distinct_forum_classifieds()%>
+<% templates = distinct_forum_templates()%>
 <div class="autoscroll">
 <table class="list">
   <thead><tr>
-    <th><%= l(:label_project)%></th>
-	  <% fields.each do |cls| %>
-     <th><%= cls%></th>
+    <th><%= l(:field_category)%></th>
+    <% templates.each do |t| %>
+     <th><%= t.column_name %></th>
     <% end %>
   <th></th>
   </tr></thead>
   <tbody>
-<% project_tree(@projects) do |project, level| %>
-  <tr class="<%= cycle("odd", "even") %> <%= project.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
-  	<td class="name"><span><%= link_to_project(project, {:action => 'settings'}, :title => project.short_description) %></span></td>
-    <% fields.each do |cls|%>
+  <% @forum_field_map.each do |key, values| -%>
+  <tr class="user <%= cycle("odd", "even") %> ">
+    <td class="name"><span><%= key %></span></td>
+    <% templates.each do |t|%>
       <td>
-      <label><%= check_box_tag '', project.id, true, {}%></label><br />
+        <!-- TODO: check box value might be changed??? -->
+      <label><%= check_box_tag '', "1", values.include?(t.column_name), {}%></label><br/>
       </td>
     <% end %>
     </tr>
-<% end %>
+  <% end %>
   </tbody>
 </table>
 </div>
-
-<% html_title(l(:label_project_plural)) -%>
