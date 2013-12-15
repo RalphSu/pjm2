@@ -10,7 +10,7 @@
 # of the License, or (at your option) any later version.
 #
 # See doc/COPYRIGHT.rdoc for more details.
-#++
+#
 
 module Redmine::MenuManager::MenuHelper
   # Returns the current menu item name

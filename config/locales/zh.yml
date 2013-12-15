@@ -1051,3 +1051,5 @@ zh:
   field_reviewer: 项目审核员
   field_client : 客户
   label_category: 类别
+  label_import: 导入文件
+  button_upload: 上传
