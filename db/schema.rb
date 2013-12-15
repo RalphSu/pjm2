@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131212122323) do
+ActiveRecord::Schema.define(:version => 20131215040823) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -373,9 +373,17 @@ ActiveRecord::Schema.define(:version => 20131212122323) do
     t.datetime "updated_at"
   end
 
+  create_table "news_release_fields", :force => true do |t|
+    t.integer "news_releases_id"
+    t.integer "news_classfieds_id"
+    t.text    "body"
+  end
+
   create_table "news_releases", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "project_id"
+    t.string   "classified"
   end
 
   create_table "open_id_authentication_associations", :force => true do |t|
@@ -420,6 +428,7 @@ ActiveRecord::Schema.define(:version => 20131212122323) do
     t.integer  "status",          :default => 1,    :null => false
     t.integer  "lft"
     t.integer  "rgt"
+    t.string   "key"
     t.string   "keywords"
     t.string   "keywords_except"
     t.date     "end_time"
@@ -569,8 +578,8 @@ ActiveRecord::Schema.define(:version => 20131212122323) do
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
     t.string   "phone_number"
-    t.string   "user_type"
     t.boolean  "client"
+    t.string   "user_type"
   end
 
   add_index "users", ["auth_source_id"], :name => "index_users_on_auth_source_id"
