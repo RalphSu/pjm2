@@ -1,4 +1,4 @@
-require 'csv'
+require 'rjb'
 
 module ContentsHelper
 
@@ -20,50 +20,29 @@ module ContentsHelper
   	return id
   end 
 
+  class PoiExcelReader
+      # Java classes import
+      @@file_class = Rjb::import('java.io.FileOutputStream')
+      @@workbook_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFWorkbook')
+      @@cell_style_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFCellStyle')
+      @@font_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFFont')
+      @@cell_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFCell')
+      @@date_util_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFDateUtil')
+      @@row_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFRow')
+      @@sheet_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFSheet')
+      @@string_stream_class=Rjb::import('java.io.StringBufferInputStream')
+
+    def read_excel(data)
+      
+    end
+
+
   ## represents a activity like news adding
   class UploadLine
     attr_accessor :entity, :items
 
     @entity
-    @items
-  end
-
-  def deserializeCSV(csvContent)
-    header = []
-    headLine = true
-    activityItems=[]
-    unless csvContent.blank?
-      arr_of_arrs = CSV.parse(csvContent)
-      
-      arr_of_arrs.each do |row|
-        if headLine
-          headLine = false
-          row.each do |h|
-            ## TODO check header existence??
-            header << h
-          end
-        else
-          ai = UploadLine.new
-          news = NewsRelease.new
-          ai.entity = news
-          ai.items = []
-          for i in 0...header.length
-            unless row[i].nil?
-              f = NewsReleaseField.new
-              f.column_name=header[i]
-              f.body=row[i]
-              ai.items<<f
-            end
-          end
-          activityItems << ai
-        end
-      end
-      activityItems
-    end
-  end
-
-  def deserializeExcel(excelContent)
-    ## TODO :: add support for excel
+    @items = []
   end
 
 end
