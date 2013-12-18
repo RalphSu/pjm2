@@ -36,7 +36,7 @@ class PoiExcelReader
 	  @@string_stream_class=Rjb::import('java.io.StringBufferInputStream')
 
 	def read_excel(data)
-		  in_stream = @@file_in_class.new('/home/ralph/dev/pjm2/my_spreadsheet.xls')
+		  in_stream = @@file_in_class.new(File.join File.dirname(__FILE__), '/my_spreadsheet.xls')
 		  wb = @@workbook_class.new(in_stream)
 		  sheet = wb.getSheetAt(0)
 		  headrow = sheet.getRow(sheet.getFirstRowNum())
