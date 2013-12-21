@@ -47,9 +47,11 @@ class NewsReleaseController < ApplicationController
 			ai.entity.safe_attributes = {:classified => @category}
 			ai.entity.project = @project
 			ai.entity.save
+			ai.entity.reload
 			# now the fields
 			ai.items.each do |item|
 				Rails.logger.info item.news_classified.id
+				item.news_classified.reload
 				item.news_release = ai.entity
 				Rails.logger.info item.news_release.id
 				item.save
