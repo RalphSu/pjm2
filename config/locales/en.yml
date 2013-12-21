@@ -454,6 +454,7 @@ en:
   label_user_anonymous: Anonymous
   label_project: Project
   label_project_new: New project
+  label_news_template_new: New template
   label_project_plural: Projects
   label_x_projects:
     zero:  no projects
@@ -497,6 +498,10 @@ en:
   label_enumeration_new: New value
   label_information: Information
   label_information_plural: Information
+  label_news_template: news_template
+  label_weibo_template: weibo_template
+  label_forum_template: forum_template
+  label_blog_template: blog_template
   label_please_login: Please log in
   label_register: Register
   label_login_with_open_id_option: or login with OpenID

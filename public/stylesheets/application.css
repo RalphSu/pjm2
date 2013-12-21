@@ -94,11 +94,7 @@ h5,
   float: right;
 }
 
-#side-container {
-  position: absolute;
-  left: 6px;
-  margin-right: -500px;
-}
+
 
 #main-menu ul {
   margin: 0;
@@ -2941,17 +2937,33 @@ input: -moz-placeholder {
 }
 
 
-#account-nav1 .home{
+#account-nav1 .welcome{
    height: 43px;
   width: 140px;
   background: url(../images/small_homepage.png) no-repeat;
   
 }
 
-#account-nav1 .projects{
+#account-nav1 .welcomeselected{
+   height: 43px;
+  width: 140px;
+  background: url(../images/big_homepage.png) no-repeat;
+  margin-top:3px;
+  
+}
+
+#account-nav1 .contents{
    height: 43px;
   width: 140px;
   background: url(../images/small_myprojects.png) no-repeat;
+  
+}
+
+#account-nav1 .contentsselected{
+   height: 43px;
+  width: 140px;
+  background: url(../images/big_myprojects.png) no-repeat;
+  margin-top:3px;
   
 }
 
@@ -2960,12 +2972,29 @@ input: -moz-placeholder {
   width: 140px;
   background: url(../images/small_report.png) no-repeat;
   
+  
 }
 
-#account-nav1 .administration{
+#account-nav1 .reportselected{
+  height: 43px;
+  width: 140px;
+  background: url(../images/big_report.png) no-repeat;
+  margin-top:3px;
+}
+
+#account-nav1 .admin{
   height: 43px;
   width: 140px;
   background: url(../images/small_configuration.png) no-repeat;
+  margin-top: 2px;
+  
+}
+
+#account-nav1  .adminselected { 
+  height: 43px;
+  width: 140px;
+  background: url(../images/big_configuration.png) no-repeat;
+  margin-top: 2px;
   
 }
 
@@ -3023,19 +3052,24 @@ div#optional_login_fields {
  * This section includes the layout and styles for the left navigation column and menu.
  ------------------------------------------------------------------------------*/
 #side-container {
-   color: #DDDDDD;
-    height: 497px;
-    left: 3px;
-    overflow:auto;
-    margin: 3px auto;
+    background-color: #E9E9E9;
+    border: 1px none #E9E9E9;
+    border-radius: 10px 0px 0 10px;
+    color: #E9E9E9;
+    left: 1px;
+    margin: 0;
+    min-height: 93.5%;
     position: absolute;
+    vertical-align: baseline;
     width: 185px;
-    background-color: #DDDDDD;
+  -webkit-border-radius: 10px 10px 0 10px;
+  -moz-border-radius: 10px 10px 0 10px;
+  behavior: url(../javascript/PIE.htc);
 }
 
 #main-menu ul {
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #fff;
+  border-top: 0px solid #ddd;
+  border-bottom: 0px solid #fff;
 }
 
 #main-menu ul ul {
@@ -3060,11 +3094,10 @@ div#optional_login_fields {
 }
 
 #main-menu li {
-  border-top: 1px solid #e2e2e2;
   border-bottom: 1px solid #f5f5f5;
   position: relative;
   min-height: 23px;
-  background-color: #e9e9e9;
+  
 }
 
 #main-menu li li {
@@ -3205,11 +3238,9 @@ div#optional_login_fields {
   margin:10px;
 }
 
-#main-border{
-  height: 630px;
-    margin: 10px auto auto;
+#main-border {
+    margin: 20px 30px 10px;
     position: relative;
-    width: 1178px;
 }
 /* IE */
 #main_wrapper.notlogged {
@@ -3218,16 +3249,19 @@ div#optional_login_fields {
 
 #main_wrapper.logged {
 
-  margin:0px auto auto;
-  height:497px;
-  background: url(../images/background_2.png) no-repeat center top;
+  margin:2px auto auto;
+  border: 1px solid #DDDDDD;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  behavior: url(../javascript/PIE.htc);
 }
 
 #topmenu{
   
   position: absolute;
   right: 20px;
-  top: 5px;
+  top: 0px;
   margin: 0px;
 }
 

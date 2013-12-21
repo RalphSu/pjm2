@@ -24,16 +24,40 @@ Rjb::load(poi_jars.join(":"),  ['-Xms256M', '-Xmx512M'])
 
 class PoiExcelReader
 	  # Java classes import
+	  include Rjb
 	  @@file_class = Rjb::import('java.io.FileOutputStream')
 	  @@file_in_class = Rjb::import('java.io.FileInputStream')
 	  @@workbook_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFWorkbook')
 	  @@cell_style_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFCellStyle')
 	  @@font_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFFont')
 	  @@cell_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFCell')
+          @@picture_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFPictureData')
 	  @@date_util_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFDateUtil')
 	  @@row_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFRow')
 	  @@sheet_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFSheet')
 	  @@string_stream_class=Rjb::import('java.io.StringBufferInputStream')
+<<<<<<< HEAD
+	  @@jString = Rjb::import('java.lang.String')
+          @@arraylist_class=Rjb::import('java.util.ArrayList')
+	  @@list_class=Rjb::import('java.util.List')
+	def read_excel(data)
+	          
+		  in_stream = @@file_in_class.new(File.join File.dirname(__FILE__), '/my_spreadsheet.xls')
+		  wb = @@workbook_class.new(in_stream)
+	
+		pictures = wb.getAllPictures()
+                p pictures.java_methods
+		pictures.each do |p|
+	  		p "find a picture in the excel, now save it. index is #{p.getPictureIndex()}"
+		  	#save 
+		  	ext = pic.suggestFileExtension();
+		  	bytes = p.getData(); 
+			out = file_class.new(File.join File.dirname(__FILE__), '/extraced_from_excel.png')
+		    	out.write(bytes);  
+		    	out.close();  
+		 end
+	
+=======
 	  @@byte_stream_class=Rjb::import('java.io.ByteArrayInputStream')
 	  @@hssf_picture_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFPicture')
 	  @@cell_interface_class=Rjb::import('org.apache.poi.ss.usermodel.Cell')
@@ -96,6 +120,7 @@ class PoiExcelReader
 	  	if patriarch.nil?
 	  		return
 	  	end
+>>>>>>> 94b9346ade948d288666815b03f2a50255778d12
 
 	  	pic_num = 0
 	  	it = patriarch.getChildren().iterator()

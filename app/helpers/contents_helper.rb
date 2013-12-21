@@ -201,7 +201,7 @@ class PoiExcelReader
   end
 
 end
-
+  end
 
 ## represents a activity like news adding
 class UploadLine

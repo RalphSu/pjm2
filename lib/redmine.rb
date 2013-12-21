@@ -176,11 +176,10 @@ Redmine::AccessControl.map do |map|
 end
 
 Redmine::MenuManager.map :top_menu do |menu|
-  menu.push :home, :caption=>:label_home
-  menu.push :my_page, { :controller => 'my', :action => 'page' }, :if => Proc.new { User.current.logged? }
-  menu.push :projects, { :controller => 'contents', :action => 'index' }, :caption => :label_my_projects
-  menu.push :administration, { :controller => 'admin', :action => 'index' }, :if => Proc.new { User.current.admin? }, :last => true
-  menu.push :report , { :controller => 'projects', :action => 'index' },:caption=>:label_report_analyse
+  menu.push :welcome, { :controller => 'welcome', :action => 'index' }, :if => Proc.new { User.current.logged? }
+  menu.push :contents, { :controller => 'contents', :action => 'index' }, :caption => :label_my_projects
+  menu.push :admin, { :controller => 'admin', :action => 'index' }, :if => Proc.new { User.current.admin? }, :last => true
+  menu.push :report , { :controller => 'admin', :action => 'index' },:caption=>:label_report_analyse
   # remove help in top-menu
   # menu.push :help, Redmine::Info.help_url, :last => true, :caption => "?"
 end
@@ -387,6 +386,20 @@ Redmine::MenuManager.map :project_menu do |menu|
                 project_settings_tabs.collect do |tab|
                   Redmine::MenuManager::MenuItem.new("settings-#{tab[:name]}".to_sym,
                                                      { :controller => 'projects', :action => 'settings', :id => p, :tab => tab[:name] },
+                                                     {
+                                                       :caption => tab[:label]
+                                                     })
+                end
+              }
+            })
+
+  menu.push(:templates, { :controller => 'templates', :action => 'index' }, {
+              :last => true,
+              :children => Proc.new { |p|
+                @project = p # @project used in the helper
+                template_settings_tabs.collect do |tab|
+                  Redmine::MenuManager::MenuItem.new("settings-#{tab[:name]}".to_sym,
+                                                     { :controller => 'templates', :action => 'index', :id => p, :tab => tab[:name] },
                                                      {
                                                        :caption => tab[:label]
                                                      })
