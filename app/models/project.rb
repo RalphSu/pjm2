@@ -27,7 +27,8 @@ class Project < ActiveRecord::Base
     'news_release' => 1, 
     'weibo' => 1, 
     'blog' => 1, 
-    'forum' => 1
+    'forum' => 1,
+    'templates' => 1,
   }
 
   # Maximum length for project identifiers

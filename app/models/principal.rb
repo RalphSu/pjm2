@@ -66,6 +66,7 @@ class Principal < ActiveRecord::Base
   # * nil with options[:global] set : check if user has at least one role allowed for this action,
   #   or falls back to Non Member / Anonymous permissions depending if the user is logged
   def allowed_to?(action, context, options={})
+
     if context && context.is_a?(Project)
       # No action allowed on archived projects
       return false unless context.active?
@@ -90,12 +91,11 @@ class Principal < ActiveRecord::Base
     elsif options[:global]
       # Admin users are always authorized
       return true if admin?
-
       # authorize if user has at least one role that has this permission
       roles = memberships.collect {|m| m.roles}.flatten.uniq
       roles.detect {|r| r.allowed_to?(action)} || (self.logged? ? Role.non_member.allowed_to?(action) : Role.anonymous.allowed_to?(action))
     else
-      false
+      self.logged? ? Role.non_member.allowed_to?(action) : Role.anonymous.allowed_to?(action)
     end
   end
 

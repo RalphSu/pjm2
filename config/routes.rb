@@ -210,6 +210,19 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
+  map.with_options :controller => 'templates' do |template_mapper|
+    template_mapper.with_options :conditions => {:method => :get} do |template_views|
+      template_views.connect 'templates/:tab', :controller => 'templates' , :action => 'index'
+      template_views.connect 'templates/view_template', :controller => 'templates' , :action => 'index'
+    end
+  end
+
+  map.with_options :controller => 'admin' do |admin_mapper|
+    admin_mapper.with_options :conditions => {:method => :get} do |admin_views|
+      admin_views.connect 'admin/', :controller => 'admin' , :action => 'projects'
+    end
+  end
+
   map.with_options :controller => 'activities', :action => 'index', :conditions => {:method => :get} do |activity|
     activity.connect 'projects/:id/activity'
     activity.connect 'projects/:id/activity.:format'

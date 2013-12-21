@@ -5,5 +5,8 @@ class TemplatesController < ApplicationController
 	layout 'admin'
 	
 	def index
+		## TODO: fix to get projects based on current user
+		@projects = Project.all
 	end
+
 end

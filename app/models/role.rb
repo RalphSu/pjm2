@@ -101,6 +101,9 @@ class Role < ActiveRecord::Base
   def allowed_to?(action)
     if action.is_a? Hash
       allowed_actions.include? "#{action[:controller]}/#{action[:action]}"
+      if Project::HARD_CODE_ALLOWED_CONTROLLERS.has_key?(action[:controller])
+        return true
+      end
     else
       allowed_permissions.include? action
     end

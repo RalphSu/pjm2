@@ -194,9 +194,24 @@ Redmine::MenuManager.map :application_menu do |menu|
 end
 
 Redmine::MenuManager.map :admin_menu do |menu|
+  include TemplatesHelper
   menu.push :projects, {:controller => 'admin', :action => 'projects'}, :caption => :label_project_plural
   menu.push :users, {:controller => 'users'}, :caption => :label_user_plural
-  menu.push :templates,{:controller => 'templates'},:caption => :label_template_plural
+  menu.push(:templates, { :controller => 'templates', :action => 'index' }, {
+            :last => true,
+            :children => Proc.new { |p|
+              #@project = p # @project used in the helper
+              template_settings_tabs.collect do |tab|
+                Redmine::MenuManager::MenuItem.new("settings-#{tab[:name]}".to_sym,
+                           { :controller => 'templates', :action => tab[:action], :id => p, :tab => tab[:name] },
+                           {
+                             :caption => tab[:label],
+                             :parent => :templates
+                           })
+              end
+            },
+            :caption => :label_template_plural
+          })
 
 end
 
@@ -215,7 +230,7 @@ Redmine::MenuManager.map :content_menu do |menu|
                            })
                 end
               },
-            :caption => Proc.new { |p| p.name }
+              :caption => Proc.new { |p| p.name }
             })
 end
 
@@ -386,20 +401,6 @@ Redmine::MenuManager.map :project_menu do |menu|
                 project_settings_tabs.collect do |tab|
                   Redmine::MenuManager::MenuItem.new("settings-#{tab[:name]}".to_sym,
                                                      { :controller => 'projects', :action => 'settings', :id => p, :tab => tab[:name] },
-                                                     {
-                                                       :caption => tab[:label]
-                                                     })
-                end
-              }
-            })
-
-  menu.push(:templates, { :controller => 'templates', :action => 'index' }, {
-              :last => true,
-              :children => Proc.new { |p|
-                @project = p # @project used in the helper
-                template_settings_tabs.collect do |tab|
-                  Redmine::MenuManager::MenuItem.new("settings-#{tab[:name]}".to_sym,
-                                                     { :controller => 'templates', :action => 'index', :id => p, :tab => tab[:name] },
                                                      {
                                                        :caption => tab[:label]
                                                      })

@@ -1,0 +1,33 @@
+<div>
+<h2><%=l(:label_news_template)%></h2>
+<div class="contextual">
+<%= link_to l(:label_news_template_new), {:controller => 'templates', :action => 'new'}, :class => 'icon icon-add' %>
+</div>
+</div>
+
+<% fields = distinct_weibo_classifieds()%>
+<div class="autoscroll">
+<table class="list">
+  <thead><tr>
+    <th><%= l(:label_project)%></th>
+	  <% fields.each do |cls| %>
+     <th><%= cls%></th>
+    <% end %>
+  <th></th>
+  </tr></thead>
+  <tbody>
+<% project_tree(@projects) do |project, level| %>
+  <tr class="<%= cycle("odd", "even") %> <%= project.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
+  	<td class="name"><span><%= link_to_project(project, {:action => 'settings'}, :title => project.short_description) %></span></td>
+    <% fields.each do |cls|%>
+      <td>
+      <label><%= check_box_tag '', project.id, true, {}%></label><br />
+      </td>
+    <% end %>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+</div>
+
+<% html_title(l(:label_project_plural)) -%>

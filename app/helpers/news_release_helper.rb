@@ -18,4 +18,10 @@ module NewsReleaseHelper
 		NewsClassified.find(:all, :conditions => {:classified =>classified })
 	end
 
+	def distinct_news_classifieds() 
+		NewsClassified.all(:select => "DISTINCT(classified)").collect do |n|
+			n.classified
+		end
+	end
+
 end
