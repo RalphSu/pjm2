@@ -9,4 +9,8 @@ class TemplatesController < ApplicationController
 		@projects = Project.all
 	end
 
+	def view_template
+		redirect_to({:controller => 'templates', :action => 'index'})
+	end
+
 end

@@ -1,23 +1,47 @@
 <h2> <%=l(:label_news)%></h2>
 
-<% form_tag({}, :method => :get) do %>
 
 <label for='category'><%= l(:label_category) %> :</label>
+<% form_tag({}, :method => :get) do %>
 <%= select_tag 'category', news_release_option_for_select(@category), :class => "large", :onchange => "this.form.submit(); return false;"  %>
-<div class="contextual">
-<%= link_to l(:label_news_new), {:controller => 'news_release', :action => 'new', :project_id=> "#{@p.identifier}", :category =>"#{@category}"}, :class => 'icon icon-add' %>
-</div>
-</fieldset>
 <% end %>
 
-<% unless @p.nil? %>
-	<table>
-		<thead>
-			
-<!-- 			<th>
-				
-			</th> -->
-		</thread>
-	</table>
+<div class="contextual">
+<!-- <label class="icon icon-add"><%=l(:label_news_new)%></label> -->
+<% form_tag(url_for(controller: 'news_release', action: 'create') , :method => :post, :multipart => true ) do %>
+	<%= hidden_field_tag :category , @category %>
+	<%= hidden_field_tag :project_id , @project.identifier %>
+	<%= file_field_tag :record %>
+	<%= submit_tag l(:button_upload) %>
 <% end %>
+</div>
+</fieldset>
+
+<% unless (@project.nil? or @category.nil?)%>
+<% fields = find_new_classifieds(@category)%>
+<table class="list">
+	<thead>
+		<% fields.each do |f|%>
+			<th><%= f.template.column_name %></th> 
+		<% end %>
+		<th></th> <!-- Place holder column for actions -->
+	</thread>
+	<tbody>
+	<% unless @project.news_release.blank? %>
+		<% @project.news_release.each do | nr| %>
+		<tr>
+		<%fields.each do |f|%>
+			<td><%= find_field_by_releaseId_classifiedId(nr.id, f.id)%></td>
+		<%end%>
+		<td class="buttons">
+<%= link_to_function l(:button_edit), { :url => { :controller => 'news_release', :action => 'edit_release', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@project.identifier}, :class => 'icon icon-edit' %>
+<%= link_to_remote(l(:button_delete), { :url => { :controller => 'news_release', :action => 'destroy_release', :id => "#{nr.id}" },:method => :delete, :category=>@category, :project_id=>@project.identifier },:class => 'icon icon-del') %>
+		</td>
+		</tr>
+		<% end %>
+	<%end%>
+	</tbody>
+</table>
+<% end %>
+
 

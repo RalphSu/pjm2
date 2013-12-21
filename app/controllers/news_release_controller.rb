@@ -31,7 +31,7 @@ class NewsReleaseController < ApplicationController
 		data = params['record'].read
 		headers = find_new_classifieds(@category)
 		if headers.empty?
-			raise "No columns definition found for #{category} not found!"
+			raise "No columns definition found for #{category} found!"
 		end
 		poiReader = PoiExcelReader.new()
 	  	uploadItems = poiReader.read_excel_text(data, headers)
@@ -59,6 +59,16 @@ class NewsReleaseController < ApplicationController
 				item.save
 			end
 		end
+	end
+
+	def edit_release
+		init(params)
+		redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+	end
+
+	def delete_release
+		init(params)
+		redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
 	end
 
 	def index

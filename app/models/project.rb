@@ -43,6 +43,7 @@ class Project < ActiveRecord::Base
                                :conditions => "#{Principal.table_name}.type='Group' OR (#{Principal.table_name}.type='User' AND #{Principal.table_name}.status=#{User::STATUS_ACTIVE})"
   has_many :users, :through => :members
   has_many :principals, :through => :member_principals, :source => :principal
+  has_many :news_release
 
   # project reviewer/manager/clients
   has_many :project_admin, :dependent => :destroy

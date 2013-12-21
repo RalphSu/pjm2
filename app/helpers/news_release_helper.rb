@@ -3,13 +3,9 @@
 module NewsReleaseHelper
 
 	def news_release_option_for_select(selected)
-		## TODO : dynamiclly load from news_classified table..
-		container = [[]]
-		container << ['新闻稿推广', '新闻稿推广']
-		container << ['平面媒体', '平面媒体']
-		container << ['视频推广', '视频推广']
-		container << ['视频新闻', '视频新闻']
-		container <<['百度知道', '百度知道']
+		container = NewsClassified.all(:select => "DISTINCT(classified)").collect do |n|
+			[n.classified, n.classified]
+		end
 		options_for_select(container, selected)
 	end
 
@@ -19,8 +15,19 @@ module NewsReleaseHelper
 	end
 
 	def distinct_news_classifieds() 
-		NewsClassified.all(:select => "DISTINCT(classified)").collect do |n|
-			n.classified
+		NewsClassified.all(:select => "DISTINCT(classified)")
+	end
+
+	def find_project_release_lines(project)
+		project.news_release
+	end
+
+	def find_field_by_releaseId_classifiedId(releaseId, classifiedId)
+		field = NewsReleaseField.find(:all, :conditions=>{:news_releases_id=>releaseId, :news_classfieds_id=>classifiedId})
+		if field.blank?
+			''
+		else
+			field[0].body
 		end
 	end
 
