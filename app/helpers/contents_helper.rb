@@ -33,7 +33,7 @@ module ContentsHelper
       @@string_stream_class=Rjb::import('java.io.StringBufferInputStream')
 
     def read_excel(data)
-      
+      @@string_stream_class.new()
     end
 
 
