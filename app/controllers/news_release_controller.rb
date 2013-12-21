@@ -1,5 +1,8 @@
 #--encoding=UTF-8
+
 class NewsReleaseController < ApplicationController
+	include NewsReleaseHelper
+	include ContentsHelper
 	layout 'content'
 
 	before_filter :find_project_by_project_id
@@ -26,35 +29,30 @@ class NewsReleaseController < ApplicationController
 		end
 
 		data = params['record'].read
-	  	uploadItems = ContentsHelper::read_excel(data)
-	  	#save(uploadItems)
+		headers = find_new_classifieds(@category)
+		if headers.empty?
+			raise "No columns definition found for #{category} not found!"
+		end
+		poiReader = PoiExcelReader.new()
+	  	uploadItems = poiReader.read_excel_text(data, headers)
+
+	  	save(uploadItems)
 
 	  	redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
 	end
 
 	def save(activeItems)
 		activeItems.each do |ai|
-			# save the item first
+			# save the entity line first
 			ai.entity.safe_attributes = {:classified => @category}
-			ai.entity.project = @project # would it be saved??
+			ai.entity.project = @project
 			ai.entity.save
 			# now the fields
-			if ai.items.nil?
-				raise ArgumentError
-			end
-
 			ai.items.each do |item|
-				template_ids = []
-				Template.find(:all , :conditions => "column_name='#{item.column_name}'").each do |t|
-					ids << t.id
-				end
-
-				n = NewsClassified.find(:first,  :conditions=> ["template_id in ? and classified = '#{@category}'",   template_ids])
-				unless n.blank?
-					item.news_classfied = n
-					item.news_release = ai.entity
-					item.save
-				end
+				Rails.logger.info item.news_classified.id
+				item.news_release = ai.entity
+				Rails.logger.info item.news_release.id
+				item.save
 			end
 		end
 	end

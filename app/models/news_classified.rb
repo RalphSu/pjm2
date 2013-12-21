@@ -5,4 +5,6 @@ class NewsClassified < ActiveRecord::Base
 
   safe_attributes 'classified'
 
+  has_many :news_release_field
+
 end

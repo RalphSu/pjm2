@@ -13,20 +13,9 @@ module NewsReleaseHelper
 		options_for_select(container, selected)
 	end
 
-	def template_header(category)
-		logger.info category
-		fields = NewsClassified.all
-		templates = []
-		if category.nil?
-			NewsClassified.all.each {|classified|
-				logger.info classified.template
-				#.cloumn_name
-			}
-		else 
-			#fields.where("classified = #{category}").limit(100).find_by_classified(category).limit(100).collect { |classified|
-			#	logger.info classified.template
-				#.cloumn_name
-			#}
-		end 
+	def find_new_classifieds(classified)
+		# select * from news_classified where classified = '@@@'
+		NewsClassified.find(:all, :conditions => {:classified =>classified })
 	end
+
 end

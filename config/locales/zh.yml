@@ -1054,3 +1054,5 @@ zh:
   label_import: 导入文件
   button_upload: 上传
   error_no_cateory: 必须指定分类
+  unknow_cell_content: 无法识别的内容!
+  invalid_file_content: 文件格式错误!

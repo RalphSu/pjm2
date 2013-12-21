@@ -1,8 +1,8 @@
 class NewsReleaseField < ActiveRecord::Base
 	include Redmine::SafeAttributes
 
-	belongs_to :news_release
-	belongs_to :news_classfied
+	belongs_to :news_release, :dependent => :destory
+	belongs_to :news_classified, :dependent => :destory
 
 	safe_attributes 'body'
 

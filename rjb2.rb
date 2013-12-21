@@ -36,6 +36,7 @@ class PoiExcelReader
 	  @@string_stream_class=Rjb::import('java.io.StringBufferInputStream')
 	  @@byte_stream_class=Rjb::import('java.io.ByteArrayInputStream')
 	  @@hssf_picture_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFPicture')
+	  @@cell_interface_class=Rjb::import('org.apache.poi.ss.usermodel.Cell')
 
 	def read_excel(data)
 		byte_stream = @@byte_stream_class.new(data)
@@ -48,43 +49,49 @@ class PoiExcelReader
 		if headrow.nil?
 			raise ''
 		end
+		# read header row
+		validate_header(headrow)
 
 		## images
-		## p wb.java_methods
 		read_pics(wb, sheet)
 
 		## texts
 		m = sheet.getFirstRowNum() + 1
-		#while m < sheet.getLastRowNum()
+		while m < sheet.getLastRowNum()
+			p "starting row : #{m}"
 			row = sheet.getRow(m)
 		  	i = row.getFirstCellNum()
-		  	# while i < row.getLastCellNum()
+		  	while i < row.getLastCellNum()
 		  		cell = row.getCell(i)
-		  		if (cell.nil?||cell.getRichStringCellValue().getString().nil?||cell.getRichStringCellValue().getString().length()==0)
-		  			# ignore this cell
+		  		cell_type = cell.getCellType()
+		  		value = nil
+		  		case
+		  		when cell_type == cell.CELL_TYPE_BLANK
+		  			value = cell.getRichStringCellValue().getString()
+		  		when cell_type == cell.CELL_TYPE_BOOLEAN
+		  			value = cell.getBooleanCellValue()
+		  		when cell_type == cell.CELL_TYPE_FORMULA
+		  			value = cell.getCellFormula()
+		  		when cell_type == cell.CELL_TYPE_NUMERIC
+		  			value = cell.getNumericCellValue()
+		  		when cell_type == cell.CELL_TYPE_STRING
+		  			value = cell.getRichStringCellValue().getString()
+		  		when cell_type == cell.CELL_TYPE_ERROR
+		  			# ignore error column
+		  		else
+		  			raise 'unknown cell type'
 		  		end
-		  		p cell.getRichStringCellValue().getString()
+
+		  		## FIXME :: DATE
+		  		p value
 		  		i= i+1
-		  	# end
+		  	end
 		  	m = m+1
-		#end
+		end
 	end
 
 	def read_pics(wb, sheet)
 		pictures = wb.getAllPictures()
-		# it = pictures.iterator()
-		# while it.hasNext()
-	 # 		p "find a picture in the excel, now save it."
-		#   	#save 
-		#   	p = it.next()
-		#   	ext = p.suggestFileExtension();
-		#   	bytes = p.getData(); 
-		#   	# override
-		# 	out = @@file_class.new(File.join File.dirname(__FILE__), '/extraced_from_excel.png')
-		#     	out.write(bytes);  
-		#     	out.close();  
-	 # 	end
-
 	  	patriarch = sheet.getDrawingPatriarch();
 	  	if patriarch.nil?
 	  		return
@@ -92,27 +99,31 @@ class PoiExcelReader
 
 	  	pic_num = 0
 	  	it = patriarch.getChildren().iterator()
-  	          while it.hasNext()
-  	         		shape = it.next()
-	           	anchor =  shape.getAnchor()
-	           	if (shape .getClass().equals(@@hssf_picture_class)) 
-			          row = anchor.getRow1()
-			          col = anchor.getCol1()
-			          p "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s
-			          pic_index = shape.getPictureIndex() - 1
-			          pic_data = pictures.get(pic_index)
-			          save_pic(row, col, pic_data)
+      	while it.hasNext()
+	 		shape = it.next()
+	       	anchor =  shape.getAnchor()
+	       	if (shape .getClass().equals(@@hssf_picture_class)) 
+	          row = anchor.getRow1()
+	          col = anchor.getCol1()
+	          p "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s
+	          pic_index = shape.getPictureIndex() - 1
+	          pic_data = pictures.get(pic_index)
+	          save_pic(row, col, pic_data)
 
-			          pic_num = pic_num + 1
-	            	end  
-	         end
-	         p "Total picture number : #{pic_num}"
+	          pic_num = pic_num + 1
+	    	end  
+	     end
+	     p "Total picture number : #{pic_num}"
 	end
 
 	def save_pic(row, col, pic_data)
 		file_name = "" + row.to_s + col.to_s + "." + pic_data.suggestFileExtension
 		p "Save image with name #{file_name}"
 		IO.binwrite(file_name, pic_data.getData())
+	end
+
+	def validate_header(headrow)
+		
 	end
 end
 

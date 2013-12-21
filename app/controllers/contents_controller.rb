@@ -7,8 +7,8 @@ class ContentsController < ApplicationController
   def index
   	## TODO: get current users' projects
   	@projects = Project.all
-     @p = @projects.first unless not @project.nil?
-     @category=params['category']
+    @p = @projects.first unless not @project.nil?
+    @category=params['category']
   end
 
   def project_content(project =nil)
