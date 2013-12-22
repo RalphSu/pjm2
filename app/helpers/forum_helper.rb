@@ -1,3 +1,4 @@
+#-- encoding: UTF-8
 module ForumHelper
 
 	def distinct_forum_classifieds() 

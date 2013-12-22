@@ -1,3 +1,4 @@
+#-- encoding: UTF-8
 module BlogHelper
 
 	def distinct_blog_classifieds() 

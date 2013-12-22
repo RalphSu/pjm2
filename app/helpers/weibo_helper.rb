@@ -1,3 +1,4 @@
+#-- encoding: UTF-8
 module WeiboHelper
 
 	def distinct_weibo_classifieds() 
