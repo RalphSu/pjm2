@@ -2,9 +2,8 @@
 module ForumHelper
 
 	def distinct_forum_classifieds() 
-		ForumClassified.all(:select => "DISTINCT(classified)").collect do |n|
-			n.classified
-		end
+		ForumClassified.all(:select => "DISTINCT(classified)")
+		
 	end
 
 	def find_forum_classifieds(classified)

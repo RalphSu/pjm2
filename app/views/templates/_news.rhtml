@@ -8,9 +8,9 @@
 <div class="autoscroll">
 <table class="list">
   <thead><tr>
-    <th><%= l(:field_category)%></th>
+    <th align="center"><%= l(:field_category)%></th>
 	  <% templates.each do |t| %>
-     <th><%= t.column_name %></th>
+     <th align="center"><%= t.column_name %></th>
     <% end %>
   <th></th>
   </tr></thead>
@@ -19,9 +19,10 @@
   <tr class="user <%= cycle("odd", "even") %> ">
   	<td class="name"><span><%= key %></span></td>
     <% templates.each do |t|%>
-      <td>
-        <!-- TODO: check box value might be changed??? -->
-      <label><%= check_box_tag '', "1", values.include?(t.column_name), {}%></label><br/>
+          <td align="center">
+        
+        <%= checked_image values.include?(t.column_name) %>
+      
       </td>
     <% end %>
     </tr>
