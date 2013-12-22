@@ -43,14 +43,15 @@ module ContentsHelper
       wb = @@workbook_class.new(byte_stream)
       sheet = wb.getSheetAt(0)
       if sheet.nil?
-        raise ''
+        raise 'sheet is not found!'
       end
       headrow = sheet.getRow(sheet.getFirstRowNum())
       if headrow.nil?
-        raise ''
+        raise ' head row not found!'
       end
       # read header row
       head_array = validate_header(headrow, headers)
+      Rails.logger.info "headers : #{head_array}"
 
       ## images first.
       #read_pics(wb, sheet)
@@ -62,11 +63,16 @@ module ContentsHelper
     def read_texts(sheet, head_array)
       result = []
 
-      #Rails.logger.info "sheet has : #{sheet.getFirstRowNum()} to #{sheet.getLastRowNum()} row."
+      Rails.logger.info "sheet has : #{sheet.getFirstRowNum()} to #{sheet.getLastRowNum()} row."
       m = sheet.getFirstRowNum() + 1
-      while m < sheet.getLastRowNum()
-        #Rails.logger.info "starting row : #{m}"
+      while m <= sheet.getLastRowNum()
+        Rails.logger.info "starting row : #{m}"
         row = sheet.getRow(m)
+        if row.nil?
+          Rails.logger.info "ignore null row : #{m}!"
+          m = m+1
+          next
+        end
         
         line = nil
 
@@ -114,7 +120,7 @@ module ContentsHelper
           i = i+1
         end
 
-        #Rails.logger.info "end row : #{m}"
+        Rails.logger.info "end row : #{m}"
         result << line unless line.nil?
         m = m+1
       end
