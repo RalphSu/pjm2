@@ -22,21 +22,25 @@ module ContentsHelper
   end 
 
   class PoiExcelReader
-      # Java classes import
-      @@file_class = Rjb::import('java.io.FileOutputStream')
-      @@file_in_class = Rjb::import('java.io.FileInputStream')
-      @@workbook_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFWorkbook')
-      @@cell_style_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFCellStyle')
-      @@font_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFFont')
-      @@cell_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFCell')
-      @@row_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFRow')
-      @@sheet_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFSheet')
-      @@string_stream_class=Rjb::import('java.io.StringBufferInputStream')
-      @@byte_stream_class=Rjb::import('java.io.ByteArrayInputStream')
-      @@xssf_picture_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFPicture')
-      @@cell_interface_class=Rjb::import('org.apache.poi.ss.usermodel.Cell')
-      @@date_util_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFDateUtil')
-      @@date_format_class = Rjb::import('java.text.SimpleDateFormat')
+    # Java classes import
+    @@file_class = Rjb::import('java.io.FileOutputStream')
+    @@file_in_class = Rjb::import('java.io.FileInputStream')
+    @@workbook_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFWorkbook')
+    @@cell_style_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFCellStyle')
+    @@font_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFFont')
+    @@cell_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFCell')
+    @@row_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFRow')
+    @@sheet_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFSheet')
+    @@string_stream_class=Rjb::import('java.io.StringBufferInputStream')
+    @@byte_stream_class=Rjb::import('java.io.ByteArrayInputStream')
+    @@xssf_picture_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFPicture')
+    @@cell_interface_class=Rjb::import('org.apache.poi.ss.usermodel.Cell')
+    @@date_util_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFDateUtil')
+    @@date_format_class = Rjb::import('java.text.SimpleDateFormat')
+
+    def initialize(project)
+      @project = project
+    end
 
     def read_excel_text(data, headers)
       byte_stream = @@byte_stream_class.new(data)
@@ -51,9 +55,6 @@ module ContentsHelper
       end
       # read header row
       head_array = validate_header(headrow, headers)
-
-      ## images first.
-      #read_pics(wb, sheet)
 
       ## texts
       read_texts(sheet, head_array)
@@ -123,38 +124,6 @@ module ContentsHelper
       return result
     end
 
-    def read_pics(wb, sheet)
-      pictures = wb.getAllPictures()
-        patriarch = sheet.getDrawingPatriarch();
-        if patriarch.nil?
-          return
-        end
-
-        pic_num = 0
-        it = patriarch.getChildren().iterator()
-          while it.hasNext()
-            shape = it.next()
-            anchor =  shape.getAnchor()
-            if (shape .getClass().equals(@@hssf_picture_class)) 
-              row = anchor.getRow1()
-              col = anchor.getCol1()
-              Rails.logger.info "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s
-              pic_index = shape.getPictureIndex() - 1
-              pic_data = pictures.get(pic_index)
-              save_pic(row, col, pic_data)
-
-              pic_num = pic_num + 1
-          end  
-         end
-         Rails.logger.info "Total picture number : #{pic_num}"
-    end
-
-    def save_pic(row, col, pic_data)
-      file_name = "" + row.to_s + col.to_s + "." + pic_data.suggestFileExtension
-      p "Save image with name #{file_name}"
-      IO.binwrite(file_name, pic_data.getData())
-    end
-
     def validate_header(row, headers)
       head = []
       head_hash = {}
@@ -214,6 +183,137 @@ module ContentsHelper
         ""
       end
     end
+
+    def read_images(wb, sheet)
+      pictures = wb.getAllPictures()
+      patriarch = sheet.getDrawingPatriarch();
+      if patriarch.nil?
+        return
+      end
+
+      # get and write pictures
+      pic_num = 0
+      it = patriarch.getChildren().iterator()
+      # anchor => path hash
+      picture_path = {}
+      while it.hasNext()
+        shape = it.next()
+        anchor =  shape.getAnchor()
+        if (shape .getClass().equals(@@hssf_picture_class)) 
+          row = anchor.getRow1()
+          col = anchor.getCol1()
+          Rails.logger.info "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s
+          pic_index = shape.getPictureIndex() - 1
+          pic_data = pictures.get(pic_index)
+          paths = save_pic(row, col, pic_data)
+
+          picture_path[anchor] = paths
+
+          pic_num = pic_num + 1
+        end  
+      end
+      Rails.logger.info "Total picture number : #{pic_num}"
+
+      # construct image metadata
+      image_metas = []
+      picture_path.each do |anchor, paths|
+        row = sheet.getRow(anchor.getRow1())
+        if row.nil?
+          raise "Row not found for image at position row: #{anchor.getRow1()}, col: #{anchor.getCol1()}"
+        end
+
+        title_col = anchor.getCol1() - 1
+        if title_col >= row.getFirstCellNum()
+          cell = row.getCell(title_col)
+          url = validate_get_cell_string(cell)
+
+          img_meta = ImageMeta.new()
+          img_meta.url = url
+          img_meta.paths = paths
+          image_metas << img_meta
+        else
+          raise "Image at : #{anchor.getRow1()}, col: #{anchor.getCol1()}, doesn't have title link prefix!"
+        end
+      end
+
+      Rails.logger.info image_metas
+      image_metas
+    end
+
+    def validate_get_cell_string(cell)
+      case
+      when cell_type == cell.CELL_TYPE_STRING
+        return cell.getRichStringCellValue().getString()
+      else
+        raise "Expected string for the cell!"
+      end
+    end
+
+    # TODO: allow whole blank column
+    def validate_image_header(header_row)
+      head = []
+      expected_head = ['文章链接','贴图']
+      i = 0
+      # read heads
+      while i < row.getLastCellNum()
+        cell = header_row.getCell(i)
+        case
+        when cell_type == cell.CELL_TYPE_STRING
+          head << value = cell.getRichStringCellValue().getString()
+        else
+          raise "Image file head is invalid. Expected : 文章链接,贴图 !"
+        end
+      end
+      # validation for head existence
+      expected_head.each do |e|
+        raise "Image file head is invalid. Expected : 文章链接,贴图 !" unless head.include?(e)
+      end
+      return head
+    end
+
+    def save_pic(row, col, pic_data)
+      folder = File.join File.dirname(__FILE__), "../../upload/#{@project.identifier}/"
+      unless File.exists?(folder)
+         Dir.mkdir(folder) 
+      end
+      if pic_data.suggestFileExtension.blank?
+        ext1 = '.full.png';
+        ext2 = '.small.png';
+      else 
+        ext1 = ".full.#{pic_data.suggestFileExtension}";
+        ext2 = ".small.#{pic_data.suggestFileExtension}";
+      end
+
+      uuid = UUIDTools::UUID.timestamp_create.to_s.gsub('-','')
+      file_full_name = uuid + ext1
+      file_small_name = uuid + ext2
+      full_name = File.join folder file_full_name
+      small_name = File.join folder file_small_name
+      # write full
+      IO.binwrite(full_name, pic_data.getData())
+      # TODO write small
+      IO.binwrite(small_name, pic_data.getData())
+      
+      [full_name, small_name]
+    end
+
+    def read_excel_image(date)
+      byte_stream = @@byte_stream_class.new(data)
+      wb = @@workbook_class.new(byte_stream)
+      sheet = wb.getSheetAt(0)
+      if sheet.nil?
+        raise ''
+      end
+      headrow = sheet.getRow(sheet.getFirstRowNum())
+      if headrow.nil?
+        raise ''
+      end
+      # read header row
+      head_array = validate_image_header(headrow, headers)
+
+      read_images(wb, sheet, head_array)
+    end
+
   end
 
   ## represents a activity like news adding
@@ -222,6 +322,12 @@ module ContentsHelper
 
     @entity
     @items = []
+  end
+
+  class ImageMeta
+    attr_accessor :url, :paths
+    @url
+    @paths
   end
 
 end

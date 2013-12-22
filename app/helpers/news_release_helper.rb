@@ -11,6 +11,15 @@ module NewsReleaseHelper
 		options_for_select(container, selected)
 	end
 
+	def news_release_option_for_select_image(selected)
+		container = []
+		container << [l(:label_image), "image"]
+		NewsClassified.all(:select => "DISTINCT(classified)").each do |n|
+			container << [n.classified, n.classified]
+		end
+		options_for_select(container, selected)
+	end
+
 	def find_new_classifieds(classified)
 		# select * from news_classified where classified = '@@@'
 		NewsClassified.find(:all, :conditions => {:classified =>classified })

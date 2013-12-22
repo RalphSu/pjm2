@@ -34,9 +34,9 @@
             <%else%>
                 <div class="modal-body">
                     <% form_tag(url_for(controller: 'news_release', action: 'create') , :method => :post, :multipart => true ) do %>
-						<%= hidden_field_tag :category , @category %>
+						<%= select_tag 'category', news_release_option_for_select_image(@category), :class => "large" %>
 						<%= hidden_field_tag :project_id , @p.identifier %>
-						<%= file_field_tag :record %>					
+						<%= file_field_tag :record %>
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group">

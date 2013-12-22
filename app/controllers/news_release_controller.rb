@@ -29,6 +29,12 @@ class NewsReleaseController < ApplicationController
 		end
 
 		data = params['record'].read
+		## TODO: ugly hard coding
+		if (@category == "image")
+			upload_pictures()
+			return
+		end
+
 		headers = find_new_classifieds(@category)
 		if headers.empty?
 			raise "No columns definition found for #{category} found!"
@@ -39,6 +45,10 @@ class NewsReleaseController < ApplicationController
 	  	save(uploadItems)
 
 	  	redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+	end
+
+	def upload_pictures
+		poiReader = PoiImageReader.new(true)
 	end
 
 	def save(activeItems)
