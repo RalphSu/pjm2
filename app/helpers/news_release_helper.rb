@@ -16,6 +16,11 @@ module NewsReleaseHelper
 		NewsClassified.find(:all, :conditions => {:classified =>classified })
 	end
 
+	def distinct_news_templates()
+		# select * from news_classified where classified = '@@@'
+		Template.find(:all, :conditions => {:template_type =>"新闻类模板" })
+	end
+
 	def distinct_news_classifieds() 
 		NewsClassified.all(:select => "DISTINCT(classified)")
 	end
