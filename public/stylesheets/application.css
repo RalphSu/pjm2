@@ -181,7 +181,7 @@ html > body #content {
 }
 #login-form {
   weight:500px;
-  height: 500px;
+  height: 450px;
   background: url(../images/login_form.png) no-repeat center top;
 }
 
@@ -201,7 +201,10 @@ html > body #content {
   font-size: 0.9em;
 }
 #login-form table td {padding: 6px;}
-#login-form label {font-weight: bold;}
+#login-form label {
+  font-weight: bold;
+  font-size:13px;
+}
 #login-form input#username, #login-form input#password {
   width: 252px;
   height: 45px; 
@@ -1356,9 +1359,7 @@ ul.properties li span {
   margin-bottom: 1.2em;
 }
 
-#user_firstname,
-#user_lastname,
-#user_mail,
+
 #my_account_form select {
   width: 90%;
 }
@@ -3246,6 +3247,7 @@ div#optional_login_fields {
 /* IE */
 #main_wrapper.notlogged {
   background: #FFFFFF;
+  height: 450px;
 }
 
 #main_wrapper.logged {
