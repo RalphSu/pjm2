@@ -2,9 +2,7 @@
 module BlogHelper
 
 	def distinct_blog_classifieds() 
-		BlogClassified.all(:select => "DISTINCT(classified)").collect do |n|
-			n.classified
-		end
+		BlogClassified.all(:select => "DISTINCT(classified)")
 	end
 
 	def find_blog_classifieds(classified)

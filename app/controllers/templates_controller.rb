@@ -1,6 +1,9 @@
 class TemplatesController < ApplicationController
 	include TemplatesHelper
 	include NewsReleaseHelper
+	include BlogHelper
+	include WeiboHelper
+	include ForumHelper
 	
 	layout 'admin'
 	
@@ -15,32 +18,32 @@ class TemplatesController < ApplicationController
 		end
 		@news_field_map
 
-		# #blog
-		# @blog_field_map ={}
-		# blog_classifieds = distinct_blog_classifieds();
-		# blog_classifieds.each do |classified|
-		# 	 @blog_field_map[classified.classified] = find_blog_classifieds(classified.classified).collect do | c |
-		# 	 	c.template.column_name
-		# 	 end
-		# end
+		#blog
+		@blog_field_map ={}
+		blog_classifieds = distinct_blog_classifieds();
+		blog_classifieds.each do |classified|
+			 @blog_field_map[classified.classified] = find_blog_classifieds(classified.classified).collect do | c |
+			 	c.template.column_name
+			 end
+		end
 
-		# # forum
-		# @forum_field_map ={}
-		# forum_classifieds = distinct_blog_classifieds();
-		# forum_classifieds.each do |classified|
-		# 	 @forum_field_map[classified.classified] = find_forum_classifieds(classified.classified).collect do | c |
-		# 	 	c.template.column_name
-		# 	 end
-		# end
+		# forum
+		@forum_field_map ={}
+		forum_classifieds = distinct_forum_classifieds();
+		forum_classifieds.each do |classified|
+			 @forum_field_map[classified.classified] = find_forum_classifieds(classified.classified).collect do | c |
+			 	c.template.column_name
+			 end
+		end
 
-		# # weibo
-		# @weibo_field_map ={}
-		# weibo_classifieds = distinct_weibo_classifieds();
-		# weibo_classifieds.each do |classified|
-		# 	 @weibo_field_map[classified.classified] = find_weibo_classifieds(classified.classified).collect do | c |
-		# 	 	c.template.column_name
-		# 	 end
-		# end
+		# weibo
+		@weibo_field_map ={}
+		weibo_classifieds = distinct_weibo_classifieds();
+		weibo_classifieds.each do |classified|
+			 @weibo_field_map[classified.classified] = find_weibo_classifieds(classified.classified).collect do | c |
+			 	c.template.column_name
+			 end
+		end
 		
 	end
 
