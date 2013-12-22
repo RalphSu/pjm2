@@ -2,8 +2,8 @@ class TemplatesController < ApplicationController
 	include TemplatesHelper
 	include NewsReleaseHelper
 	include BlogHelper
-	include ForumHelper
 	include WeiboHelper
+	include ForumHelper
 	
 	layout 'admin'
 	
@@ -16,7 +16,7 @@ class TemplatesController < ApplicationController
 			 	c.template.column_name
 			 end
 		end
-		
+		@news_field_map
 
 		#blog
 		@blog_field_map ={}

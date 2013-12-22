@@ -3,7 +3,6 @@ module ForumHelper
 
 	def distinct_forum_classifieds() 
 		ForumClassified.all(:select => "DISTINCT(classified)")
-		
 	end
 
 	def find_forum_classifieds(classified)

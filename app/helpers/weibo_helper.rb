@@ -3,7 +3,7 @@ module WeiboHelper
 
 	def distinct_weibo_classifieds() 
 		WeiboClassified.all(:select => "DISTINCT(classified)")
-		
+
 	end
 
 	def find_weibo_classifieds(classified)
