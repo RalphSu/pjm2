@@ -12,12 +12,13 @@ class ContentsController < ApplicationController
   end
 
   def project_content(project =nil)
-
+    index
   end
 
   # show @project
   def show
     @category = params['category']
+    @category = "" if @category.nil?
     @tab = params['tab'].nil? ? 'news' : params['tab']
     @p = Project.find(params[:project_id])
     @projects=[]

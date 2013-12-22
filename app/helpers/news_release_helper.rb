@@ -3,8 +3,10 @@
 module NewsReleaseHelper
 
 	def news_release_option_for_select(selected)
-		container = NewsClassified.all(:select => "DISTINCT(classified)").collect do |n|
-			[n.classified, n.classified]
+		container = []
+		container << ["", ""]
+		NewsClassified.all(:select => "DISTINCT(classified)").each do |n|
+			container << [n.classified, n.classified]
 		end
 		options_for_select(container, selected)
 	end
