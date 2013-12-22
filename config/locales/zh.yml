@@ -1061,3 +1061,5 @@ zh:
   error_no_cateory: 必须指定分类
   unknow_cell_content: 无法识别的内容!
   invalid_file_content: 文件格式错误!
+  no_project_selected: 必须选择一个项目！
+  label_import_news: "选择文件导入:"
