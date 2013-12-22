@@ -36,6 +36,7 @@ module ContentsHelper
       @@xssf_picture_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFPicture')
       @@cell_interface_class=Rjb::import('org.apache.poi.ss.usermodel.Cell')
       @@date_util_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFDateUtil')
+      @@date_format_class = Rjb::import('java.text.SimpleDateFormat')
 
     def read_excel_text(data, headers)
       byte_stream = @@byte_stream_class.new(data)
@@ -82,7 +83,12 @@ module ContentsHelper
           when cell_type == cell.CELL_TYPE_FORMULA
             value = cell.getCellFormula()
           when cell_type == cell.CELL_TYPE_NUMERIC
-            value = cell.getNumericCellValue()
+            if @@date_util_class.isCellDateFormatted(cell)
+              value = cell.getDateCellValue()
+              value = parseDateValue(value)
+            else 
+              value = cell.getNumericCellValue()
+            end
           when cell_type == cell.CELL_TYPE_STRING
             value = cell.getRichStringCellValue().getString()
           when cell_type == cell.CELL_TYPE_ERROR
@@ -132,7 +138,7 @@ module ContentsHelper
             if (shape .getClass().equals(@@hssf_picture_class)) 
               row = anchor.getRow1()
               col = anchor.getCol1()
-              p "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s
+              Rails.logger.info "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s
               pic_index = shape.getPictureIndex() - 1
               pic_data = pictures.get(pic_index)
               save_pic(row, col, pic_data)
@@ -140,7 +146,7 @@ module ContentsHelper
               pic_num = pic_num + 1
           end  
          end
-         p "Total picture number : #{pic_num}"
+         Rails.logger.info "Total picture number : #{pic_num}"
     end
 
     def save_pic(row, col, pic_data)
@@ -200,6 +206,14 @@ module ContentsHelper
       return head
     end
 
+    def parseDateValue(date)
+      unless date.nil?
+        dateFormat = @@date_format_class.new('yyyy-MM-dd')
+        dateFormat.format(date)
+      else
+        ""
+      end
+    end
   end
 
   ## represents a activity like news adding
