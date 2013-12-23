@@ -78,6 +78,10 @@ module ContentsHelper
 
         i = row.getFirstCellNum()
         while i < row.getLastCellNum()
+          if i >= head_array.length
+            next
+          end
+
           cell = row.getCell(i)
           cell_type = cell.getCellType()
           value = nil
@@ -89,9 +93,15 @@ module ContentsHelper
           when cell_type == cell.CELL_TYPE_FORMULA
             value = cell.getCellFormula()
           when cell_type == cell.CELL_TYPE_NUMERIC
-            if @@date_util_class.isCellDateFormatted(cell)
-              value = cell.getDateCellValue()
-              value = parseDateValue(value)
+            is_date_col = head_array[i].template.column_name == "日期"
+            if (@@date_util_class.isCellDateFormatted(cell) || @@date_util_class.isCellInternalDateFormatted(cell) || is_date_col)
+              begin
+                value = cell.getDateCellValue()
+                value = parseDateValue(value)
+              rescue Exception
+                Rails.logger.info "Invalid date value : #{cell.toString()}"
+                value=""
+              end
             else 
               value = cell.getNumericCellValue()
             end
