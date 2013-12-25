@@ -67,11 +67,8 @@ class NewsReleaseController < ApplicationController
 			# now the fields
 			ai.items.each do |item|
 				Rails.logger.info item.news_classified.id
-				item.news_classified.reload
 				item.news_release = ai.entity
 				Rails.logger.info item.news_release.id
-				item.save
-				item.news_release = ai.entity
 				item.save
 			end
 		end
