@@ -17,23 +17,11 @@ class NewsReleaseController < ApplicationController
 	verify :method => :post, :only => :create, :render => {:nothing => true, :status => :method_not_allowed }
 	def create
 		init(params)
-		if @category.blank?
-			# category must be present
-    		@message = l(:error_no_cateory)
-		    respond_to do |format|
-		      format.html {
-		        render :template => 'common/error', :layout => use_layout, :status => 400
-		      }
-		  	end
-		  	return
-		end
 
 		data = params['record'].read
 		file_name = save_tmp_file(data)
+
 		headers = _get_header()
-		if headers.empty?
-			raise "No columns definition found for #{category} found!"
-		end
 		data =  IO.binread(file_name)
 		Rails.logger.info "read record size: #{data.size}"
 		poiReader = PoiExcelReader.new(_get_classified_hash)
@@ -72,7 +60,6 @@ class NewsReleaseController < ApplicationController
 		Rails.logger.info "Save file to databases #{activeItems}"
 		activeItems.each do |ai|
 			# save the entity line first
-			ai.entity.safe_attributes = {:classified => @category}
 			ai.entity.project = @project
 			ai.entity.save
 			Rails.logger.info "a activity line is saved: #{ai.entity}"

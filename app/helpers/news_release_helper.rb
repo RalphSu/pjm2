@@ -19,7 +19,7 @@ module NewsReleaseHelper
 	def find_news_classified_hash
 		# hash of hash  classified => { template_name => NewsClassified }
 		map = {}
-		NewsClassified.all.each |f| do
+		NewsClassified.all.each  do |f|
 			if map.has_key?(f.classified)
 				map[f.classified][f.template.column_name] = f
 			else

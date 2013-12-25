@@ -136,5 +136,7 @@ pr = PoiExcelReader.new
 file_name = File.join File.dirname(__FILE__), '/keyi_sample.xlsx'
 #f = File.open(file_name)
 data = IO.binread(file_name)
+
+p :str.to_s
 p data.size
 pr.read_excel(data)
