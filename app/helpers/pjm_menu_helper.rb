@@ -23,7 +23,7 @@ module PjmMenuHelper
     if node.nil?
       return
     end
-    caption, url, selected = extract_node_details(node, project)
+    caption, url, selected =   extract_node_details_controller(node, project)
     
     Rails.logger.info selected
 

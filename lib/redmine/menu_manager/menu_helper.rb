@@ -45,7 +45,7 @@ module Redmine::MenuManager::MenuHelper
       return render_menu_node_with_children(node, project)
     else
       caption, url, selected = extract_node_details(node, project)
-      return content_tag('li',
+     return content_tag('li',
                            render_single_menu_node(node, caption, url, selected))
     end
   end
@@ -109,7 +109,7 @@ module Redmine::MenuManager::MenuHelper
 
   def menu_items_for(menu, project=nil)
     items = []
-    Redmine::MenuManager.items(menu).root.children.each do |node|
+     Redmine::MenuManager.items(menu).root.children.each do |node|
       if allowed_node?(node, User.current, project)
         if block_given?
           yield node
@@ -122,6 +122,7 @@ module Redmine::MenuManager::MenuHelper
   end
 
   def extract_node_details(node, project=nil)
+    
     item = node
     url = case item.url
     when Hash
@@ -132,8 +133,29 @@ module Redmine::MenuManager::MenuHelper
       item.url
     end
     caption = item.caption(project)
-
+     
     return [caption, url, (current_menu_item == item.name)]
+  end
+
+   def extract_node_details_controller(node, project=nil)
+    
+    item = node
+    url = case item.url
+    when Hash
+      project.nil? ? item.url : {item.param => project}.merge(item.url)
+    when Symbol
+      send(item.url)
+    else
+      item.url
+    end
+    caption = item.caption(project)
+    controllername = controller_name.to_s
+    if(controllername=="users")
+        controllername="admin"
+    elsif(controllername=="templates")
+        controllername="admin"
+    end
+    return [caption, url, (controllername == item.name.to_s)]
   end
 
   # Checks if a user is allowed to access the menu item by:

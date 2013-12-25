@@ -24,6 +24,7 @@ module Redmine::MenuManager
   end
 
   def self.items(menu_name)
+    
     @items[menu_name.to_sym] || Redmine::MenuManager::TreeNode.new(:root, {})
   end
 end
