@@ -30,19 +30,26 @@ class NewsReleaseController < ApplicationController
 
 		data = params['record'].read
 		file_name = save_tmp_file(data)
-		headers = find_new_classifieds(@category)
+		headers = _get_header()
 		if headers.empty?
 			raise "No columns definition found for #{category} found!"
 		end
 		data =  IO.binread(file_name)
 		Rails.logger.info "read record size: #{data.size}"
-		poiReader = PoiExcelReader.new()
+		poiReader = PoiExcelReader.new(_get_classified_hash)
 	  	uploadItems = poiReader.read_excel_text(data, headers)
 
 	  	save(uploadItems)
 
 	  	remove_tmp_file(file_name)
 	  	redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+	end
+
+	def _get_classified_hash
+		find_news_classified_hash()
+	end
+	def _get_header()
+		distinct_news_templates()
 	end
 
 	def save_tmp_file(data)

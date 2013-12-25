@@ -16,11 +16,26 @@ module NewsReleaseHelper
 		NewsClassified.find(:all, :conditions => {:classified =>classified })
 	end
 
-	def distinct_news_templates()
+	def find_news_classified_hash
+		# hash of hash  classified => { template_name => NewsClassified }
+		map = {}
+		NewsClassified.all.each |f| do
+			if map.has_key?(f.classified)
+				map[f.classified][f.template.column_name] = f
+			else
+				inner_map = {}
+				inner_map[f.template.column_name] = f
+				map[f.classified] = inner_map
+			end
+		end
+		map
+	end
+
+	def distinct_news_templates
 		Template.find(:all, :conditions => {:template_type =>"新闻类模板" })
 	end
 
-	def distinct_news_classifieds() 
+	def distinct_news_classifieds
 		NewsClassified.all(:select => "DISTINCT(classified)")
 	end
 

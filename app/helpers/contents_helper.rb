@@ -6,7 +6,7 @@ module ContentsHelper
   def project_content_tabs
     tabs = [
             {:name => 'news', :controller=> 'news_release', :action => 'index', :partial => 'contents/news', :label => :label_news}
-            #{:name => 'weibo',  :controller=> 'weibo', :action => 'index', :partial => 'contents/weibo', :label => :label_weibo},
+            {:name => 'weibo',  :controller=> 'weibo', :action => 'index', :partial => 'contents/weibo', :label => :label_weibo},
             #{:name => 'press', :action => press, :partial => 'contents/press', :label => :label_press},
             #{:name => 'blog', :action => :blog, :partial => 'contents/blog', :label => :label_blog},
             #{:name => 'micro_talk', :action => :micro_talk, :partial => 'contents/micro_talk', :label => :label_micro_talk},
@@ -16,10 +16,6 @@ module ContentsHelper
     tabs.select {|tab| User.current.allowed_to?(tab[:action], @project)}
     tabs
   end
-
-  def get_project_name(id)
-  	return id
-  end 
 
   class PoiExcelReader
       # Java classes import
@@ -37,6 +33,11 @@ module ContentsHelper
       @@cell_interface_class=Rjb::import('org.apache.poi.ss.usermodel.Cell')
       @@date_util_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFDateUtil')
       @@date_format_class = Rjb::import('java.text.SimpleDateFormat')
+
+    def initialize(classified_hash)
+      #
+      @classified_hash = classified_hash
+    end
 
     def read_excel_text(data, headers)
       byte_stream = @@byte_stream_class.new(data)
@@ -173,23 +174,17 @@ module ContentsHelper
 
     def validate_header(row, headers)
       head = []
-      head_hash = {}
-      # build column_name to classifield hash
-      headers.each do |h|
-        head_hash[h.template.column_name] = h
-      end
+      Rails.logger.debug "Parsing header row of range [#{row.getFirstCellNum()}, #{row.getLastCellNum()})"
 
-      #Rails.logger.debug head_hash
-      #Rails.logger.debug "Parsing header row of range [#{row.getFirstCellNum()}, #{row.getLastCellNum()})"
-
-      i = 0
+      # TODO:: first column is the category
+      i = row.getFirstCellNum()
       # read heads
       while i < row.getLastCellNum()
         cell = row.getCell(i)
         cell_type = cell.getCellType()
         value = nil
-
-        #Rails.logger.info "reading header cell at index #{i}, cell type is #{cell_type}, cell value as #{cell.getStringCellValue()}"
+        # validate type
+        Rails.logger.info "reading header cell at index #{i}, cell type is #{cell_type}, cell value as #{cell.getStringCellValue()}"
         case
         when cell_type == cell.CELL_TYPE_STRING
           value = cell.getRichStringCellValue().getString()
@@ -200,25 +195,17 @@ module ContentsHelper
           raise "File head is invalid. header row must be string!"
         end
 
-        unless value.blank?
-          #raise "File has empty column header!"
-          if head_hash.has_key?(value)
-            head << head_hash[value]
-          else 
-            raise "unexpected header column #{value}!"
-          end
-        end
+        head << value
 
-        i= i+1
+        i = i+1
       end
 
-      # validation
+      # validate expectation
       headers.each { |expected|
         raise "File head is invalid. header #{expected} not presented!" unless head.include?(expected)
       }
 
-      #Rails.logger.info head
-
+      Rails.logger.info head
       return head
     end
 
