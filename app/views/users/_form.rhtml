@@ -3,9 +3,9 @@
 <!--[form:user]-->
 <div class="box tabular">
 <p><%= f.text_field :login, :required => true, :size => 25  %></p>
-<p><%= f.text_field :firstname, :required => true ,:size => 30  %></p>
-<p><%= f.text_field :mail, :required => true %></p>
-<p><%= f.text_field :phone_number, :required => true %></p>
+<p><%= f.text_field :firstname, :required => true ,:size => 25  %></p>
+<p><%= f.text_field :mail, :required => true ,:size => 25 %></p>
+<p><%= f.text_field :phone_number, :required => true ,:size => 25 %></p>
 <p><%= f.password_field :password, :required => true, :size => 25, :autocomplete => :off %><br />
 <em><%= l(:text_caracters_minimum, :count => Setting.password_min_length) %></em></p>
 <p><%= f.password_field :password_confirmation, :required => true, :size => 25, :autocomplete => :off %></p>

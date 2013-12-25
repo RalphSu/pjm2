@@ -352,7 +352,8 @@ class User < Principal
   end
 
   def self.nonClients
-    clients = User.all
+     
+    clients = User.find(:all,:conditions=>["user_type in (?,?) or (user_type is null and status>0)", l(:label_user_normal), l(:label_user_admin) ])
     if clients.nil?
       []
     else
@@ -361,7 +362,8 @@ class User < Principal
   end
 
   def self.allClients
-    clients = User.find_by_client(true)
+    clients = User.find(:all,:conditions=>["user_type = ? ", l(:label_user_client) ])
+    
     if clients.nil?
       []
     else

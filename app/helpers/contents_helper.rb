@@ -5,7 +5,7 @@ module ContentsHelper
 
   def project_content_tabs
     tabs = [
-            {:name => 'news', :controller=> 'news_release', :action => 'index', :partial => 'contents/news', :label => :label_news},    
+            {:name => 'news', :controller=> 'news_release', :action => 'index', :partial => 'contents/news', :label => :label_news}
             #{:name => 'weibo',  :controller=> 'weibo', :action => 'index', :partial => 'contents/weibo', :label => :label_weibo},
             #{:name => 'press', :action => press, :partial => 'contents/press', :label => :label_press},
             #{:name => 'blog', :action => :blog, :partial => 'contents/blog', :label => :label_blog},
@@ -43,14 +43,15 @@ module ContentsHelper
       wb = @@workbook_class.new(byte_stream)
       sheet = wb.getSheetAt(0)
       if sheet.nil?
-        raise ''
+        raise 'sheet is not found!'
       end
       headrow = sheet.getRow(sheet.getFirstRowNum())
       if headrow.nil?
-        raise ''
+        raise ' head row not found!'
       end
       # read header row
       head_array = validate_header(headrow, headers)
+      Rails.logger.info "headers : #{head_array}"
 
       ## images first.
       #read_pics(wb, sheet)
@@ -62,16 +63,25 @@ module ContentsHelper
     def read_texts(sheet, head_array)
       result = []
 
-      #Rails.logger.info "sheet has : #{sheet.getFirstRowNum()} to #{sheet.getLastRowNum()} row."
+      Rails.logger.info "sheet has : #{sheet.getFirstRowNum()} to #{sheet.getLastRowNum()} row."
       m = sheet.getFirstRowNum() + 1
-      while m < sheet.getLastRowNum()
-        #Rails.logger.info "starting row : #{m}"
+      while m <= sheet.getLastRowNum()
+        Rails.logger.info "starting row : #{m}"
         row = sheet.getRow(m)
+        if row.nil?
+          Rails.logger.info "ignore null row : #{m}!"
+          m = m+1
+          next
+        end
         
         line = nil
 
         i = row.getFirstCellNum()
         while i < row.getLastCellNum()
+          if i >= head_array.length
+            next
+          end
+
           cell = row.getCell(i)
           cell_type = cell.getCellType()
           value = nil
@@ -83,9 +93,15 @@ module ContentsHelper
           when cell_type == cell.CELL_TYPE_FORMULA
             value = cell.getCellFormula()
           when cell_type == cell.CELL_TYPE_NUMERIC
-            if @@date_util_class.isCellDateFormatted(cell)
-              value = cell.getDateCellValue()
-              value = parseDateValue(value)
+            is_date_col = head_array[i].template.column_name == "日期"
+            if (@@date_util_class.isCellDateFormatted(cell) || @@date_util_class.isCellInternalDateFormatted(cell) || is_date_col)
+              begin
+                value = cell.getDateCellValue()
+                value = parseDateValue(value)
+              rescue Exception
+                Rails.logger.info "Invalid date value : #{cell.toString()}"
+                value=""
+              end
             else 
               value = cell.getNumericCellValue()
             end
@@ -114,7 +130,7 @@ module ContentsHelper
           i = i+1
         end
 
-        #Rails.logger.info "end row : #{m}"
+        Rails.logger.info "end row : #{m}"
         result << line unless line.nil?
         m = m+1
       end

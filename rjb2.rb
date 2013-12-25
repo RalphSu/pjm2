@@ -25,42 +25,20 @@ Rjb::load(poi_jars.join(":"),  ['-Xms256M', '-Xmx512M'])
 class PoiExcelReader
 	  # Java classes import
 	  include Rjb
-	  @@file_class = Rjb::import('java.io.FileOutputStream')
-	  @@file_in_class = Rjb::import('java.io.FileInputStream')
-	  @@workbook_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFWorkbook')
-	  @@cell_style_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFCellStyle')
-	  @@font_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFFont')
-	  @@cell_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFCell')
-          @@picture_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFPictureData')
-	  @@date_util_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFDateUtil')
-	  @@row_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFRow')
-	  @@sheet_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFSheet')
-	  @@string_stream_class=Rjb::import('java.io.StringBufferInputStream')
-<<<<<<< HEAD
-	  @@jString = Rjb::import('java.lang.String')
-          @@arraylist_class=Rjb::import('java.util.ArrayList')
-	  @@list_class=Rjb::import('java.util.List')
-	def read_excel(data)
-	          
-		  in_stream = @@file_in_class.new(File.join File.dirname(__FILE__), '/my_spreadsheet.xls')
-		  wb = @@workbook_class.new(in_stream)
-	
-		pictures = wb.getAllPictures()
-                p pictures.java_methods
-		pictures.each do |p|
-	  		p "find a picture in the excel, now save it. index is #{p.getPictureIndex()}"
-		  	#save 
-		  	ext = pic.suggestFileExtension();
-		  	bytes = p.getData(); 
-			out = file_class.new(File.join File.dirname(__FILE__), '/extraced_from_excel.png')
-		    	out.write(bytes);  
-		    	out.close();  
-		 end
-	
-=======
-	  @@byte_stream_class=Rjb::import('java.io.ByteArrayInputStream')
-	  @@hssf_picture_class=Rjb::import('org.apache.poi.hssf.usermodel.HSSFPicture')
-	  @@cell_interface_class=Rjb::import('org.apache.poi.ss.usermodel.Cell')
+	      @@file_class = Rjb::import('java.io.FileOutputStream')
+	      @@file_in_class = Rjb::import('java.io.FileInputStream')
+	      @@workbook_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFWorkbook')
+	      @@cell_style_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFCellStyle')
+	      @@font_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFFont')
+	      @@cell_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFCell')
+	      @@row_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFRow')
+	      @@sheet_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFSheet')
+	      @@string_stream_class=Rjb::import('java.io.StringBufferInputStream')
+	      @@byte_stream_class=Rjb::import('java.io.ByteArrayInputStream')
+	      @@xssf_picture_class=Rjb::import('org.apache.poi.xssf.usermodel.XSSFPicture')
+	      @@cell_interface_class=Rjb::import('org.apache.poi.ss.usermodel.Cell')
+	      @@date_util_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFDateUtil')
+	      @@date_format_class = Rjb::import('java.text.SimpleDateFormat')
 
 	def read_excel(data)
 		byte_stream = @@byte_stream_class.new(data)
@@ -69,19 +47,22 @@ class PoiExcelReader
 		if sheet.nil?
 			raise ''
 		end
+		p "sheet contains row from #{sheet.getFirstRowNum() } to #{sheet.getLastRowNum()}"
 		headrow = sheet.getRow(sheet.getFirstRowNum())
 		if headrow.nil?
 			raise ''
 		end
+		p headrow
 		# read header row
 		validate_header(headrow)
 
 		## images
-		read_pics(wb, sheet)
+		#read_pics(wb, sheet)
 
 		## texts
 		m = sheet.getFirstRowNum() + 1
-		while m < sheet.getLastRowNum()
+		p "sheet contains row from #{sheet.getFirstRowNum() } to #{sheet.getLastRowNum()}"
+		while m <= sheet.getLastRowNum()
 			p "starting row : #{m}"
 			row = sheet.getRow(m)
 		  	i = row.getFirstCellNum()
@@ -120,22 +101,21 @@ class PoiExcelReader
 	  	if patriarch.nil?
 	  		return
 	  	end
->>>>>>> 94b9346ade948d288666815b03f2a50255778d12
 
 	  	pic_num = 0
 	  	it = patriarch.getChildren().iterator()
-      	while it.hasNext()
+      		while it.hasNext()
 	 		shape = it.next()
-	       	anchor =  shape.getAnchor()
-	       	if (shape .getClass().equals(@@hssf_picture_class)) 
-	          row = anchor.getRow1()
-	          col = anchor.getCol1()
-	          p "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s
-	          pic_index = shape.getPictureIndex() - 1
-	          pic_data = pictures.get(pic_index)
-	          save_pic(row, col, pic_data)
+		       	anchor =  shape.getAnchor()
+		       	if (shape .getClass().equals(@@hssf_picture_class)) 
+		          row = anchor.getRow1()
+		          col = anchor.getCol1()
+		          p "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s
+		          pic_index = shape.getPictureIndex() - 1
+		          pic_data = pictures.get(pic_index)
+		          save_pic(row, col, pic_data)
 
-	          pic_num = pic_num + 1
+		          pic_num = pic_num + 1
 	    	end  
 	     end
 	     p "Total picture number : #{pic_num}"
@@ -153,7 +133,7 @@ class PoiExcelReader
 end
 
 pr = PoiExcelReader.new
-file_name = File.join File.dirname(__FILE__), '/my_spreadsheet.xls'
+file_name = File.join File.dirname(__FILE__), '/keyi_sample.xlsx'
 #f = File.open(file_name)
 data = IO.binread(file_name)
 p data.size
