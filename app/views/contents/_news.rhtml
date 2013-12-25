@@ -68,9 +68,10 @@
 	<% unless @p.news_release.blank? %>
 		<% @p.news_release.each do | nr| %>
 			<% if nr.classified == @category %>
-		<tr>
+			<% release_fields = find_field_by_releaseId(nr.id) %>
+		<tr class="user <%= cycle("odd", "even") %>">
 		<%fields.each do |f|%>
-			<td><%= find_field_by_releaseId_classifiedId(nr.id, f.id)%></td>
+			<td><%= release_fields[f.id] %></td>
 		<%end%>
 		<td class="buttons">
 <%= link_to_function l(:button_edit), { :url => { :controller => 'news_release', :action => 'edit_release', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>

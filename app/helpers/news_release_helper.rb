@@ -43,13 +43,19 @@ module NewsReleaseHelper
 		project.news_release
 	end
 
-	def find_field_by_releaseId_classifiedId(releaseId, classifiedId)
-		field = NewsReleaseField.find(:all, :conditions=>{:news_releases_id=>releaseId, :news_classfieds_id=>classifiedId})
+	def find_field_by_releaseId(releaseId)
+		field = NewsReleaseField.find(:all, :conditions=>{:news_releases_id=>releaseId})
 		if field.blank?
-			''
+			map = {}
 		else
-			field[0].body
+			map = {}
+			field.each do |f|
+				map[f.news_classified.id] = f.body
+			end
+			map
 		end
+		# Rails.logger.info map
+		map
 	end
 
 end
