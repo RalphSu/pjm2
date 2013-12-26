@@ -19,7 +19,7 @@ class WeiboController < ApplicationController
 		data =  IO.binread(file_name)
 		Rails.logger.info "read record size: #{data.size}"
 		poiReader = PoiExcelReader.new(_get_classified_hash, _get_factory)
-	  	uploadItems = poiReader.read_excel_text(data, headers)
+	  	uploadItems = poiReader.read_excel_text(file_name, headers)
 
 	  	save(uploadItems)
 

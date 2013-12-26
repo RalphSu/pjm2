@@ -21,6 +21,7 @@ module ContentsHelper
 	  # Java classes import
 	  @@file_class = Rjb::import('java.io.FileOutputStream')
 	  @@file_in_class = Rjb::import('java.io.FileInputStream')
+	  @@string_class = Rjb::import('java.lang.String')
 	  @@workbook_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFWorkbook')
 	  @@cell_style_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFCellStyle')
 	  @@font_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFFont')
@@ -33,6 +34,7 @@ module ContentsHelper
 	  @@cell_interface_class=Rjb::import('org.apache.poi.ss.usermodel.Cell')
 	  @@date_util_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFDateUtil')
 	  @@date_format_class = Rjb::import('java.text.SimpleDateFormat')
+	  @@opc_package_class=Rjb::import('org.apache.poi.openxml4j.opc.OPCPackage')
 
 	def initialize(classified_hash, factory)
 	  #
@@ -41,8 +43,12 @@ module ContentsHelper
 	end
 
 	def read_excel_text(data, headers)
-	  byte_stream = @@byte_stream_class.new(data)
-	  wb = @@workbook_class.new(byte_stream)
+	  #byte_stream = @@byte_stream_class.new(data)
+	  #wb = @@workbook_class.new(byte_stream)
+	  #byte_stream = @@file_in_class.new(@@string_class.new(data))
+	  opc = @@opc_package_class.open(@@string_class.new(data))
+	  wb = @@workbook_class.new(opc)
+
 	  sheet = wb.getSheetAt(0)
 	  if sheet.nil?
 		raise 'sheet is not found!'
