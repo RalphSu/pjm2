@@ -1,9 +1,9 @@
 class NewsReleaseField < ActiveRecord::Base
 	include Redmine::SafeAttributes
 
-	belongs_to :weibo,
+	belongs_to :news_release,
 	:class_name => "NewsRelease",
-	:foreign_key => "weibos_id"
+	:foreign_key => "news_releases_id"
 	belongs_to :news_classified,
 	:class_name => "NewsClassified",
 	:foreign_key => "news_classfieds_id"

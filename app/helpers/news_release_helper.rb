@@ -39,10 +39,6 @@ module NewsReleaseHelper
 		NewsClassified.all(:select => "DISTINCT(classified)")
 	end
 
-	def find_project_release_lines(project)
-		project.news_release
-	end
-
 	def find_field_by_releaseId(releaseId)
 		field = NewsReleaseField.find(:all, :conditions=>{:news_releases_id=>releaseId})
 		if field.blank?
@@ -56,6 +52,20 @@ module NewsReleaseHelper
 		end
 		# Rails.logger.info map
 		map
+	end
+
+	class NewsReleaseFactory
+		def createEntity(classified_name)
+			nr  = NewsRelease.new()
+			nr.classified = classified_name
+			return nr
+		end
+		def createField(body, classified)
+			field = NewsReleaseField.new()
+			field.body = body
+			field.news_classified = classified
+			return field
+		end
 	end
 
 end

@@ -1,1 +1,87 @@
 <h2><%= l(:label_weibo)%></h2>
+
+<label for='category'><%= l(:label_category) %> :</label>
+<% form_tag({}, :method => :get) do %>
+<%= select_tag 'category', weibo_option_for_select(@category), :class => "large", :onchange => "this.form.submit(); return false;"  %>
+<% end %>
+
+<div class="contextual">
+	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_weibo_new)%></label></a>
+</div>
+</fieldset>
+
+<!-- Modal dialog for upload -->
+<div class="container">
+	<div class="row">
+		<div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                    <% title = @p.nil? ? l(:no_project_selected) : l(:label_import_news) %>
+                    <h4 class="modal-title" id="myModalLabel"><%= title %></h4>
+                </div>
+			<% if @p.nil?%>
+                <div class="modal-body">
+                		<h4 class="modal-title" id="myModalLabel"><%= title %></h4>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                	</div>
+                </div>
+            <%else%>
+                <div class="modal-body">
+                    <% form_tag(url_for(controller: 'weibo', action: 'create') , :method => :post, :multipart => true ) do %>
+						<%= hidden_field_tag :category , @category %>
+						<%= hidden_field_tag :project_id , @p.identifier %>
+						<%= file_field_tag :record %>					
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                    <button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
+					</div>
+				</div>
+                    <% end %>
+            <% end %>
+		    </div><!-- /.modal-content -->
+		</div><!-- /.modal-dalog -->
+		</div><!-- /.modal -->
+	</div>
+</div>
+
+
+<!-- show contents table -->
+<% fields = find_weibo_classifieds(@category)%>
+<table class="list">
+	<thead>
+		<% fields.each do |f|%>
+			<th><%= f.template.column_name %></th> 
+		<% end %>
+		<th></th> <!-- Place holder column for actions -->
+	</thread>
+	<tbody>
+<% unless (@p.blank? or @category.blank?)%>
+	<% unless @p.weibos.blank? %>
+		<% @p.weibos.each do | nr| %>
+			<% if nr.classified == @category %>
+			<% weibo_fields = find_field_by_weiboId(nr.id) %>
+		<tr class="user <%= cycle("odd", "even") %>">
+		<%fields.each do |f|%>
+			<td><%= weibo_fields[f.id] %></td>
+		<%end%>
+		<td class="buttons">
+<%= link_to_function l(:button_edit), { :url => { :controller => 'weibo', :action => 'edit_weibo', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>
+<%= link_to_remote(l(:button_delete), { :url => { :controller => 'weibo', :action => 'destory_weibo', :id => "#{nr.id}" },:method => :delete, :category=>@category, :project_id=>@p.identifier },:class => 'icon icon-del') %>
+		</td>
+		</tr>
+		<% end %>
+		<% end %>
+	<%end%>
+<% end %>
+	</tbody>
+</table>
+
+
+

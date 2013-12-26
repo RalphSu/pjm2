@@ -34,9 +34,10 @@ module ContentsHelper
 	  @@date_util_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFDateUtil')
 	  @@date_format_class = Rjb::import('java.text.SimpleDateFormat')
 
-	def initialize(classified_hash)
+	def initialize(classified_hash, factory)
 	  #
 	  @classified_hash = classified_hash
+	  @factory = factory
 	end
 
 	def read_excel_text(data, headers)
@@ -143,14 +144,11 @@ module ContentsHelper
 		  	if category_map.has_key?(head_array[i])
 				if line.nil?
 					line = UploadLine.new()
-					line.entity = NewsRelease.new()
-					line.entity.classified = category_name
+					line.entity = @factory.createEntity(category_name)
 					line.items = []
 				end
 				value = value.to_s
-				field = NewsReleaseField.new()
-				field.body = value
-				field.news_classified = category_map[head_array[i]]
+				field = @factory.createField(value, category_map[head_array[i]])
 				Rails.logger.info "		Add a field for row #{m}, at col #{i}, column_name is #{head_array[i]}!"
 				line.items << field
 			end
@@ -239,7 +237,7 @@ module ContentsHelper
 
 	  # validate expectation
 	  headers.each { |expected|
-		raise "File head is invalid. header #{expected} not presented!" unless head.include?(expected.column_name)
+		raise "File head is invalid. header #{expected.column_name} not presented!" unless head.include?(expected.column_name)
 	  }
 
 	  #Rails.logger.info head
@@ -267,5 +265,22 @@ module ContentsHelper
 	@entity
 	@items = []
   end
+
+  	#helper methods
+	def save_tmp_file(data)
+		file_name = "" + Time.now.inspect + "-" + Random.new().rand().to_s
+		full_name = File.join File.dirname(__FILE__),file_name
+		Rails.logger.info "Save file with name #{file_name}"
+		IO.binwrite(full_name, data)
+		full_name
+	 end
+
+	 def remove_tmp_file(file_name)
+	 	begin
+	 		File.delete(file_name)
+	 	rescue Exception
+	 		Rails.logger.info 'delete temp file failed, ignore and return'
+	 	end
+	 end
 
 end

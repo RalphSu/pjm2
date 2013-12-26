@@ -87,6 +87,12 @@ ActionController::Routing::Routes.draw do |map|
       news_relase_views.connect 'news_release/index/:project_id/', :action => 'index'
     end
   end
+  
+  map.with_options :controller => 'weibo' do |weibo_routes|
+    weibo_routes.with_options :conditions => {:method => :get} do |weibo_views|
+      weibo_views.connect 'weibo/index/:project_id/', :action => 'index'
+    end
+  end
 
   map.with_options :controller => 'documents' do |document_routes|
     document_routes.with_options :conditions => {:method => :get} do |document_views|

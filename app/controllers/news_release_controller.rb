@@ -24,13 +24,17 @@ class NewsReleaseController < ApplicationController
 		headers = _get_header()
 		data =  IO.binread(file_name)
 		Rails.logger.info "read record size: #{data.size}"
-		poiReader = PoiExcelReader.new(_get_classified_hash)
+		poiReader = PoiExcelReader.new(_get_classified_hash, _get_factory)
 	  	uploadItems = poiReader.read_excel_text(data, headers)
 
 	  	save(uploadItems)
 
 	  	remove_tmp_file(file_name)
 	  	redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+	end
+
+	def _get_factory
+		NewsReleaseFactory.new()
 	end
 
 	def _get_classified_hash
@@ -40,22 +44,6 @@ class NewsReleaseController < ApplicationController
 		distinct_news_templates()
 	end
 
-	def save_tmp_file(data)
-		file_name = "" + Time.now.inspect + "-" + Random.new().rand().to_s
-		full_name = File.join File.dirname(__FILE__),file_name
-		Rails.logger.info "Save file with name #{file_name}"
-		IO.binwrite(full_name, data)
-		full_name
-	 end
-
-	 def remove_tmp_file(file_name)
-	 	begin
-	 		File.delete(file_name)
-	 	rescue Exception
-	 		Rails.logger.info 'delete temp file failed, ignore and return'
-	 	end
-	 end
-
 	def save(activeItems)
 		Rails.logger.info "Save file to databases #{activeItems}"
 		activeItems.each do |ai|
@@ -63,7 +51,6 @@ class NewsReleaseController < ApplicationController
 			ai.entity.project = @project
 			ai.entity.save
 			Rails.logger.info "a activity line is saved: #{ai.entity}"
-			ai.entity.reload
 			# now the fields
 			ai.items.each do |item|
 				Rails.logger.info item.news_classified.id
