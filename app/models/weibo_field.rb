@@ -1,4 +1,4 @@
-class WeiboFields < ActiveRecord::Base
+class WeiboField < ActiveRecord::Base
 
 	include Redmine::SafeAttributes
 
