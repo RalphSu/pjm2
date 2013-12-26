@@ -1,4 +1,5 @@
 *.rbc
+*.class
 *.sassc
 .sass-cache
 capybara-*.html

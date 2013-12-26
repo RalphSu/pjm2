@@ -3,6 +3,7 @@ require 'rjb'
 
 # JVM loading
 POI_LIB_HOME=File.join File.dirname(__FILE__), '/lib/poi-3.9'
+#POI_LIB_HOME= './lib/poi-3.9'
 poi_jars = [
 	"#{POI_LIB_HOME}/poi-3.9-20121203.jar",
 	"#{POI_LIB_HOME}/poi-excelant-3.9-20121203.jar",
@@ -19,6 +20,7 @@ poi_jars = [
 	"#{POI_LIB_HOME}/ooxml-lib/xmlbeans-2.3.0.jar"
 ]
 # loading
+#p poi_jars.join(":")
 Rjb::load(poi_jars.join(":"),  ['-Xms256M', '-Xmx512M'])
 
 
