@@ -73,7 +73,7 @@
 			<% forum_fields = find_field_by_forumId(nr.id) %>
 		<tr class="user <%= cycle("odd", "even") %>">
 		<%fields.each do |f|%>
-			<td><%= forum_fields[f.id] %></td>
+			<td><p title=<%= forum_fields[f.id] %>><%= forum_fields[f.id] %></td>
 		<%end%>
 		<td class="buttons">
 <%= link_to_function l(:button_edit), { :url => { :controller => 'forum', :action => 'edit_forum', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>

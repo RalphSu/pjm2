@@ -72,7 +72,7 @@
 			<% weibo_fields = find_field_by_weiboId(nr.id) %>
 		<tr class="user <%= cycle("odd", "even") %>">
 		<%fields.each do |f|%>
-			<td><%= weibo_fields[f.id] %></td>
+			<td><p title=<%= weibo_fields[f.id] %>><%= weibo_fields[f.id] %></td>
 		<%end%>
 		<td class="buttons">
 <%= link_to_function l(:button_edit), { :url => { :controller => 'weibo', :action => 'edit_weibo', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>
