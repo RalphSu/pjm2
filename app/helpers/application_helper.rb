@@ -1088,6 +1088,8 @@ module ApplicationHelper
           items_for_main_level << item
         elsif item.name == :contents
           items_for_main_level << item
+        elsif item.name == :pjconfig
+          items_for_main_level << item
         end
       end
       @top_menu_split = {

@@ -3014,6 +3014,22 @@ input: -moz-placeholder {
   
 }
 
+#account-nav1 .pjconfig{
+  height: 43px;
+  width: 140px;
+  background: url(../images/small_configuration.png) no-repeat;
+  margin-top: 2px;
+  
+}
+
+#account-nav1  .pjconfigselected { 
+  height: 43px;
+  width: 140px;
+  background: url(../images/big_configuration.png) no-repeat;
+  margin-top: 2px;
+  
+}
+
 #account-nav1 > a {
   text-decoration: none;
   color: #000000;

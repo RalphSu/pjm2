@@ -191,7 +191,9 @@ Redmine::MenuManager.map :top_menu do |menu|
   menu.push :welcome, { :controller => 'welcome', :action => 'index' }, :if => Proc.new { User.current.logged? }
   menu.push :contents, { :controller => 'contents', :action => 'index' }, :caption => :label_my_projects
   menu.push :report , { :controller => 'admin', :action => 'index' },:caption=>:label_report_analyse
+  menu.push :pjconfig, { :controller => 'pjconfig', :action => 'index' }, :if => Proc.new { !User.current.admin? }
   menu.push :admin, { :controller => 'admin', :action => 'index' }, :if => Proc.new { User.current.admin? }, :last => true
+  
   # remove help in top-menu
   # menu.push :help, Redmine::Info.help_url, :last => true, :caption => "?"
 end
@@ -224,6 +226,12 @@ Redmine::MenuManager.map :admin_menu do |menu|
             },
             :caption => :label_template_plural
           })
+
+end
+
+Redmine::MenuManager.map :pjconfig_menu do |menu|
+  include TemplatesHelper
+  menu.push :projects, {:controller => 'pjconfig', :action => 'projects'}, :caption => :label_project_plural
 
 end
 
