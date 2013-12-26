@@ -3,10 +3,10 @@
 <div class="splitcontentleft">
   <div class="wiki"><%= textilizable Setting.welcome_text %></div>
   <% if @news.any? %>
-  <div class="news box">
+  <div class="news ">
 	<h3><%=l(:label_news_latest)%></h3>
 		<%= render :partial => 'news/news', :collection => @news %>
-		<%= link_to l(:label_news_view_all), :controller => 'news' %>
+		
   </div>
   <% end %>
   <%= call_hook(:view_welcome_index_left, :projects => @projects) %>
