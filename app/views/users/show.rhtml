@@ -40,9 +40,6 @@
 <% unless @events_by_day.empty? %>
 <h3><%= link_to l(:label_activity), :controller => 'activities', :action => 'index', :id => nil, :user_id => @user, :from => @events_by_day.keys.first %></h3>
 
-<p>
-<%=l(:label_reported_issues)%>: <%= Issue.count(:conditions => ["author_id=?", @user.id]) %>
-</p>
 
 <div id="activity">
 <% @events_by_day.keys.sort.reverse.each do |day| %>
@@ -59,13 +56,7 @@
 <% end -%>
 </div>
 
-<% other_formats_links do |f| %>
-	<%= f.link_to 'Atom', :url => {:controller => 'activities', :action => 'index', :id => nil, :user_id => @user, :key => User.current.rss_key} %>
-<% end %>
 
-<% content_for :header_tags do %>
-		<%= auto_discovery_link_tag(:atom, :controller => 'activities', :action => 'index', :user_id => @user, :format => :atom, :key => User.current.rss_key) %>
-<% end %>
 <% end %>
 <%= call_hook :view_account_right_bottom, :user => @user %>
 </div>

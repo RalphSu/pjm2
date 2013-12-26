@@ -18,6 +18,7 @@ class WelcomeController < ApplicationController
   def index
   	::I18n.locale=:zh
     @news = News.latest User.current
+    Rails.logger.info @news.size
     @projects = Project.latest User.current
   end
 

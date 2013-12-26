@@ -506,8 +506,8 @@ zh:
   label_last_login: 最后登录
   label_registered_on: 注册于
   label_activity: 日志
-  label_overall_activity: 全部活动
-  label_user_activity: "%{value} 的活动"
+  label_overall_activity: 全部日志
+  label_user_activity: "%{value} 的日志"
   label_new: 新建
   label_logged_as: 登录为
   label_environment: 环境
@@ -543,7 +543,7 @@ zh:
   label_news: 新闻
   label_news_new: 添加新闻
   label_news_plural: 新闻
-  label_news_latest: 最近的新闻
+  label_news_latest: 最近的日志
   label_news_view_all: 查看所有新闻
   label_news_added: 新闻已添加
   label_weibo: 微博
