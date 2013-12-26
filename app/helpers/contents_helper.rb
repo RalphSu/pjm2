@@ -274,7 +274,8 @@ module ContentsHelper
 
   	#helper methods
 	def save_tmp_file(data)
-		file_name = "" + Time.now.inspect + "-" + Random.new().rand().to_s
+		file_name = "" + Time.now.to_f.to_s + "-" + Random.new().rand().to_s
+		file_name = 
 		full_name = File.join File.dirname(__FILE__),file_name
 		Rails.logger.info "Save file with name #{file_name}"
 		IO.binwrite(full_name, data)
