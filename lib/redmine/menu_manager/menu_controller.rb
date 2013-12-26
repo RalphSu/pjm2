@@ -45,6 +45,8 @@ module Redmine::MenuManager::MenuController
 
   # Returns the menu item name according to the current action
   def current_menu_item
+      Rails.logger.info "tttt"
+    Rails.logger.info controller_name
     @current_menu_item ||= menu_items[controller_name.to_sym][:actions][action_name.to_sym] ||
                              menu_items[controller_name.to_sym][:default]
   end

@@ -68,7 +68,7 @@
 	<% unless @p.news_release.blank? %>
 		<% @p.news_release.each do | nr| %>
 			<% if nr.classified == @category %>
-		<tr>
+		<tr class="user <%= cycle("odd", "even") %> ">
 		<%fields.each do |f|%>
 			<td><%= find_field_by_releaseId_classifiedId(nr.id, f.id)%></td>
 		<%end%>
