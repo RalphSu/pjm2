@@ -39,10 +39,6 @@ module WeiboHelper
 		map
 	end
 
-	def find_project_weibo_lines(project)
-		project.weibos
-	end
-
 	def find_field_by_weiboId(weiboId)
 		field = WeiboField.find(:all, :conditions=>{:weibos_id=>weiboId})
 		if field.blank?

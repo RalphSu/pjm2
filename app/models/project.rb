@@ -45,6 +45,8 @@ class Project < ActiveRecord::Base
   has_many :principals, :through => :member_principals, :source => :principal
   has_many :news_release
   has_many :weibos
+  has_many :forums
+  has_many :blogs
 
   # project reviewer/manager/clients
   has_many :project_admin, :dependent => :destroy

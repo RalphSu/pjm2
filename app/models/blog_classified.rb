@@ -1,3 +1,9 @@
 class BlogClassified < ActiveRecord::Base
-  belongs_to :template
+	include Redmine::SafeAttributes
+
+	belongs_to :template
+
+	safe_attributes 'classified'
+
+	has_many :blog_fields
 end

@@ -94,6 +94,18 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
+  map.with_options :controller => 'blog' do |blog_routes|
+    blog_routes.with_options :conditions => {:method => :get} do |blog_views|
+      blog_views.connect 'blog/index/:project_id/', :action => 'index'
+    end
+  end
+  
+  map.with_options :controller => 'forum' do |forum_routes|
+    forum_routes.with_options :conditions => {:method => :get} do |forum_views|
+      forum_views.connect 'forum/index/:project_id/', :action => 'index'
+    end
+  end
+
   map.with_options :controller => 'documents' do |document_routes|
     document_routes.with_options :conditions => {:method => :get} do |document_views|
       document_views.connect 'projects/:project_id/documents', :action => 'index'

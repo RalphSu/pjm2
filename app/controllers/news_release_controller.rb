@@ -21,21 +21,20 @@ class NewsReleaseController < ApplicationController
 		data = params['record'].read
 		file_name = save_tmp_file(data)
 		begin
-		ActiveRecord::Base.transaction do
-     		@news = News.new(:project => @project, :author => User.current)
-		@news.summary="import news file"
-		@news.title="import"
-		@news.description="import file"
-		
-		if @news.save
-      		Rails.logger.info "save news success"
-      	else
-      		Rails.logger.info "save  news failed"
-      		Rails.logger.info(@news.errors.inspect) 
-      	end
-      	end
+			ActiveRecord::Base.transaction do
+		     		@news = News.new(:project => @project, :author => User.current)
+				@news.summary="import news file"
+				@news.title="import"
+				@news.description="import file"
+				if @news.save
+			      		Rails.logger.info "save news success"
+			      	else
+			      		Rails.logger.info "save  news failed"
+			      		Rails.logger.info(@news.errors.inspect) 
+			      	end
+		      	end
     		rescue Exception => e
-      	Rails.logger.info e.message
+		      	Rails.logger.info e.message
     		end
 		
 		

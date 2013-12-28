@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131226141104) do
+ActiveRecord::Schema.define(:version => 20131228144635) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -55,9 +55,19 @@ ActiveRecord::Schema.define(:version => 20131226141104) do
     t.datetime "updated_at"
   end
 
+  create_table "blog_fields", :force => true do |t|
+    t.integer  "blogs_id"
+    t.integer  "blog_classfieds_id"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "blogs", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "project_id"
+    t.string   "classified"
   end
 
   create_table "boards", :force => true do |t|
@@ -204,9 +214,19 @@ ActiveRecord::Schema.define(:version => 20131226141104) do
     t.datetime "updated_at"
   end
 
+  create_table "forum_fields", :force => true do |t|
+    t.integer  "forums_id"
+    t.integer  "forum_classfieds_id"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "forums", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "project_id"
+    t.string   "classified"
   end
 
   create_table "groups_users", :id => false, :force => true do |t|

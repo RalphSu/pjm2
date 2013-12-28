@@ -548,6 +548,8 @@ zh:
   label_news_added: 新闻已添加
   label_weibo: 微博
   label_weibo_new: 添加微博
+  label_blog_new: 添加博客
+  label_forum_new: 添加论坛
   label_settings: 项目配置
   label_overview: 项目详细信息
   label_version: 版本
