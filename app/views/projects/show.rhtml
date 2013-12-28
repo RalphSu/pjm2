@@ -23,32 +23,13 @@
 	   <li><%= h(custom_value.custom_field.name) %>: <%=h show_value(custom_value) %></li>
 	<% end %>
 	<% end %>
-	</ul>
+    <li><%=l(:field_keywords)%>:<%=@project.keywords%></li>
+	 <li><%=l(:field_keywords_except)%>:<%=@project.keywords_except%></li>
+   <span class="author"><li><%=l(:field_start_time)%>:<%= format_date(@project.start_time)%></span></p>
+    <span class="author"><li><%=l(:field_end_time)%>:<%= format_date(@project.end_time)%></span></p>
+  </ul>
 
-  <% if User.current.allowed_to?(:view_issues, @project) %>
-  <div class="issues box">
-    <h3><%=l(:label_issue_tracking)%></h3>
-    <ul>
-    <% for tracker in @trackers %>
-      <li><%= link_to h(tracker.name), :controller => 'issues', :action => 'index', :project_id => @project,
-                                                :set_filter => 1,
-                                                "tracker_id" => tracker.id %>:
-					<%= l(:label_x_open_issues_abbr_on_total, :count => @open_issues_by_tracker[tracker].to_i,
-																										:total => @total_issues_by_tracker[tracker].to_i) %>
-			</li>
-    <% end %>
-    </ul>
-    <p>
-    	<%= link_to l(:label_issue_view_all), :controller => 'issues', :action => 'index', :project_id => @project, :set_filter => 1 %>
-	    <% if User.current.allowed_to?(:view_calendar, @project, :global => true) %>
-				| <%= link_to(l(:label_calendar), :controller => 'calendars', :action => 'show', :project_id => @project) %>
-			<% end %>
-			<% if User.current.allowed_to?(:view_gantt, @project, :global => true) %>
-				| <%= link_to(l(:label_gantt), :controller => 'gantts', :action => 'show', :project_id => @project) %>
-			<% end %>
-		</p>
-  </div>
-  <% end %>
+  
   <%= call_hook(:view_projects_show_left, :project => @project) %>
 </div>
 
