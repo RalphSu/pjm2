@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131228144635) do
+ActiveRecord::Schema.define(:version => 20131229131651) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -235,6 +235,13 @@ ActiveRecord::Schema.define(:version => 20131228144635) do
   end
 
   add_index "groups_users", ["group_id", "user_id"], :name => "groups_users_ids", :unique => true
+
+  create_table "images", :force => true do |t|
+    t.string   "url"
+    t.string   "file_path"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "issue_categories", :force => true do |t|
     t.integer "project_id",                   :default => 0,  :null => false

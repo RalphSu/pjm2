@@ -13,17 +13,28 @@ class BlogController < ApplicationController
 
 		data = params['record'].read
 		file_name = save_tmp_file(data)
-
-		headers = _get_header()
 		data =  IO.binread(file_name)
 		Rails.logger.info "read record size: #{data.size}"
-		poiReader = PoiExcelReader.new(_get_classified_hash, _get_factory)
-	  	uploadItems = poiReader.read_excel_text(file_name, headers)
 
-	  	save(uploadItems)
+		_import(file_name, data)
 
 	  	remove_tmp_file(file_name)
 	  	redirect_to({:controller => 'blog', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+	end
+
+	def _import(file_name, data)
+		#if (@import_type == '1')
+		#	# read text
+			headers = _get_header()
+			poiReader = PoiExcelReader.new(_get_classified_hash, _get_factory)
+		  	uploadItems = poiReader.read_excel_text(file_name, headers)
+		  	save(uploadItems)
+	  	# else 
+	  	# 	# read image
+	  	# 	poiReader = PoiExcelImageReader.new(@project)
+	  	# 	uploadImages = poiReader.read_excel_image(data)
+	  	# 	save_images(uploadImages)
+	  	# end
 	end
 
 	def _get_factory

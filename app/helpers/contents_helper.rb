@@ -252,7 +252,7 @@ module ContentsHelper
 		end
 	end
 
-	## excel image handling:
+	## excel image handling
 	class PoiExcelImageReader
 		# Java classes import
 		@@file_class = Rjb::import('java.io.FileOutputStream')
@@ -271,18 +271,18 @@ module ContentsHelper
 		@@date_format_class = Rjb::import('java.text.SimpleDateFormat')
 
 		def initialize(project)
-		  @project = project
+			@project = project
 		end
 
 		def read_images(wb, sheet, head_array)
 			it = sheet.getRelations().iterator()
 			picture_path = {}
 			pic_num = 0
-			while it.hasNext
+			while it.hasNext()
 				doc_part = it.next()
 				if doc_part.getClass().equals(@@xssf_drawing_class)
 					shape_it = doc_part.getShapes().iterator()
-					while shape_it.hasNext
+					while shape_it.hasNext()
 						shape = shape_it.next()
 						if shape.getClass().equals(@@xssf_picture_class)
 							anchor = shape.getPreferredSize().getFrom()
@@ -320,12 +320,10 @@ module ContentsHelper
 				img_meta.url = url
 				img_meta.paths = paths
 				image_metas << img_meta
-				p img_meta
 			end
 
 			image_metas
 		end
-
 
 		def validate_get_cell_string(cell)
 			case
@@ -354,12 +352,12 @@ module ContentsHelper
 				when cell_type = cell.CELL_TYPE_BLANK
 					head << ""
 				else
-					raise "Image file head is invalid. Expected : 文章链接,贴图 !"
+					raise "Image file head is invalid. Expected : #{expected_head} !"
 				end
 			end
 			# validation for head existence
 			expected_head.each do |e|
-				raise "Image file head is invalid. Expected : 文章链接,贴图 !" unless head.include?(e)
+				raise "Image file head is invalid. Expected : #{expected_head} !" unless head.include?(e)
 			end
 			return head
 		end
@@ -370,24 +368,16 @@ module ContentsHelper
 				Dir.mkdir(folder)
 			end
 			if pic_data.suggestFileExtension.blank?
-				ext1 = '.full.png';
-				ext2 = '.small.png';
+				ext = ".png"
 			else 
-				ext1 = ".full.#{pic_data.suggestFileExtension}";
-				ext2 = ".small.#{pic_data.suggestFileExtension}";
+				ext = ".#{pic_data.suggestFileExtension}"
 			end
-
 			uuid = UUIDTools::UUID.timestamp_create.to_s.gsub('-','')
-			file_full_name = uuid + ext1
-			file_small_name = uuid + ext2
+			file_full_name = uuid + ext
 			full_name = File.join folder file_full_name
-			small_name = File.join folder file_small_name
 			# write full
 			IO.binwrite(full_name, pic_data.getData())
-			# TODO write small
-			IO.binwrite(small_name, pic_data.getData())
-
-			[full_name, small_name]
+			full_name
 		end
 
 		def read_excel_image(data)
@@ -409,7 +399,7 @@ module ContentsHelper
 			begin
 				byte_stream.close()
 			rescue 
-				Rails.logger.info "ImageReader:: Close stream failed, ignore and return"
+				Rails.logger.info "ImageReader :: Close stream failed, ignore and return"
 			end
 			result
 		end
@@ -419,8 +409,16 @@ module ContentsHelper
 		attr_accessor :url, :paths
 		# the url which the image screenshot matches
 		@url
-		# the image stored paths
+		# the image stored path
 		@paths
+	end
+	def save_images(uploadImages)
+		uploadImages.each do |m|
+			img = Image.new()
+			img.url = m.url
+			img.file_path = m.paths
+			img.save
+		end
 	end
 
 end

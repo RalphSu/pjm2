@@ -195,7 +195,10 @@ end # end of POIExcelImageReader
 
 class Project
 	attr_accessor :identifier
-	@identifier = "test-image-import"
+
+	def initialize(id)
+		@identifier = id
+	end
 end
 
 class ImageMeta
@@ -206,7 +209,7 @@ class ImageMeta
 	@paths
 end
 
-pr = PoiExcelImageReader.new(Project.new)
+pr = PoiExcelImageReader.new(Project.new('test'))
 file_name = File.join File.dirname(__FILE__), '/image_import_ralph.xlsx'
 data = IO.binread(file_name)
 
