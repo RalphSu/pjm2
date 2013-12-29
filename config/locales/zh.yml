@@ -1066,3 +1066,5 @@ zh:
   no_project_selected: 必须选择一个项目！
   label_import_news: "选择文件导入:"
   label_image: 图片
+  label_data: 数据
+  label_import_type: "导入类型: "

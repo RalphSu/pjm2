@@ -1,4 +1,5 @@
 upload/
+Gemfile.lock
 *.rbc
 *.class
 *.sassc

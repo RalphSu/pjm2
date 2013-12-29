@@ -148,7 +148,6 @@ class PoiExcelImageReader
 		if (not pic_data.suggestFileExtension().nil?) && (pic_data.suggestFileExtension().length() > 0)
 			ext1 = ".full.#{pic_data.suggestFileExtension}";
 			ext2 = ".small.#{pic_data.suggestFileExtension}";
-
 		else 
 			ext1 = '.full.png';
 			ext2 = '.small.png';
@@ -158,13 +157,9 @@ class PoiExcelImageReader
 		file_full_name = uuid + ext1
 		file_small_name = uuid + ext2
 		full_name = File.join folder, file_full_name
-		small_name = File.join folder, file_small_name
 		# write full
 		IO.binwrite(full_name, pic_data.getData())
-		# TODO write small
-		IO.binwrite(small_name, pic_data.getData())
-
-		[full_name, small_name]
+		full_name
 	end
 
 	def read_excel_image(data)

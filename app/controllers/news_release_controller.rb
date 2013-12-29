@@ -47,18 +47,18 @@ class NewsReleaseController < ApplicationController
 	end
 
 	def _import(file_name, data)
-		#if (@import_type == '1')
-		#	# read text
+		if  @import_type.blank? || (@import_type == '0')
+			# read text
 			headers = _get_header()
 			poiReader = PoiExcelReader.new(_get_classified_hash, _get_factory)
 		  	uploadItems = poiReader.read_excel_text(file_name, headers)
 		  	save(uploadItems)
-	  	# else 
-	  	# 	# read image
-	  	# 	poiReader = PoiExcelImageReader.new(@project)
-	  	# 	uploadImages = poiReader.read_excel_image(data)
-	  	# 	save_images(uploadImages)
-	  	# end
+	  	else 
+			# read image
+	  		poiReader = PoiExcelImageReader.new(@project)
+	  		uploadImages = poiReader.read_excel_image(data)
+	  		save_images(uploadImages)
+	  	end
 	end
 
 	def _get_factory
@@ -105,6 +105,7 @@ class NewsReleaseController < ApplicationController
 
 	def init(params)
 		@category=params[:category]
+		@import_type = params[:import]
 		@p = @project
 		@projects =[]
 		@projects << @p unless @p.nil?

@@ -9,9 +9,17 @@ module ContentsHelper
 				{:name => 'weibo',  :controller=> 'weibo', :action => 'index', :partial => 'contents/weibo', :label => :label_weibo},
 				{:name => 'blog', :controller=> 'blog', :action => 'index', :partial => 'contents/blog', :label => :label_blog},
 				{:name => 'forum', :controller=> 'forum', :action => 'index' , :partial => 'contents/forum', :label => :label_forum},
-				]
+		]
 		tabs.select {|tab| User.current.allowed_to?(tab[:action], @project)}
 		tabs
+	end
+
+	def import_types(selected)
+		types = [
+			[:label_data, "0"],
+			[:label_image, "1"]
+		]
+		options_for_select(types, selected)
 	end
 
 	class PoiExcelReader
