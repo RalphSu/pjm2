@@ -13,6 +13,8 @@ gem "json", "~> 1.7.7"
 gem "coderay", "~> 1.0.0"
 gem "i18n", "~> 0.4.2"
 gem "rubytree", "~> 0.5.2", :require => 'tree'
+gem "nokogiri"
+gem "rufus-scheduler", "3.0.3"
 gem "rdoc", ">= 2.4.2"
 gem "uuidtools", "2.1.4"
 gem "liquid", "~> 2.3.0"
@@ -27,7 +29,6 @@ group :test do
   gem 'edavis10-object_daddy', :require => 'object_daddy'
   gem 'mocha', '0.12.1'
   gem 'capybara'
-  gem 'nokogiri'
   gem 'coveralls', :require => false
 end
 
