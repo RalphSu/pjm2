@@ -14,13 +14,13 @@ class Crawler
 
 	def do_crawl
 		Project.find(:all, :conditions=> {:status => Project::STATUS_ACTIVE}).each do |p|
-			#crawler_project(p)
+			#crawl_project(p)
 			puts p.name + " :: " + Time.now.to_s
 		end
 	end
 
 	# could a api for manually trigger project crawling
-	def crawler_project(project)
+	def crawl_project(project)
 		# crawl for project, and store the crawler job status : star_time, end_time, num_of_pages_read, num_of_items_added
 		# send key word and fetch each page, iterating on each page
 	end
