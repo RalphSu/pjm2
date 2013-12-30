@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131229131651) do
+ActiveRecord::Schema.define(:version => 20131230153243) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -130,6 +130,16 @@ ActiveRecord::Schema.define(:version => 20131229131651) do
 
   add_index "comments", ["author_id"], :name => "index_comments_on_author_id"
   add_index "comments", ["commented_id", "commented_type"], :name => "index_comments_on_commented_id_and_commented_type"
+
+  create_table "crawler_jobs", :force => true do |t|
+    t.integer  "project_id",   :default => 0, :null => false
+    t.integer  "num_of_pages"
+    t.integer  "saved_count"
+    t.string   "start_time"
+    t.string   "end_time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "custom_fields", :force => true do |t|
     t.string  "type",            :limit => 30, :default => "",    :null => false
@@ -455,7 +465,6 @@ ActiveRecord::Schema.define(:version => 20131229131651) do
     t.integer  "status",          :default => 1,    :null => false
     t.integer  "lft"
     t.integer  "rgt"
-    t.string   "key"
     t.string   "keywords"
     t.string   "keywords_except"
     t.date     "end_time"
@@ -605,8 +614,8 @@ ActiveRecord::Schema.define(:version => 20131229131651) do
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
     t.string   "phone_number"
-    t.boolean  "client"
     t.string   "user_type"
+    t.boolean  "client"
   end
 
   add_index "users", ["auth_source_id"], :name => "index_users_on_auth_source_id"
