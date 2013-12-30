@@ -25,7 +25,14 @@ class Crawler
 		saved_count = 0
 		num_of_pages_read = 0
 		page_url = "http://news.baidu.com/ns?"
-
+		while (not page_url.nil)
+			doc = Nokogiri::HTML(open(page_url))
+			[next_page, count] = _handle_one_page(doc, project, news_classifieds_hash, num_of_pages_read+1)
+			page_url = next_page
+			saved_count = saved_count + count
+			num_of_pages_read = num_of_pages_read + 1
+			# sleep( 1000ms) to avoid baidu blocking.
+		end
 		end_time = Time.now.to_s
 	end
 
