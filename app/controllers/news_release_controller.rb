@@ -20,22 +20,6 @@ class NewsReleaseController < ApplicationController
 
 		data = params['record'].read
 		file_name = save_tmp_file(data)
-		begin
-			ActiveRecord::Base.transaction do
-		     		@news = News.new(:project => @project, :author => User.current)
-				@news.summary="import news file"
-				@news.title="import"
-				@news.description="import file"
-				if @news.save
-			      		Rails.logger.info "save news success"
-			      	else
-			      		Rails.logger.info "save  news failed"
-			      		Rails.logger.info(@news.errors.inspect) 
-			      	end
-		      	end
-    		rescue Exception => e
-		      	puts e.message
-    		end
 
 		data =  IO.binread(file_name)
 		puts "read record size: #{data.size}"
@@ -54,11 +38,13 @@ class NewsReleaseController < ApplicationController
 			poiReader = PoiExcelReader.new(_get_classified_hash, _get_factory)
 		  	uploadItems = poiReader.read_excel_text(file_name, headers)
 		  	save(uploadItems)
+		  	_save_news_event(l(:label_manually_import), l(:label_import_data_file), l(:label_import_data_file))
 	  	else 
 			# read image
 	  		poiReader = PoiExcelImageReader.new(@project)
 	  		uploadImages = poiReader.read_excel_image(data)
 	  		save_images(uploadImages)
+			_save_news_event(l(:label_manually_import), l(:label_import_image_file), l(:label_import_image_file))
 	  	end
 	end
 

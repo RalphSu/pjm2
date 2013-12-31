@@ -1068,3 +1068,6 @@ zh:
   label_image: 图片
   label_data: 数据
   label_import_type: "导入类型: "
+  label_manually_import: 手动导入
+  label_import_data_file: 导入数据
+  label_import_image_file:  导入图片

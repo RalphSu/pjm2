@@ -427,6 +427,7 @@ module ContentsHelper
 		# the image stored path
 		@paths
 	end
+
 	def save_images(uploadImages)
 		uploadImages.each do |m|
 			img = Image.new()
@@ -434,6 +435,25 @@ module ContentsHelper
 			img.file_path = m.paths
 			img.save
 		end
+	end
+
+	def _save_news_event(title, summary, description)
+		begin
+			ActiveRecord::Base.transaction do
+		     		news = News.new(:project => @project, :author => User.current)
+				news.summary=summary
+				news.title=title
+				news.description= description
+				if news.save
+			      		Rails.logger.info "save news success"
+			      	else
+			      		Rails.logger.info "save  news failed"
+			      		Rails.logger.info(news.errors.inspect) 
+			      	end
+		      	end
+    		rescue Exception => e
+		      	puts e.message
+    		end
 	end
 
 end
