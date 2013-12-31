@@ -8,8 +8,8 @@ class Crawler
 
 	def do_crawl
 		Project.find(:all, :conditions=> {:status => Project::STATUS_ACTIVE}).each do |p|
-			#crawl_project(p)
-			puts p.name + " :: " + Time.now.to_s
+			puts "Start crawer for project :#{p.name}, time : #{Time.now.to_s} "
+			crawl_project(p)
 		end
 	end
 
@@ -19,25 +19,96 @@ class Crawler
 		NewsClassified.find(:all, :conditions=>{:classified=> '新闻稿推广'}).each do |n|
 			news_classifieds_hash[n.template.column_name] = n
 		end
-		start_time = Time.now.to_s
-		# crawl for project, and store the crawler job status : projectId, star_time, end_time, num_of_pages_read, num_of_item_saved
+		
+		# crawl for project, and store the crawler job status : project id, star_time, end_time, num_of_pages_read, num_of_item_saved
 		# send key word and fetch each page, iterating on each page
 		saved_count = 0
+		start_time = Time.now.to_s
 		num_of_pages_read = 0
-		page_url = "http://news.baidu.com/ns?"
-		while (not page_url.nil)
-			doc = Nokogiri::HTML(open(page_url))
-			[next_page, count] = _handle_one_page(doc, project, news_classifieds_hash, num_of_pages_read+1)
-			page_url = next_page
-			saved_count = saved_count + count
-			num_of_pages_read = num_of_pages_read + 1
-			# sleep( 1000ms) to avoid baidu blocking.
+		init = _get_init_url(project)
+		page_url = init[0]
+		search_query_begin_date = init[1]
+		search_query_end_date = init[2]
+
+		job = _create_job(project, page_url, saved_count, num_of_pages_read, start_time, search_query_begin_date, search_query_end_date)
+
+		# start crawl
+		while (not page_url.blank?)
+			begin 
+				doc = Nokogiri::HTML(open(page_url))
+				stat = _handle_one_page(job, doc, project, news_classifieds_hash, num_of_pages_read+1)
+				page_url = stat[0]
+				saved_count = saved_count + stat[1]
+				num_of_pages_read = num_of_pages_read + 1
+				# sleep( 1000ms) to avoid baidu blocking.
+				sleep 2
+			rescue Exception => e
+				puts "crawl failed with exception #{e.inspect}!"
+				break			
+			end
 		end
 		end_time = Time.now.to_s
+
+		_update_job(job, end_time, num_of_pages_read, saved_count)
+	end
+
+	def _create_job(project, page_url, saved_count, num_of_pages_read, start_time, search_query_begin_date, search_query_end_date)
+		begin
+			job = CrawlerJob.new
+			job.project_id = project.id
+			job.init_url = page_url
+			job.num_of_pages = num_of_pages_read
+			job.saved_count = saved_count
+			job.start_time = start_time
+			job.search_query_begin_date = search_query_begin_date
+			job.search_query_end_date = search_query_end_date
+			job.save!()
+			job
+		rescue Exception
+			puts 'Save crawler job faild caused by database error!'
+		end
+	end
+
+	def _update_job(job, end_time, num_of_pages_read, saved_count)
+		begin
+			job.end_time = end_time
+			job.num_of_pages = num_of_pages_read
+			job.saved_count = saved_count
+			job.save!
+		rescue Exception
+			puts 'Save crawler job faild caused by database error!'
+		end
+	end
+
+	def _get_init_url(project)
+		news = 'news'
+		last_day = Time.now - (60 * 60 * 24)
+		today = Time.now
+		start_time = Time.new(last_day.year, last_day.month, last_day.day)
+		end_time = Time.new(today.year, today.month, today.day)
+		bt = start_time.to_i
+		y0 = start_time.year
+		m0 = start_time.month
+		d0 = start_time.day
+		y1 = end_time.year
+		m1 = end_time.month
+		d1 = end_time.day
+		begin_date = start_time.strftime('%Y-%m-%d')
+		end_date = end_time.strftime('%Y-%m-%d')
+		et = end_time.to_i
+		cl = 2
+		ct1 = 1
+		ct = 1
+		q1 = URI.encode(project.keywords)
+		q4 = URI.encode(project.keywords_except)
+		tn = 'newsdy'
+		rn = 20
+		url = "http://news.baidu.com/ns?from=#{news}&bt=#{bt}&y0=#{y0}&m0=#{m0}&d0=#{d0}&y1=#{y1}&m1=#{m1}&d1=#{d1}&cl=#{cl}&et=#{et}&ct1=#{ct1}&ct=#{ct}&q1=#{q1}&q4=#{q4}&tn=#{tn}&rn=#{rn}&begin_date=#{begin_date}&end_date=#{end_date}"
+		[url, start_time, end_time]
 	end
 
 	# return [next_page, saved_count]
-	def _handle_one_page(doc, project, news_classifieds_hash, page_num)
+	def _handle_one_page(job, doc, project, news_classifieds_hash, page_num)
 		saved_count = 0
 		item_count = 0
 		next_page = nil
@@ -47,6 +118,7 @@ class Crawler
 				nr = NewsRelease.new
 				nr.project = project
 				nr.classified = '新闻稿推广'
+				nr.crawler_jobs = job
 
 				fields = []
 				# puts "found one item, now processing "
@@ -103,7 +175,7 @@ class Crawler
 		# check for next page
 		doc.search('//div/div/p/a').each do |item|
 			if '下一页>' == item.content
-				next_page = item['href']
+				next_page = 'http://news.baidu.com' + item['href']
 			end
 		end
 		[next_page, saved_count]
@@ -113,14 +185,14 @@ class Crawler
 		unless fields.blank?
 			begin
 				ActiveRecord::Base.transaction do
-					nr.save()
+					nr.save!
 					fields.each do |f|
 						f.news_release=nr
-						f.save
+						f.save!
 					end
 				end  # end of transaction
 			rescue Exception
-				Rails.logger.info "Save an extracted news release failed caused by ActiveRecord save. #{nr.inspect} #{fields.inspect}"
+				puts "Save an extracted news release failed caused by ActiveRecord save. #{nr.inspect} #{fields.inspect}"
 			end
 			begin
 				# now save news
@@ -129,13 +201,13 @@ class Crawler
 				@news.title="百度网页抓取"
 				@news.description="百度网页抓取后台"
 				if @news.save
-					Rails.logger.info "save news success"
+					puts "save news success"
 				else
-					Rails.logger.info "save  news failed"
-					Rails.logger.info(@news.errors.inspect) 
+					puts "save  news failed"
+					puts(@news.errors.inspect) 
 				end
 			rescue Exception
-				Rails.logger.info "save  news failed. -- baidu_crawler"
+				puts "save  news failed. -- baidu_crawler"
 			end
 			return true
 		end
@@ -146,7 +218,8 @@ end
 scheduler = Rufus::Scheduler.new
 sys_crawler = Crawler.new
 
-#scheduler.cron '5 0 * * *' do
-scheduler.every("2m") do
+scheduler.cron '5 0 * * *' do
+# scheduler.every("5m") do
 	sys_crawler.do_crawl()
 end
+#sys_crawler.do_crawl()

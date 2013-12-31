@@ -7,4 +7,6 @@ class NewsRelease < ActiveRecord::Base
 
 	has_many :news_release_fields
 
+	belongs_to :crawler_jobs
+
 end

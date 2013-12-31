@@ -171,7 +171,7 @@ class User < Principal
     if tokens.size == 1
       token = tokens.first
       if (token.created_on > Setting.autologin.to_i.day.ago) && token.user && token.user.active?
-        token.user.update_attribute(:last_login_on, Time.now)
+        token.user.update_attribute(:last_login_on, k.now)
         token.user
       end
     end
