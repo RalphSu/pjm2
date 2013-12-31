@@ -34,11 +34,11 @@ class NewsReleaseController < ApplicationController
 			      	end
 		      	end
     		rescue Exception => e
-		      	Rails.logger.info e.message
+		      	puts e.message
     		end
 
 		data =  IO.binread(file_name)
-		Rails.logger.info "read record size: #{data.size}"
+		puts "read record size: #{data.size}"
 
 		_import(file_name, data)
 
@@ -47,6 +47,7 @@ class NewsReleaseController < ApplicationController
 	end
 
 	def _import(file_name, data)
+		puts "Uploading type : #{@import_type}"
 		if  @import_type.blank? || (@import_type == '0')
 			# read text
 			headers = _get_header()

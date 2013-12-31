@@ -7,6 +7,7 @@ class NewsRelease < ActiveRecord::Base
 
 	has_many :news_release_fields
 
-	belongs_to :crawler_jobs
+	belongs_to :crawler_job, :class_name => "CrawlerJob",
+	:foreign_key => "crawler_id"
 
 end

@@ -16,8 +16,8 @@ module ContentsHelper
 
 	def import_types(selected)
 		types = [
-			[:label_data, "0"],
-			[:label_image, "1"]
+			[l(:label_data), "0"],
+			[l(:label_image), "1"]
 		]
 		options_for_select(types, selected)
 	end
@@ -47,8 +47,8 @@ module ContentsHelper
 			@factory = factory
 		end
 
-		def read_excel_text(data, headers)
-			opc = @@opc_package_class.open(@@string_class.new(data))
+		def read_excel_text(file_name, headers)
+			opc = @@opc_package_class.open(@@string_class.new(file_name))
 			wb = @@workbook_class.new(opc)
 
 			sheet = wb.getSheetAt(0)
@@ -277,12 +277,14 @@ module ContentsHelper
 		@@cell_interface_class=Rjb::import('org.apache.poi.ss.usermodel.Cell')
 		@@date_util_class = Rjb::import('org.apache.poi.hssf.usermodel.HSSFDateUtil')
 		@@date_format_class = Rjb::import('java.text.SimpleDateFormat')
+		@@xssf_drawing_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFDrawing')
 
 		def initialize(project)
 			@project = project
 		end
 
 		def read_images(wb, sheet, head_array)
+			puts "read images from sheet"
 			it = sheet.getRelations().iterator()
 			picture_path = {}
 			pic_num = 0
@@ -299,14 +301,14 @@ module ContentsHelper
 							paths = save_pic(shape.getPictureData())
 							picture_path[anchor] = paths
 
-							Rails.logger.info "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s + ", paths: " + paths.to_s
+							puts "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s + ", paths: " + paths.to_s
 
 							pic_num = pic_num + 1
 						end
 					end # end of shapes loop
 				end
 			end # end of relations loop
-			Rails.logger.info "Total picture number : #{pic_num}"
+			puts "Total picture number : #{pic_num}"
 
 			# construct image metadata
 			image_metas = []
@@ -349,6 +351,7 @@ module ContentsHelper
 			# read heads
 			while i < header_row.getLastCellNum()
 				cell = header_row.getCell(i)
+				i = i + 1
 				if cell.nil?
 					next
 				end
@@ -370,7 +373,7 @@ module ContentsHelper
 			return head
 		end
 
-		def save_pic(row, col, pic_data)
+		def save_pic(pic_data)
 			folder = File.join File.dirname(__FILE__), "../../upload/#{@project.identifier}/"
 			unless File.exists?(folder)
 				Dir.mkdir(folder)
@@ -382,13 +385,14 @@ module ContentsHelper
 			end
 			uuid = UUIDTools::UUID.timestamp_create.to_s.gsub('-','')
 			file_full_name = uuid + ext
-			full_name = File.join folder file_full_name
+			full_name = File.join folder,file_full_name
 			# write full
 			IO.binwrite(full_name, pic_data.getData())
 			full_name
 		end
 
 		def read_excel_image(data)
+			puts "Read images from excel start...."
 			byte_stream = @@byte_stream_class.new(data)
 			wb = @@workbook_class.new(byte_stream)
 			sheet = wb.getSheetAt(0)
@@ -401,14 +405,17 @@ module ContentsHelper
 			end
 			# read header row
 			head_array = validate_image_header(headrow)
+			puts "Image header rows : #{head_array} !!!"
+
 			# read/store images and return the image metadata
 			result = read_images(wb, sheet, head_array)
 
 			begin
 				byte_stream.close()
 			rescue 
-				Rails.logger.info "ImageReader :: Close stream failed, ignore and return"
+				puts "ImageReader :: Close stream failed, ignore and return"
 			end
+			puts "Read images from excel end...."
 			result
 		end
 	end # end of POIExcelImageReader

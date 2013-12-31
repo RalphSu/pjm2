@@ -19,6 +19,8 @@ class Crawler
 		NewsClassified.find(:all, :conditions=>{:classified=> '新闻稿推广'}).each do |n|
 			news_classifieds_hash[n.template.column_name] = n
 		end
+
+		puts news_classifieds_hash
 		
 		# crawl for project, and store the crawler job status : project id, star_time, end_time, num_of_pages_read, num_of_item_saved
 		# send key word and fetch each page, iterating on each page
@@ -27,6 +29,7 @@ class Crawler
 		num_of_pages_read = 0
 		init = _get_init_url(project)
 		page_url = init[0]
+		puts "init url for project #{project.name}: #{page_url}"
 		search_query_begin_date = init[1]
 		search_query_end_date = init[2]
 
@@ -40,16 +43,19 @@ class Crawler
 				page_url = stat[0]
 				saved_count = saved_count + stat[1]
 				num_of_pages_read = num_of_pages_read + 1
+				puts "Crawler done for project #{project.name}, page number #{num_of_pages_read}, saved item count : #{saved_count}!"
 				# sleep( 1000ms) to avoid baidu blocking.
 				sleep 2
 			rescue Exception => e
 				puts "crawl failed with exception #{e.inspect}!"
-				break			
+				page_url = nil
+				break		
 			end
 		end
 		end_time = Time.now.to_s
 
 		_update_job(job, end_time, num_of_pages_read, saved_count)
+		_save_news_event(project)
 	end
 
 	def _create_job(project, page_url, saved_count, num_of_pages_read, start_time, search_query_begin_date, search_query_end_date)
@@ -99,8 +105,14 @@ class Crawler
 		cl = 2
 		ct1 = 1
 		ct = 1
-		q1 = URI.encode(project.keywords)
-		q4 = URI.encode(project.keywords_except)
+		q1 = ""
+		unless project.keywords.blank?
+			q1 = URI.encode(project.keywords)
+		end 
+		q4 = ""
+		unless project.keywords_except.blank?
+			q4 = URI.encode(project.keywords_except)
+		end
 		tn = 'newsdy'
 		rn = 20
 		url = "http://news.baidu.com/ns?from=#{news}&bt=#{bt}&y0=#{y0}&m0=#{m0}&d0=#{d0}&y1=#{y1}&m1=#{m1}&d1=#{d1}&cl=#{cl}&et=#{et}&ct1=#{ct1}&ct=#{ct}&q1=#{q1}&q4=#{q4}&tn=#{tn}&rn=#{rn}&begin_date=#{begin_date}&end_date=#{end_date}"
@@ -114,11 +126,12 @@ class Crawler
 		next_page = nil
 		doc.search('//div/ul/li').each do |item|
 			# create news_release line
+			# puts item.content
 			begin
 				nr = NewsRelease.new
 				nr.project = project
 				nr.classified = '新闻稿推广'
-				nr.crawler_jobs = job
+				nr.crawler_job = job
 
 				fields = []
 				# puts "found one item, now processing "
@@ -167,8 +180,8 @@ class Crawler
 					saved_count = saved_count + 1
 				end
 				item_count = item_count + 1
-			rescue Exception 
-				Rails.logger.error "Ignore failure when hande project #{project.name} for page at #{page_num}, item index : #{item_count}. The item content is #{item.content} !!!"
+			rescue Exception => e
+				puts "Ignore failure when hande project #{project.name} for page at #{page_num}, item index : #{item_count}. The item content is #{item.content}! Exception : #{e.inspect}"
 			end # end of try catch
 		end # end of each result
 
@@ -182,7 +195,9 @@ class Crawler
 	end
 
 	def _save(nr, fields)
+		# puts "	Saved #{nr} and #{fields} for one news_release line!"
 		unless fields.blank?
+			saved = false
 			begin
 				ActiveRecord::Base.transaction do
 					nr.save!
@@ -191,27 +206,33 @@ class Crawler
 						f.save!
 					end
 				end  # end of transaction
-			rescue Exception
-				puts "Save an extracted news release failed caused by ActiveRecord save. #{nr.inspect} #{fields.inspect}"
+				saved = true
+			rescue Exception => e
+				puts "Save an extracted news release failed caused by ActiveRecord save. #{nr.inspect} #{fields.inspect}. Exception : #{e}!!"
+				return saved
 			end
-			begin
-				# now save news
-				@news = News.new(:project => nr.project, :author => User.find(:conditions=>{:admin=>1}))
-				@news.summary="百度网页抓取"
-				@news.title="百度网页抓取"
-				@news.description="百度网页抓取后台"
-				if @news.save
-					puts "save news success"
-				else
-					puts "save  news failed"
-					puts(@news.errors.inspect) 
-				end
-			rescue Exception
-				puts "save  news failed. -- baidu_crawler"
-			end
-			return true
+			return saved
 		end
 		return false
+	end
+
+	def _save_news_event(project)
+		begin
+			puts "	add news for this item"
+			# now save news
+			news = News.new(:project => project, :author => User.find(:all, :conditions=>{:admin=>1}).first)
+			news.summary="百度网页抓取"
+			news.title="百度网页抓取"
+			news.description="百度网页抓取后台"
+			if news.save
+				puts "save news success"
+			else
+				puts "save  news failed"
+				puts(news.errors.inspect) 
+			end
+		rescue Exception => e
+			puts "Save news event failed caused by ActiveRecord save. #{news}. Exception : #{e}!!"
+		end
 	end
 end
 

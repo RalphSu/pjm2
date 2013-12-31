@@ -1,7 +1,5 @@
-#--encoding=UTF-8
+#-- encoding: UTF-8
 require 'rjb'
-require 'uuidtools'
-
 # JVM loading
 POI_LIB_HOME=File.join File.dirname(__FILE__), '/lib/poi-3.9'
 #POI_LIB_HOME= './lib/poi-3.9'
@@ -24,7 +22,7 @@ poi_jars = [
 #p poi_jars.join(":")
 Rjb::load(poi_jars.join(":"),  ['-Xms256M', '-Xmx512M'])
 
-## excel image handling:
+## excel image handling
 class PoiExcelImageReader
 	# Java classes import
 	@@file_class = Rjb::import('java.io.FileOutputStream')
@@ -44,39 +42,39 @@ class PoiExcelImageReader
 	@@xssf_drawing_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFDrawing')
 
 	def initialize(project)
-	  @project = project
+		@project = project
 	end
 
 	def read_images(wb, sheet, head_array)
+		puts "read images from sheet"
 		it = sheet.getRelations().iterator()
 		picture_path = {}
 		pic_num = 0
-		while it.hasNext
+		while it.hasNext()
 			doc_part = it.next()
 			if doc_part.getClass().equals(@@xssf_drawing_class)
 				shape_it = doc_part.getShapes().iterator()
-				while shape_it.hasNext
+				while shape_it.hasNext()
 					shape = shape_it.next()
 					if shape.getClass().equals(@@xssf_picture_class)
 						anchor = shape.getPreferredSize().getFrom()
 						row = anchor.getRow()
 						col = anchor.getCol()
-						puts "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s
-
 						paths = save_pic(shape.getPictureData())
 						picture_path[anchor] = paths
+
+						puts "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s + ", paths: " + paths.to_s
 
 						pic_num = pic_num + 1
 					end
 				end # end of shapes loop
 			end
 		end # end of relations loop
-		p "Total picture number : #{pic_num}"
+		puts "Total picture number : #{pic_num}"
 
 		# construct image metadata
 		image_metas = []
 		picture_path.each do |anchor, paths|
-			# p "Row: #{anchor.getRow()}, Col : #{anchor.getCol()}. Paths : #{paths}"
 
 			row = sheet.getRow(anchor.getRow())
 			if row.nil?
@@ -115,7 +113,6 @@ class PoiExcelImageReader
 		# read heads
 		while i < header_row.getLastCellNum()
 			cell = header_row.getCell(i)
-			i = i + 1
 			if cell.nil?
 				next
 			end
@@ -129,60 +126,62 @@ class PoiExcelImageReader
 			else
 				raise "Image file head is invalid. Expected : #{expected_head} !"
 			end
+			i = i + 1
 		end
 		# validation for head existence
 		expected_head.each do |e|
-			raise "Image file head is invalid. Expected : #{expected_head} ! #{e} missed!" unless head.include?(e)
+			raise "Image file head is invalid. Expected : #{expected_head} !" unless head.include?(e)
 		end
 		return head
 	end
 
 	def save_pic(pic_data)
-		folder = File.join File.dirname(__FILE__), "/upload/#{@project.identifier}"
-		p folder
+		folder = File.join File.dirname(__FILE__), "../../upload/#{@project.identifier}/"
 		unless File.exists?(folder)
 			Dir.mkdir(folder)
 		end
-		# p "suggestFileExtension is #{pic_data.suggestFileExtension()}"
-		if (not pic_data.suggestFileExtension().nil?) && (pic_data.suggestFileExtension().length() > 0)
-			ext1 = ".full.#{pic_data.suggestFileExtension}";
-			ext2 = ".small.#{pic_data.suggestFileExtension}";
+		if pic_data.suggestFileExtension.blank?
+			ext = ".png"
 		else 
-			ext1 = '.full.png';
-			ext2 = '.small.png';
+			ext = ".#{pic_data.suggestFileExtension}"
 		end
-
 		uuid = UUIDTools::UUID.timestamp_create.to_s.gsub('-','')
-		file_full_name = uuid + ext1
-		file_small_name = uuid + ext2
-		full_name = File.join folder, file_full_name
+		file_full_name = uuid + ext
+		full_name = File.join folder file_full_name
 		# write full
 		IO.binwrite(full_name, pic_data.getData())
 		full_name
 	end
 
 	def read_excel_image(data)
+		puts "Read images from excel start...."
 		byte_stream = @@byte_stream_class.new(data)
 		wb = @@workbook_class.new(byte_stream)
+		puts "work book loaded"
 		sheet = wb.getSheetAt(0)
 		if sheet.nil?
 			raise 'Can not find sheet!'
 		end
+		puts "sheet readed"
+
 		headrow = sheet.getRow(sheet.getFirstRowNum())
 		if headrow.nil?
 			raise 'No head row!'
 		end
+		puts "row readed"
 		# read header row
 		head_array = validate_image_header(headrow)
-		p head_array
+		puts "Image header rows : #{head_array} !!!"
+
 		# read/store images and return the image metadata
 		result = read_images(wb, sheet, head_array)
 
 		begin
 			byte_stream.close()
-		rescue  Exception => e
-			puts "ImageReader:: Close stream failed, ignore and return. Exception : #{e}"
+		rescue 
+			puts "ImageReader :: Close stream failed, ignore and return"
 		end
+		puts "Read images from excel end...."
 		result
 	end
 end # end of POIExcelImageReader
@@ -199,12 +198,12 @@ class ImageMeta
 	attr_accessor :url, :paths
 	# the url which the image screenshot matches
 	@url
-	# the image stored paths
+	# the image stored path
 	@paths
 end
 
 pr = PoiExcelImageReader.new(Project.new('test'))
-file_name = File.join File.dirname(__FILE__), '/image_import_ralph.xlsx'
+file_name = File.join File.dirname(__FILE__), '/image_import_ralph-small.xlsx'
 data = IO.binread(file_name)
 
 p " data size " + data.size.to_s
