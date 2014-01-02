@@ -3,6 +3,7 @@ TODO
 	a. add indexes for table ***_fields on column ***_classifieds_id -- done 2014.1.2
 	b. add indexes for table ***_fields on column ***_id -- done 2014.1.2
 	c. add indexes for table news_releases/weibos/forums/blogs/ on column [project_id, classified] -- done 2014.1.2
+	d. correct data for forum --
 2. Show images. - in all content list page of table cells...
 3. Project export template config
     a. data model
