@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140102084527) do
+ActiveRecord::Schema.define(:version => 20140102111108) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -518,6 +518,14 @@ ActiveRecord::Schema.define(:version => 20140102084527) do
 
   add_index "queries", ["project_id"], :name => "index_queries_on_project_id"
   add_index "queries", ["user_id"], :name => "index_queries_on_user_id"
+
+  create_table "report_templates", :force => true do |t|
+    t.string   "template_type", :null => false
+    t.integer  "classified_id", :null => false
+    t.integer  "position",      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "repositories", :force => true do |t|
     t.integer "project_id",                  :default => 0,  :null => false

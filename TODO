@@ -7,7 +7,18 @@ TODO
 2. Show images. - in all content list page of table cells if matched
 
 3. Project export template config
-    a. data model
+    a. data model <Every table line in report_template represents a selection of classifiedd for a project>
+Table report_template ( id, project_id, template_type(varchar, have same distinct value compare to :templates table), classifieds_id, position(int) )
+
+UC 1 : find one project's report template:
+select * from report_template as t where t.project_id = :project_id     ## return all selected report classified for given project.
+UC 2 : Add a selection
+insert into report_templates(project_id, template_type, classifieds_id, position) value(...)
+UC 3 : rewrite all selections from a given project (NEED TO care about the transaction)
+INSERT INTO report_templates (a,b,c) VALUES (1,2,3) ON DUPLICATE KEY UPDATE c=c+1;
+UC 4 : delete a selection
+delete from report_templates where id = ? 
+
     b. config page -before 1.5
     c. do real export 
         talk with POI on report generation
