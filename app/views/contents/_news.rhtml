@@ -66,10 +66,11 @@
 		<th></th> <!-- Place holder column for actions -->
 	</thread>
 	<tbody>
+<% news_release = nil # init %>
 <% unless (@p.blank? or @category.blank?)%>
-	<% unless @p.news_release.blank? %>
-		<% @p.news_release.each do | nr| %>
-			<% if nr.classified == @category %>
+	<% news_release = find_news_release_for_project(@p, @category) %>
+	<% unless news_release.blank? %>
+		<% news_release.each do | nr| %>
 			<% release_fields = find_field_by_releaseId(nr.id) %>
 		<tr class="user <%= cycle("odd", "even") %>">
 		<%fields.each do |f|%>
@@ -81,11 +82,11 @@
 		</td>
 		</tr>
 		<% end %>
-		<% end %>
 	<%end%>
 <% end %>
 	</tbody>
 </table>
 
-
-
+<% unless news_release.blank? %>
+	<%=will_paginate news_release, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
+<% end %>

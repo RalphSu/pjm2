@@ -64,9 +64,11 @@
 		<th></th> <!-- Place holder column for actions -->
 	</thread>
 	<tbody>
+<% blogs = nil # init %>
 <% unless (@p.blank? or @category.blank?)%>
-	<% unless @p.blogs.blank? %>
-		<% @p.blogs.each do | nr| %>
+	<% blogs = find_blog_for_project(@p, @category) %>
+	<% unless blogs.blank? %>
+		<% blogs.each do | nr| %>
 			<% if nr.classified == @category %>
 			<% blog_fields = find_field_by_blogId(nr.id) %>
 		<tr class="user <%= cycle("odd", "even") %>">
@@ -84,6 +86,8 @@
 <% end %>
 	</tbody>
 </table>
-
+<% unless blogs.blank? %>
+	<%=will_paginate blogs, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
+<% end %>
 
 

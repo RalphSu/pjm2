@@ -14,6 +14,10 @@ module ForumHelper
 		Template.find(:all, :conditions => {:template_type =>"论坛类模板" })
 	end
 
+	def find_forum_for_project(project, category)
+		Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc',:conditions=>{:project_id => project, :classified => category})
+	end
+
 	def forum_option_for_select(selected)
 		container = []
 		container << ["", ""]

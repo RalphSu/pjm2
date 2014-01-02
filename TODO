@@ -1,3 +1,11 @@
 TODO
-1. Pagination for content page.   -- refer to issues_controller...
+1. Pagination for content page.   -- refer to issues_controller... -- done 2014. 1.2
+	a. add indexes for table ***_fields on column ***_classifieds_id -- done 2014.1.2
+	b. add indexes for table ***_fields on column ***_id -- done 2014.1.2
+	c. add indexes for table news_releases/weibos/forums/blogs/ on column [project_id, classified] -- done 2014.1.2
 2. Show images. - in all content list page of table cells...
+3. Project export template config
+    a. data model
+    b. config page -before 1.5
+    c. do real export 
+        talk with POI on report generation

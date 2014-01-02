@@ -15,6 +15,10 @@ module BlogHelper
 		Template.find(:all, :conditions => {:template_type =>"博客类模板" })
 	end
 
+	def find_blog_for_project(project, category)
+		Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc',:conditions=>{:project_id => project, :classified => category})
+	end
+
 	def blog_option_for_select(selected)
 		container = []
 		container << ["", ""]

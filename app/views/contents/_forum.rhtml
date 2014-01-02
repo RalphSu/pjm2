@@ -64,9 +64,11 @@
 		<th></th> <!-- Place holder column for actions -->
 	</thread>
 	<tbody>
+<% forums = nil # init %>
 <% unless (@p.blank? or @category.blank?)%>
-	<% unless @p.forums.blank? %>
-		<% @p.forums.each do | nr| %>
+	<% forums = find_forum_for_project(@p, @category) %>
+	<% unless forums.blank? %>
+		<% forums.each do | nr| %>
 			<% if nr.classified == @category %>
 			<% forum_fields = find_field_by_forumId(nr.id) %>
 		<tr class="user <%= cycle("odd", "even") %>">
@@ -84,6 +86,8 @@
 <% end %>
 	</tbody>
 </table>
-
+<% unless forums.blank? %>
+	<%=will_paginate forums, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
+<% end %>
 
 

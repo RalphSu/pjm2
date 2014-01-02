@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131231083844) do
+ActiveRecord::Schema.define(:version => 20140102064504) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -57,11 +57,14 @@ ActiveRecord::Schema.define(:version => 20131231083844) do
 
   create_table "blog_fields", :force => true do |t|
     t.integer  "blogs_id"
-    t.integer  "blog_classfieds_id"
+    t.integer  "blog_classifieds_id"
     t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "blog_fields", ["blog_classifieds_id"], :name => "index_blog_fields_on_blog_classifieds_id"
+  add_index "blog_fields", ["blogs_id"], :name => "index_blog_fields_on_blogs_id"
 
   create_table "blogs", :force => true do |t|
     t.datetime "created_at"
@@ -69,6 +72,8 @@ ActiveRecord::Schema.define(:version => 20131231083844) do
     t.integer  "project_id"
     t.string   "classified"
   end
+
+  add_index "blogs", ["project_id", "classified"], :name => "index_blogs_on_project_id_and_classified"
 
   create_table "boards", :force => true do |t|
     t.integer "project_id",                      :null => false
@@ -229,11 +234,14 @@ ActiveRecord::Schema.define(:version => 20131231083844) do
 
   create_table "forum_fields", :force => true do |t|
     t.integer  "forums_id"
-    t.integer  "forum_classfieds_id"
+    t.integer  "forum_classifieds_id"
     t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "forum_fields", ["forum_classifieds_id"], :name => "index_forum_fields_on_forum_classifieds_id"
+  add_index "forum_fields", ["forums_id"], :name => "index_forum_fields_on_forums_id"
 
   create_table "forums", :force => true do |t|
     t.datetime "created_at"
@@ -241,6 +249,8 @@ ActiveRecord::Schema.define(:version => 20131231083844) do
     t.integer  "project_id"
     t.string   "classified"
   end
+
+  add_index "forums", ["project_id", "classified"], :name => "index_forums_on_project_id_and_classified"
 
   create_table "groups_users", :id => false, :force => true do |t|
     t.integer "group_id", :null => false
@@ -414,10 +424,15 @@ ActiveRecord::Schema.define(:version => 20131231083844) do
   end
 
   create_table "news_release_fields", :force => true do |t|
-    t.integer "news_releases_id"
-    t.integer "news_classfieds_id"
-    t.text    "body"
+    t.integer  "news_releases_id"
+    t.integer  "news_classifieds_id"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
+
+  add_index "news_release_fields", ["news_classifieds_id"], :name => "index_news_release_fields_on_news_classifieds_id"
+  add_index "news_release_fields", ["news_releases_id"], :name => "index_news_release_fields_on_news_releases_id"
 
   create_table "news_releases", :force => true do |t|
     t.datetime "created_at"
@@ -426,6 +441,8 @@ ActiveRecord::Schema.define(:version => 20131231083844) do
     t.string   "classified"
     t.integer  "crawler_id"
   end
+
+  add_index "news_releases", ["project_id", "classified"], :name => "index_news_releases_on_project_id_and_classified"
 
   create_table "open_id_authentication_associations", :force => true do |t|
     t.integer "issued"
@@ -469,6 +486,7 @@ ActiveRecord::Schema.define(:version => 20131231083844) do
     t.integer  "status",          :default => 1,    :null => false
     t.integer  "lft"
     t.integer  "rgt"
+    t.string   "key"
     t.string   "keywords"
     t.string   "keywords_except"
     t.date     "end_time"
@@ -618,8 +636,8 @@ ActiveRecord::Schema.define(:version => 20131231083844) do
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
     t.string   "phone_number"
-    t.string   "user_type"
     t.boolean  "client"
+    t.string   "user_type"
   end
 
   add_index "users", ["auth_source_id"], :name => "index_users_on_auth_source_id"
@@ -661,11 +679,14 @@ ActiveRecord::Schema.define(:version => 20131231083844) do
 
   create_table "weibo_fields", :force => true do |t|
     t.integer  "weibos_id"
-    t.integer  "weibo_classfieds_id"
+    t.integer  "weibo_classifieds_id"
     t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "weibo_fields", ["weibo_classifieds_id"], :name => "index_weibo_fields_on_weibo_classifieds_id"
+  add_index "weibo_fields", ["weibos_id"], :name => "index_weibo_fields_on_weibos_id"
 
   create_table "weibos", :force => true do |t|
     t.datetime "created_at"
@@ -673,6 +694,8 @@ ActiveRecord::Schema.define(:version => 20131231083844) do
     t.integer  "project_id"
     t.string   "classified"
   end
+
+  add_index "weibos", ["project_id", "classified"], :name => "index_weibos_on_project_id_and_classified"
 
   create_table "wiki_content_versions", :force => true do |t|
     t.integer  "wiki_content_id",                                       :null => false

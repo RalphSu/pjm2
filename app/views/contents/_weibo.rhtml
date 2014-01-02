@@ -64,10 +64,11 @@
 		<th></th> <!-- Place holder column for actions -->
 	</thread>
 	<tbody>
+<% weibos = nil # init %>
 <% unless (@p.blank? or @category.blank?)%>
-	<% unless @p.weibos.blank? %>
-		<% @p.weibos.each do | nr| %>
-			<% if nr.classified == @category %>
+	<% weibos = find_weibo_for_project(@p, @category) %>
+	<% unless weibos.blank? %>
+		<% weibos.each do | nr| %>
 			<% weibo_fields = find_field_by_weiboId(nr.id) %>
 		<tr class="user <%= cycle("odd", "even") %>">
 		<%fields.each do |f|%>
@@ -84,6 +85,8 @@
 <% end %>
 	</tbody>
 </table>
-
+<% unless weibos.blank? %>
+	<%=will_paginate news_release, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
+<% end %>
 
 

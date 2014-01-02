@@ -31,6 +31,10 @@ module NewsReleaseHelper
 		map
 	end
 
+	def find_news_release_for_project(project, category)
+		NewsRelease.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc',:conditions=>{:project_id => project, :classified => category})
+	end
+
 	def distinct_news_templates
 		Template.find(:all, :conditions => {:template_type =>"新闻类模板" })
 	end

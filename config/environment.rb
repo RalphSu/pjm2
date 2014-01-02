@@ -113,3 +113,5 @@ Rails::Initializer.run do |config|
     instance_eval File.read(File.join(File.dirname(__FILE__), 'additional_environment.rb'))
   end
 end
+
+require 'will_paginate'

@@ -14,6 +14,9 @@ module WeiboHelper
 		Template.find(:all, :conditions => {:template_type =>"微博类模板" })
 	end
 
+	def find_weibo_for_project(project, category)
+		Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc',:conditions=>{:project_id => project, :classified => category})
+	end
 
 	def weibo_option_for_select(selected)
 		container = []
