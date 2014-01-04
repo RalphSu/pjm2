@@ -234,6 +234,9 @@ Redmine::MenuManager.map :content_menu do |menu|
             })
 end
 
+Redmine::MenuManager.map :report_menu do |menu|
+end
+
 Redmine::MenuManager.map :project_menu do |menu|
   include ProjectsHelper
 

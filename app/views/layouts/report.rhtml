@@ -1,7 +1,7 @@
 <% content_for :main_menu  do %>
 	<% unless @projects.blank? %>
 		 <% @projects.each  do |p| %>
-		             <% menu_items_for(:content_menu) do |item| %>
+		             <% menu_items_for(:report_menu) do |item| %>
 	        		      <%= render_menu_node(item, p) %>
 	  	             <% end %>
 		<% end%>
