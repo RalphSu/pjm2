@@ -438,6 +438,9 @@ zh:
   label_project: 项目
   label_project_new: 新建项目
   label_news_template_new: 新建新闻类模板
+  label_weibo_template_new: 新建微博类模板
+  label_blog_template_new: 新建博客类模板
+  label_forum_template_new: 新建论坛类模板
   label_project_plural: 项目
   label_user_normal: 员工
   label_user_client: 客户

@@ -178,8 +178,8 @@ end
 Redmine::MenuManager.map :top_menu do |menu|
   menu.push :welcome, { :controller => 'welcome', :action => 'index' }, :if => Proc.new { User.current.logged? }
   menu.push :contents, { :controller => 'contents', :action => 'index' }, :caption => :label_my_projects
+  menu.push :report , { :controller => 'report_template', :action => 'index' },:caption=>:label_report_analyse
   menu.push :admin, { :controller => 'admin', :action => 'index' }, :if => Proc.new { User.current.admin? }, :last => true
-  menu.push :report , { :controller => 'admin', :action => 'index' },:caption=>:label_report_analyse
   # remove help in top-menu
   # menu.push :help, Redmine::Info.help_url, :last => true, :caption => "?"
 end
