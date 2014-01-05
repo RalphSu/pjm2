@@ -69,6 +69,18 @@ Redmine::AccessControl.map do |map|
   map.permission :manage_members, {:projects => :settings, :members => [:new, :edit, :destroy, :autocomplete_for_member]}, :require => :member
   map.permission :manage_versions, {:projects => :settings, :versions => [:new, :create, :edit, :update, :close_completed, :destroy]}, :require => :member
   map.permission :add_subprojects, {:projects => [:new, :create]}, :require => :member
+  # report
+  map.permission :report_index, {:report_template => [:index, :show]}
+  # content
+  map.permission :view_content, {:contents => [:index, :show, :project_content]}
+  map.permission :update_news_release, {:contents => [:index, :show, :project_content],
+                                                                                        :news_release => [:create, :edit_release, :delete_release]}
+  map.permission :update_weibo, {:contents => [:index, :show, :project_content],
+                                                                      :weibo=> [:index, :edit_weibo, :destory_weibo]}
+  map.permission :update_blog,  {:contents => [:index, :show, :project_content],
+                                                                      :blog=> [:index, :edit_blog, :destory_blog]}
+  map.permission :update_forum, {:contents => [:index, :show, :project_content],
+                                                                      :forum=> [:index, :edit_blog, :destory_forum]}
 
   map.project_module :issue_tracking do |map|
     # Issue categories
@@ -178,7 +190,7 @@ end
 Redmine::MenuManager.map :top_menu do |menu|
   menu.push :welcome, { :controller => 'welcome', :action => 'index' }, :if => Proc.new { User.current.logged? }
   menu.push :contents, { :controller => 'contents', :action => 'index' }, :caption => :label_my_projects
-  menu.push :report , { :controller => 'report_template', :action => 'index' },:caption=>:label_report_analyse
+  menu.push :report , { :controller => 'admin', :action => 'index' },:caption=>:label_report_analyse
   menu.push :admin, { :controller => 'admin', :action => 'index' }, :if => Proc.new { User.current.admin? }, :last => true
   # remove help in top-menu
   # menu.push :help, Redmine::Info.help_url, :last => true, :caption => "?"
