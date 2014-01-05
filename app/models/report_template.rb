@@ -4,6 +4,6 @@ class ReportTemplate < ActiveRecord::Base
 	belong_to :project, :foreign_key='project_id'
 
 	# manually maintianed the relationship between the template and the ***_classified
-	safe_attributes 'template_type', 'classified_id', 'position'
+	safe_attributes 'template_type', 'classified', 'position'
 
 end
