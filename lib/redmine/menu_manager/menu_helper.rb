@@ -114,7 +114,7 @@ module Redmine::MenuManager::MenuHelper
         if block_given?
           yield node
         else
-          items << node  # TODO: not used?
+          items << node
         end
       end
     end

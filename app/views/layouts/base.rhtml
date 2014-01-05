@@ -12,6 +12,8 @@
 <%= stylesheet_link_tag 'application', :media => 'all' %>
 <%= stylesheet_link_tag 'bootstrap.min', :media => 'all' %>
 <%= stylesheet_link_tag 'print', :media => 'print' %>
+<!-- <%= stylesheet_link_tag 'style.min', :media => 'all'  %> -->
+<%= stylesheet_link_tag 'skin/ui.dynatree', :media => 'all'  %>
 <%= stylesheet_link_tag 'rtl', :media => 'all' if l(:direction) == 'rtl' %>
 <!--[if lte IE 6]><%= stylesheet_link_tag 'ie6', :media => 'all' %><![endif]-->
 <!--[if lte IE 7]><%= stylesheet_link_tag 'ie7', :media => 'all' %><![endif]-->
@@ -22,9 +24,10 @@
 <%= javascript_include_tag 'jquery-ui.min.js' %>
 <%= javascript_include_tag 'jquery.menu_expand.js' %>
 <%= javascript_include_tag 'bootstrap.min.js' %>
-<%= javascript_include_tag 'artDialog.js' %>
 <%= javascript_tag('jQuery.noConflict();') %>
 <%= javascript_include_tag 'modernizr.min.js' %>
+<%= javascript_include_tag 'jquery.dynatree.min.js' %>
+<!-- <%= javascript_include_tag 'jstree.min.js' %> -->
 <%= javascript_heads %>
 <%= stylesheet_link_tag 'jstoolbar' %>
 <%= heads_for_theme %>

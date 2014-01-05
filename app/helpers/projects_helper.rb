@@ -20,9 +20,10 @@ module ProjectsHelper
 
   def project_settings_tabs
     tabs = [
-            {:name => 'info', :action => :edit_project, :partial => 'projects/edit', :label => :label_information_plural},    
+            {:name => 'info', :controller => 'projects', :action => :edit_project, :partial => 'projects/edit', :label => :label_information_plural},    
             #{:name => 'modules', :action => :select_project_modules, :partial => 'projects/settings/modules', :label => :label_module_plural},
-            {:name => 'members', :action => :manage_members, :partial => 'projects/settings/members', :label => :label_member_plural},
+            {:name => 'members', :controller => 'projects', :action => :manage_members, :partial => 'projects/settings/members', :label => :label_member_plural},
+            {:name => 'report', :controller => 'report_template', :action => :report_index, :partial => 'projects/settings/report_template', :label => :label_report_plural},
             #{:name => 'versions', :action => :manage_versions, :partial => 'projects/settings/versions', :label => :label_version_plural},
             #{:name => 'categories', :action => :manage_categories, :partial => 'projects/settings/issue_categories', :label => :label_issue_category_plural},
             #{:name => 'wiki', :action => :manage_wiki, :partial => 'projects/settings/wiki', :label => :label_wiki},
@@ -30,7 +31,10 @@ module ProjectsHelper
             #{:name => 'boards', :action => :manage_boards, :partial => 'projects/settings/boards', :label => :label_board_plural},
             #{:name => 'activities', :action => :manage_project_activities, :partial => 'projects/settings/activities', :label => :enumeration_activities}
             ]
-    tabs.select {|tab| User.current.allowed_to?(tab[:action], @project)}
+    Rails.logger.info "project setting tabs before permission check : #{tabs.size}"
+    tabs = tabs.select {|tab| User.current.allowed_to?(tab[:action], @project)}
+    Rails.logger.info "project setting tabs after permission check : #{tabs.size}"
+    tabs
   end
 
   def parent_project_select_tag(project)

@@ -29,6 +29,7 @@ class Project < ActiveRecord::Base
     'blog' => 1, 
     'forum' => 1,
     'templates' => 1,
+    'report_template' => 1,
   }
 
   # Maximum length for project identifiers
@@ -47,6 +48,7 @@ class Project < ActiveRecord::Base
   has_many :weibos
   has_many :forums
   has_many :blogs
+  has_many :report_templates
 
   # project reviewer/manager/clients
   has_many :project_admin, :dependent => :destroy

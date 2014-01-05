@@ -33,7 +33,7 @@ module PjmMenuHelper
     if not selected.nil? and selected
        selectedcss = node.name.to_s+"selected"
         Rails.logger.info selectedcss
-         selectedhtml_options = { :class => selectedcss }
+        selectedhtml_options = { :class => selectedcss }
         html <<link_to("",url, node.html_options.merge(selectedhtml_options))
     else
        html <<link_to("",url, node.html_options(:selected => selected))

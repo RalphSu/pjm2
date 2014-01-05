@@ -1,0 +1,2 @@
+module ReportTemplateHelper
+end
