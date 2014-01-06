@@ -46,6 +46,15 @@ sudo yum install mysql-server, mysql
 sudo service mysqld start
 sudo chkconfig mysqld on 
 ``` 
+
+setup JDK
+``` shell 
+sudo apt-get install openjdk-6-jdk
+
+# add below line to .bashrc
+export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64
+``` 
+
 setup pjm
 ``` shell
 sudo apt-get install libmagickwand-dev 
