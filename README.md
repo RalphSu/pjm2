@@ -69,6 +69,17 @@ mysql> CREATE USER 'chiliproject'@'localhost' IDENTIFIED BY 'chili';
 mysql> GRANT ALL PRIVILEGES ON chiliproject.* TO 'chiliproject'@'localhost';
 
 bundle install --without development test 
-RAILS_ENV=production rake db:migrate 
 rake generate_session_store
+
+RAILS_ENV=production rake db:migrate 
+RAILS_ENV=production bundle exec rake redmine:load_default_data
+# choose en
+
+#Re-Run schema-migration to rename role
+# enter mysql, 
+delete from schema_migrations where version="20131203062739";
+exit;
+
+> RAILS_ENV=production rake db:migrate
+
 ``` 
