@@ -55,6 +55,14 @@ sudo apt-get install openjdk-6-jdk
 export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64
 ``` 
 
+setup iptables : NAT to 80 from 8080
+``` shell 
+# redirect request on interface eth0 from 80 to 8080
+sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+sudo iptables-save
+``` 
+
+
 setup pjm
 ``` shell
 sudo apt-get install libmagickwand-dev 
