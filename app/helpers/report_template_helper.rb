@@ -10,6 +10,10 @@ module ReportTemplateHelper
 		NewsClassified.all(:select => "DISTINCT(classified)").each do |n|
 			item = {}
 			item[:title] = n.classified
+			value ={}
+			value[:category] = "#{category}"
+			value[:classified] = "#{n.classified}"
+			item[:value] = value
 			sub_classifieds << item
 		end
 		tree = {
@@ -23,6 +27,10 @@ module ReportTemplateHelper
 		WeiboClassified.all(:select=> "DISTINCT(classified)").each do |n|
 			item = {}
 			item[:title] = n.classified
+			value ={}
+			value[:category] = "#{category}"
+			value[:classified] = "#{n.classified}"
+			item[:value] = value
 			sub_classifieds << item
 		end
 		tree = {
@@ -36,6 +44,10 @@ module ReportTemplateHelper
 		BlogClassified.all(:select=> "DISTINCT(classified)").each do |n|
 			item = {}
 			item[:title] = n.classified
+			value ={}
+			value[:category] = "#{category}"
+			value[:classified] = "#{n.classified}"
+			item[:value] = value
 			sub_classifieds << item
 		end
 		tree = {
@@ -49,6 +61,10 @@ module ReportTemplateHelper
 		ForumClassified.all(:select=> "DISTINCT(classified)").each do |n|
 			item = {}
 			item[:title] = n.classified
+			value ={}
+			value[:category] = "#{category}"
+			value[:classified] = "#{n.classified}"
+			item[:value] = value
 			sub_classifieds << item
 		end
 		tree = {

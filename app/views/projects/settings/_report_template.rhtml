@@ -1,31 +1,40 @@
 <div id="report_template"></div>
 <div id="echoSelection3"></div>
-<div id="echoSelectionRootKeys3"></div>
-<div id="echoSelectionRoots3"></div>
+<div id="seq_table"></div>
+<!-- <div id="echoSelectionRootKeys3"></div>
+<div id="echoSelectionRoots3"></div> -->
 <% tree_data = get_templates @project %>
 <script type="text/javascript" charset="utf-8">
   var treeData =<%= ActiveSupport::JSON.encode(tree_data)%>;
-
+  var treeSelectedData = [];
   	jQuery(function() {
 	      jQuery("#report_template").dynatree({
 		      checkbox: true,
 		      selectMode: 3,
 		      children: treeData,
 		      onSelect: function(select, node) {
-		        // Get a list of all selected nodes, and convert to a key array:
-		        var selKeys = jQuery.map(node.tree.getSelectedNodes(), function(node){
-		          return node.data.key;
+		      	// clear
+		      	treeSelectedData = []
+		        	// Get a list of all selected nodes, and convert to a key array:
+		        	var selKeys = jQuery.map(node.tree.getSelectedNodes(true), function(node) {
+		        	if (node.data.value != undefined) {
+		          	treeSelectedData.push(node.data.value);
+		          } else {
+		          	for (var child in node.data.children) {
+		          		treeSelectedData.push(child.data.value)
+		          	}
+		          }
 		        });
-		        jQuery("#echoSelection3").text(selKeys.join(", "));
+		        jQuery("#echoSelection3").text(JSON.stringify(treeSelectedData));
 
-		        // Get a list of all selected TOP nodes
-		        var selRootNodes = node.tree.getSelectedNodes(true);
-		        // ... and convert to a key array:
-		        var selRootKeys = jQuery.map(selRootNodes, function(node){
-		          return node.data.key;
-		        });
-		        jQuery("#echoSelectionRootKeys3").text(selRootKeys.join(", "));
-		        jQuery("#echoSelectionRoots3").text(selRootNodes.join(", "));
+		        // // Get a list of all selected TOP nodes
+		        // var selRootNodes = node.tree.getSelectedNodes(true);
+		        // // ... and convert to a key array:
+		        // var selRootKeys = jQuery.map(selRootNodes, function(node){
+		        //   return node.data.value;
+		        // });
+		        // jQuery("#echoSelectionRootKeys3").text(selRootKeys.join(", "));
+		        // jQuery("#echoSelectionRoots3").text(selRootNodes.join(", "));
 		      },
 		      onDblClick: function(node, event) {
 		        node.toggleSelect();
