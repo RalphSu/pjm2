@@ -87,7 +87,7 @@
 	</tbody>
 </table>
 <% unless weibos.blank? %>
-	<%=will_paginate news_release, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
+	<%=will_paginate weibos, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
 <% end %>
 
 
