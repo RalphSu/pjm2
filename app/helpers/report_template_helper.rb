@@ -93,8 +93,7 @@ module ReportTemplateHelper
 			value[:category] = t.template_type
 			value[:classified] = t.classified
 			item[:value] = value
-			tree_map[t.tempate_type]<<item;
-		
+			tree_map[t.template_type]<<item;
 		end
 		
 		tree_map.each do |k,v|

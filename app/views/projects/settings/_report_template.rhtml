@@ -31,17 +31,12 @@
   </tbody>
   </table>
 
-
-<div id="echoSelection3"></div>
-<div id="seq_table"></div>
-<!-- <div id="echoSelectionRootKeys3"></div>
-<div id="echoSelectionRoots3"></div> -->
 <% tree_data = get_templates %>
 <% projecttree_data = get_projecttemplates @project %>
 <script type="text/javascript" charset="utf-8">
-  var treeData =<%= ActiveSupport::JSON.encode(tree_data)%>;
-  var treeSelectedData = [];
-  	jQuery(function() {
+	var treeData =<%= ActiveSupport::JSON.encode(tree_data)%>;
+	var treeSelectedData = [];
+	jQuery(function() {
 	      jQuery("#report_template").dynatree({
 		      checkbox: true,
 		      selectMode: 3,
@@ -85,12 +80,12 @@
 		        }
 		      },
 		      // The following options are only required, if we have more than one tree on one page:
-		      // cookieId: "dynatree-Cb3",
-		      // idPrefix: "dynatree-Cb3-"
+		      cookieId: "dynatree-Cb3",
+		      idPrefix: "dynatree-Cb3-"
 	    });
 	});
 
-var projecttree_data =<%= ActiveSupport::JSON.encode(projecttree_data)%>;
+	var projecttree_data =<%= ActiveSupport::JSON.encode(projecttree_data)%>;
 
   	jQuery(function() {
 	      jQuery("#project_report_template").dynatree({
@@ -106,8 +101,10 @@ var projecttree_data =<%= ActiveSupport::JSON.encode(projecttree_data)%>;
 		          node.toggleSelect();
 		          return false;
 		        }
-		      }
-	
+		      },
+		      // The following options are only required, if we have more than one tree on one page:
+		      cookieId: "dynatree-Cb4",
+		      idPrefix: "dynatree-Cb4-"
 	    });
 	});
 
@@ -117,17 +114,17 @@ var projecttree_data =<%= ActiveSupport::JSON.encode(projecttree_data)%>;
 		var treeRoot = jQuery("#report_template").dynatree("getRoot");
 
 		 jQuery.map(selectedNodes, function(node) {
-		 	      if(node.getChildren()!=null){
-						for (var i=0; i<node.getChildren().length;i++){
-							var classfiedNode = node.getChildren()[i].data.value;
-							addToTree(treeRoot,classfiedNode);
-						}
-					node.parent.removeChild(node);
-		          	}else{
+		 	if(node.getChildren()!=null){
+				for (var i=0; i<node.getChildren().length;i++){
+					var classfiedNode = node.getChildren()[i].data.value;
+					addToTree(treeRoot,classfiedNode);
+				}
+				node.parent.removeChild(node);
+	          	}else{
 		        		addToTree(treeRoot,node.data.value);
 		        		node.parent.removeChild(node);
-		        	}
-		        
+	        		}
+	        
 		 });
 	}
 
@@ -136,35 +133,27 @@ var projecttree_data =<%= ActiveSupport::JSON.encode(projecttree_data)%>;
 
 		var projectTreeRoot = jQuery("#project_report_template").dynatree("getRoot");
 
-		  jQuery.map(selectedNodes, function(node) {
-		 	      if(node.getChildren()!=null){
-						for (var i=0; i<node.getChildren().length;i++){
-							var classfiedNode = node.getChildren()[i].data.value;
-							addToTree(projectTreeRoot,classfiedNode);
-						}
-					node.parent.removeChild(node);
-		          	}else{
+		jQuery.map(selectedNodes, function(node) {
+	 	 	if(node.getChildren()!=null){
+				for (var i=0; i<node.getChildren().length;i++){
+					var classfiedNode = node.getChildren()[i].data.value;
+					addToTree(projectTreeRoot,classfiedNode);
+				}
+				node.parent.removeChild(node);
+	          	}else{
 		        		addToTree(projectTreeRoot,node.data.value);
 		        		node.parent.removeChild(node);
 		        	}
-		        
-		 });
-
-		
+		});
 	}
 
 	function addToTree(projectTreeRoot, classfiedNode){
 		if(classfiedNode!=null){
 			treeSelectedData.push(classfiedNode)	
 			if((projectTreeRoot.getChildren()==null)||projectTreeRoot.getChildren().length==0){
-				var childNode = projectTreeRoot.addChild({
-       				 title: classfiedNode.category
-       			});
-				childNode.addChild({
-					title: classfiedNode.classified,
-        				value: classfiedNode
-				});
-			}else{
+				var childNode = projectTreeRoot.addChild( { title: classfiedNode.category });
+				childNode.addChild({ title: classfiedNode.classified, value: classfiedNode });
+			} else {
 				var foundcategory=false;
 				var foundclassified=false;
 				for(var m=0;m<projectTreeRoot.getChildren().length;m++){
@@ -179,24 +168,44 @@ var projecttree_data =<%= ActiveSupport::JSON.encode(projecttree_data)%>;
 						}
 						if(foundclassified==false){
 							projectTreeRoot.getChildren()[m].addChild({
-        							title: classfiedNode.classified,
-        							value: classfiedNode
+	        							title: classfiedNode.classified,
+	        							value: classfiedNode
     							});	
 						}
 						break;
 					}
 				}
 				if(foundcategory==false){
-					var childNode = projectTreeRoot.addChild({
-       					 title: classfiedNode.category
-       				});
-					childNode.addChild({
-						title: classfiedNode.classified,
-        					value: classfiedNode
-					});
+					var childNode = projectTreeRoot.addChild({ title: classfiedNode.category });
+					childNode.addChild({ title: classfiedNode.classified, value: classfiedNode });
 				}
 			}					
 		}
 	}
 </script>
 
+<% form_tag(url_for(controller: 'report_template', action: 'save') , :method => :post ) do %>
+<button id="save-btn" onClick="fill_template(); this.form.submit(); return false;"><%=l(:button_save)%></button>
+<script type="text/javascript" charset="utf-8">
+function fill_template() {
+	var submit_data  = []
+	jQuery("#project_report_template").dynatree("getRoot").visit(function (node) {
+		// only need to add the leaf nodes
+		if (node.getChildren() == null) {
+			data = {
+				template_type : node.data.value["category"], 
+				classified: node.data.value["classified"],
+				project_id : <%= @project.id %>,
+				position : -1 // TODO
+			}
+			submit_data.push(data)
+		}
+	});
+	jQuery("#templates").val(JSON.stringify(submit_data));
+	jQuery("#templates-show").text(JSON.stringify(submit_data));
+}
+</script>
+<%= hidden_field_tag :project_id , @project.identifier %>
+<input id = "templates" name="templates" class="hidden" ></input>
+<div id = "templates-show" class="hidden"></div>
+<%end%>

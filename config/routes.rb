@@ -106,6 +106,13 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
+  map.with_options :controller => 'report_template' do |report_routes|
+    report_routes.with_options :conditions => {:method => :post} do |report_views|
+      report_views.connect 'report_template/save/', :action => 'save'
+    end
+  end
+
+
   map.with_options :controller => 'documents' do |document_routes|
     document_routes.with_options :conditions => {:method => :get} do |document_views|
       document_views.connect 'projects/:project_id/documents', :action => 'index'

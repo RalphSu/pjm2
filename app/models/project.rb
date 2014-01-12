@@ -48,7 +48,7 @@ class Project < ActiveRecord::Base
   has_many :weibos
   has_many :forums
   has_many :blogs
-  has_many :report_templates
+  has_many :report_templates, :dependent => :delete_all
 
   # project reviewer/manager/clients
   has_many :project_admin, :dependent => :destroy
