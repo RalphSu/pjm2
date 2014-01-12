@@ -1,9 +1,43 @@
-<div id="report_template"></div>
+<table>
+  <thead>
+  <tr>
+    <th>
+    <p>This tree allows dragging.</p>
+    </th>
+    <th>
+    	<p></p>
+    </th>
+    <th>
+    <p>This tree allows dropping.</p>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr valign="top">
+    <td id="report_template_td">
+      <div id="report_template"></div>
+    </td>
+    <td>
+      <div >
+      	<button id="deselect_report" onclick="moveLeft();" ><<</button>
+      	<button id="select_report" onclick="moveRight();">>></button>
+      </div>
+    </td>
+    <td id="project_report_template_td">
+      <div id="project_report_template"></div>
+    </td>
+  </tr>
+
+  </tbody>
+  </table>
+
+
 <div id="echoSelection3"></div>
 <div id="seq_table"></div>
 <!-- <div id="echoSelectionRootKeys3"></div>
 <div id="echoSelectionRoots3"></div> -->
-<% tree_data = get_templates @project %>
+<% tree_data = get_templates %>
+<% projecttree_data = get_projecttemplates @project %>
 <script type="text/javascript" charset="utf-8">
   var treeData =<%= ActiveSupport::JSON.encode(tree_data)%>;
   var treeSelectedData = [];
@@ -13,19 +47,24 @@
 		      selectMode: 3,
 		      children: treeData,
 		      onSelect: function(select, node) {
-		      	// clear
-		      	treeSelectedData = []
-		        	// Get a list of all selected nodes, and convert to a key array:
-		        	var selKeys = jQuery.map(node.tree.getSelectedNodes(true), function(node) {
-		        	if (node.data.value != undefined) {
-		          	treeSelectedData.push(node.data.value);
-		          } else {
-		          	for (var child in node.data.children) {
-		          		treeSelectedData.push(child.data.value)
-		          	}
-		          }
-		        });
-		        jQuery("#echoSelection3").text(JSON.stringify(treeSelectedData));
+		   //    	// clear
+		   //    	treeSelectedData = []
+		   //      	// Get a list of all selected nodes, and convert to a key array:
+		        	// var selKeys = jQuery.map(node.tree.getSelectedNodes(true), function(node) {
+		   //      		if(node.data.children!=null){
+					// 	for (var i=0; i<node.data.children.length;i++){
+					// 		if(node.data.children[i].value!=null){
+					// 			treeSelectedData.push(node.data.children[i].value)	
+					// 		}
+							
+					// 	}
+					// //node.parent.removeChild(node);
+		   //        		}else{
+		   //      			treeSelectedData.push(node.data.value);	
+		   //      		//	node.parent.removeChild(node);
+		   //      		}
+		   //      });
+		   //      jQuery("#echoSelection3").text(JSON.stringify(treeSelectedData));
 
 		        // // Get a list of all selected TOP nodes
 		        // var selRootNodes = node.tree.getSelectedNodes(true);
@@ -50,5 +89,114 @@
 		      // idPrefix: "dynatree-Cb3-"
 	    });
 	});
+
+var projecttree_data =<%= ActiveSupport::JSON.encode(projecttree_data)%>;
+
+  	jQuery(function() {
+	      jQuery("#project_report_template").dynatree({
+		      checkbox: true,
+		      selectMode: 3,
+		      children: projecttree_data,
+		    
+		      onDblClick: function(node, event) {
+		        node.toggleSelect();
+		      },
+		      onKeydown: function(node, event) {
+		        if( event.which == 32 ) {
+		          node.toggleSelect();
+		          return false;
+		        }
+		      }
+	
+	    });
+	});
+
+	function moveLeft(){
+		var selectedNodes = jQuery("#project_report_template").dynatree("getRoot").tree.getSelectedNodes(true);
+
+		var treeRoot = jQuery("#report_template").dynatree("getRoot");
+
+		 jQuery.map(selectedNodes, function(node) {
+		 	      if(node.getChildren()!=null){
+						for (var i=0; i<node.getChildren().length;i++){
+							var classfiedNode = node.getChildren()[i].data.value;
+							addToTree(treeRoot,classfiedNode);
+						}
+					node.parent.removeChild(node);
+		          	}else{
+		        		addToTree(treeRoot,node.data.value);
+		        		node.parent.removeChild(node);
+		        	}
+		        
+		 });
+	}
+
+	function moveRight(){
+		var selectedNodes = jQuery("#report_template").dynatree("getRoot").tree.getSelectedNodes(true);
+
+		var projectTreeRoot = jQuery("#project_report_template").dynatree("getRoot");
+
+		  jQuery.map(selectedNodes, function(node) {
+		 	      if(node.getChildren()!=null){
+						for (var i=0; i<node.getChildren().length;i++){
+							var classfiedNode = node.getChildren()[i].data.value;
+							addToTree(projectTreeRoot,classfiedNode);
+						}
+					node.parent.removeChild(node);
+		          	}else{
+		        		addToTree(projectTreeRoot,node.data.value);
+		        		node.parent.removeChild(node);
+		        	}
+		        
+		 });
+
+		
+	}
+
+	function addToTree(projectTreeRoot, classfiedNode){
+		if(classfiedNode!=null){
+			treeSelectedData.push(classfiedNode)	
+			if((projectTreeRoot.getChildren()==null)||projectTreeRoot.getChildren().length==0){
+				var childNode = projectTreeRoot.addChild({
+       				 title: classfiedNode.category
+       			});
+				childNode.addChild({
+					title: classfiedNode.classified,
+        				value: classfiedNode
+				});
+			}else{
+				var foundcategory=false;
+				var foundclassified=false;
+				for(var m=0;m<projectTreeRoot.getChildren().length;m++){
+					if(classfiedNode.category==projectTreeRoot.getChildren()[m].data.title){
+						foundcategory=true;
+						var categoryNode= projectTreeRoot.getChildren()[m];
+						for(var n=0;n<categoryNode.getChildren().length;n++){
+							if(classfiedNode.classified==categoryNode.getChildren()[n].data.title){
+								foundclassified=true;
+								break;
+							}
+						}
+						if(foundclassified==false){
+							projectTreeRoot.getChildren()[m].addChild({
+        							title: classfiedNode.classified,
+        							value: classfiedNode
+    							});	
+						}
+						break;
+					}
+				}
+				if(foundcategory==false){
+					var childNode = projectTreeRoot.addChild({
+       					 title: classfiedNode.category
+       				});
+					childNode.addChild({
+						title: classfiedNode.classified,
+        					value: classfiedNode
+					});
+				}
+			}					
+		}
+	}
 </script>
 

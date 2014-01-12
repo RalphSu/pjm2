@@ -2,7 +2,7 @@
 
 module ReportTemplateHelper
 
-	def get_templates(project)
+	def get_templates()
 		tree_data = []
 
 		category = '新闻类模板'
@@ -73,18 +73,37 @@ module ReportTemplateHelper
 		}
 		tree_data << tree
 
+
+
+		return tree_data
+	end
+
+
+	def get_projecttemplates(project)
+		tree_map= {}
+		tree_data=[]
 		# fill the selected flag
 		ReportTemplate.find(:all, :conditions=> {:project_id => project.id}).each do |t|
-			tree_data.each do |td|
-				if td[:title] == t.template_type
-					td[:children].each do |item|
-						if item[:title] == t.classified
-							item[:select] = true
-						end
-					end
-				end
+			if not tree_map.has_key?(t.template_type)
+			 	tree_map[t.template_type]=[]
 			end
+			item = {}
+			item[:title] = t.classified
+			value ={}
+			value[:category] = t.template_type
+			value[:classified] = t.classified
+			item[:value] = value
+			tree_map[t.tempate_type]<<item;
+		
 		end
+		
+		tree_map.each do |k,v|
+		 	tree ={
+		 		:title=>k,
+		 		:children=>v
+		 	}
+		 	tree_data<<tree
+		 end
 
 		return tree_data
 	end

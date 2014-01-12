@@ -141,6 +141,22 @@ h5,
   
 }
 
+#deselect_report {
+  display: inline;
+}
+
+#select_report {
+  display: block;
+}
+
+#report_template_td{
+  border: 1px solid #333333;
+}
+
+#project_report_template_td{
+  border: 1px solid #333333;
+}
+
 * html #content {
   width: 75%;
   padding-left: 0;
