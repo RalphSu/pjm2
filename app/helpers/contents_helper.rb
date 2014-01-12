@@ -227,7 +227,7 @@ module ContentsHelper
 
 		def parseDateValue(date)
 			unless date.nil?
-				dateFormat = @@date_format_class.new('yyyy-MM-dd')
+				dateFormat = @@date_format_class.new('yyyy-MM-dd hh:mm:ss')
 				dateFormat.format(date)
 			else
 				""
