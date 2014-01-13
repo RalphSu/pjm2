@@ -30,6 +30,12 @@ class ReportTemplateController < ApplicationController
 				Rails.logger.info e.inspect
 			end
 		end
-		redirect_to({:controller => 'projects', :action => 'settings', :tab=>'report', :id=>@project.identifier})
+		respond_to do |format|
+       	 format.html {
+          flash[:notice] = l(:notice_successful_update)
+          redirect_to({:controller => 'projects', :action => 'settings', :tab=>'report', :id=>@project.identifier})
+      	  }
+      	end
+		
 	end
 end

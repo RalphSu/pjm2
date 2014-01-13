@@ -31,7 +31,7 @@
   </tbody>
   </table>
 
-<% tree_data = get_templates %>
+<% tree_data = get_templates @project%>
 <% projecttree_data = get_projecttemplates @project %>
 <script type="text/javascript" charset="utf-8">
 	var treeData =<%= ActiveSupport::JSON.encode(tree_data)%>;
