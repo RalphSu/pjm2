@@ -14,17 +14,28 @@ class ReportTaskController < ApplicationController
    #          projects<<aa
    #        end
    #      end
-    @p = @projects.first unless not @project.nil?
+    @project = @projects.first unless not @project.nil?
   end
 
 
    def tasks
-   
+    ## TODO: get current users' projects
+    @projects=Project.all
+
    # fill the selected flag
     @reporttasks = ReportTask.find(:all, :conditions=> {:project_id => @project.id})
 
     render :action => "tasks",:layout => false if request.xhr?
 
+  end
+
+  def download
+  end
+
+  def upload
+  end
+
+  def publish
   end
 
 end

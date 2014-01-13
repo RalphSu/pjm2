@@ -1,5 +1,5 @@
 
-<h2><%=l(:label_project_plural)%></h2>
+<h2><%=l(:label_report_plural)%></h2>
 <div class="contextual">
 <%= link_to l(:label_project_new), {:controller => 'projects', :action => 'new'}, :class => 'icon icon-add' %>
 </div>
@@ -9,8 +9,10 @@
 <div class="autoscroll">
 <table class="list">
   <thead><tr>
-	<th><%=l(:label_report_task_time)%></th>
-	<th><%=l(:label_report_task_create_time)%></th>
+    <th><%=l(:label_report_number)%></th>
+    <th><%=l(:label_report_task_create_time)%></th>
+	<th><%=l(:label_report_task_start_time)%></th>
+	<th><%=l(:label_report_task_end_time)%></th>
     <th><%=l(:label_report_task_status)%></th>
     <th><%=l(:label_report_gen_path)%></th>
     <th><%=l(:label_report_correct_path)%></th>
@@ -19,16 +21,28 @@
   <tbody>
 <% @reporttasks.each  do |f|%>
   <tr class="user <%= cycle("odd", "even") %>">
-	<td class="name"><span><%= link_to_project(project, {:action => 'settings'}, :title => project.short_description) %></span></td>
+	<td class="name"><%= f.id %></td>
+    <td><%=   format_date(f.created_at)%></td>
 	<td ><%= format_date(f.report_start_time) %></td>
-    <td ><%= format_date(f.gen_start_time) %></td>
-    <td ><%= f.status %></td>
-    <td ><%= f.report_path %></td>
+    <td ><%=  format_date(f.report_end_time) %></td>
+    <td ><%=  f.status %></td>
+    <td ><%=  f.report_path %></td>
+    <td ><%=  f.report_path %></td>
     
   <td class="buttons">
-    <%= link_to(l(:button_archive), { :controller => 'projects', :action => 'archive', :id => project, :status => params[:status] }, :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-lock') if project.active? %>
-    <%= link_to(l(:button_unarchive), { :controller => 'projects', :action => 'unarchive', :id => project, :status => params[:status] }, :method => :post, :class => 'icon icon-unlock') if !project.active? && (project.parent.nil? || project.parent.active?) %>
-    
+    <% if (f.status == ReportTask::STATUS_PLANNED) or (f.status == ReportTask::STATUS_INPROGRESS) %>
+        <%= l(:label_report_not_generated) %>
+   <% elsif f.status == ReportTask::STATUS_GENERATED %>
+      <%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-unlock') %>
+      <%= link_to(l(:button_upload), { :controller => 'report_task', :action => 'upload', :project_id => @project, :task_id=>f.id},  :method => :post, :class => 'icon icon-unlock') %>
+   <% elsif f.status == ReportTask::STATUS_REVIEWED %>
+      <%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-unlock') %>
+      <%= link_to(l(:button_upload), { :controller => 'report_task', :action => 'upload', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-unlock') %>
+      <%= link_to(l(:button_unarchive), { :controller => 'report_task', :action => 'publish', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-unlock') %>
+    <% elsif f.status == ReportTask::published %>
+      <%=l(:label_report_published)%>
+     <% else %>
+     <% end %>
    </td>
   </tr>
 <% end %>
