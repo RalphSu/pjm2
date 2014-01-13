@@ -443,6 +443,12 @@ zh:
   label_forum_template_new: 新建论坛类模板
   label_project_plural: 项目
   label_user_normal: 员工
+  label_report_task_time: 报表时间
+  label_report_new: 新建报表
+  label_report_task_create_time: 创建时间
+  label_report_task_status: 状态
+  label_report_gen_path: 系统地址
+  label_report_correct_path: 校对地址
   label_user_client: 客户
   label_user_admin: 超级管理员
   label_x_projects:

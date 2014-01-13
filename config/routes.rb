@@ -82,6 +82,13 @@ ActionController::Routing::Routes.draw do |map|
     # end
   end
 
+  # report routes
+  map.with_options :controller => 'report_task' do |report_routes|
+    report_routes.with_options :conditions => {:method => :get} do |report_views|
+      report_views.connect 'report_task/tasks/:project_id/', :action => 'tasks'
+    end
+  end
+
   map.with_options :controller => 'news_release' do |news_release_routes|
     news_release_routes.with_options :conditions => {:method => :get} do |news_relase_views|
       news_relase_views.connect 'news_release/index/:project_id/', :action => 'index'

@@ -154,7 +154,10 @@ module Redmine::MenuManager::MenuHelper
         controllername="admin"
     elsif(controllername=="templates")
         controllername="admin"
+    elsif(controllername=="report_task")
+        controllername="report"
     end
+
     return [caption, url, (controllername == item.name.to_s)]
   end
 
