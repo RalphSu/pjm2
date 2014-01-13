@@ -190,7 +190,7 @@ end
 Redmine::MenuManager.map :top_menu do |menu|
   menu.push :welcome, { :controller => 'welcome', :action => 'index' }, :if => Proc.new { User.current.logged? }
   menu.push :contents, { :controller => 'contents', :action => 'index' }, :caption => :label_my_projects
-  menu.push :report , { :controller => 'admin', :action => 'index' },:caption=>:label_report_analyse
+  menu.push :report , { :controller => 'report_task', :action => 'index' },:caption=>:label_report_analyse
   menu.push :pjconfig, { :controller => 'pjconfig', :action => 'index' }, :if => Proc.new { !User.current.admin? }
   menu.push :admin, { :controller => 'admin', :action => 'index' }, :if => Proc.new { User.current.admin? }, :last => true
   
@@ -255,6 +255,10 @@ Redmine::MenuManager.map :content_menu do |menu|
 end
 
 Redmine::MenuManager.map :report_menu do |menu|
+  menu.push( :report, {:controller => 'report_task', :action => 'tasks'},{
+              :last => true,
+              :caption => Proc.new { |p| p.name }
+            })
 end
 
 Redmine::MenuManager.map :project_menu do |menu|
