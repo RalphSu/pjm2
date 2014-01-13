@@ -29,13 +29,68 @@ class ReportTaskController < ApplicationController
 
   end
 
+  def create
+    start_time = params[:report_start_time]
+    end_time = params[:report_end_time]
+    task = ReportTask.new
+    task.status= ReportTask::STATUS_PLANNED
+    task.gen_count= 1
+    unless start_time.blank?
+          task.report_start_time = Time.parse(start_time)
+    end
+    unless end_time.blank?
+           task.report_end_time = Time.parse(end_time)
+    end
+    task.project = @project
+    task.save!
+
+    respond_to do |format|
+      format.html {
+        flash[:notice] = l(:notice_successful_create)
+        redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
+      }
+    end
+  end
+
   def download
+    
   end
 
   def upload
+    id = params[:task_id]
+    unless id.blank?
+      task = ReportTask.find(id)
+      unless task.blank?
+
+        ## TODO : saved
+
+        task.status=ReportTask::STATUS_REVIEWED
+        task.save!
+      end
+    end
+    respond_to do |format|
+      format.html {
+        flash[:notice] = l(:notice_successful_upload)
+        redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
+      }
+    end
   end
 
   def publish
+    id = params[:task_id]
+    unless id.blank?
+      task = ReportTask.find(id)
+      unless task.blank?
+        task.status=ReportTask::STATUS_PUBLISHED
+        task.save!
+      end
+    end
+    respond_to do |format|
+      format.html {
+        flash[:notice] = l(:notice_successful_publish)
+        redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
+      }
+    end
   end
 
 end

@@ -1,10 +1,38 @@
 
 <h2><%=l(:label_report_plural)%></h2>
 <div class="contextual">
-<%= link_to l(:label_project_new), {:controller => 'projects', :action => 'new'}, :class => 'icon icon-add' %>
+  <a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_new_report)%></label></a>
 </div>
+</fieldset>
 
-&nbsp;
+<!-- Modal dialog for upload -->
+<div class="container">
+  <div class="row">
+    <div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                    <h4 class="modal-title" id="myModalLabel"><%=l(:label_new_report) %></h4>
+                </div>
+                <div class="modal-body">
+                    <% form_tag(url_for(controller: 'report_task', action: 'create') , :method => :post ) do %>
+                        <%= hidden_field_tag :project_id , @project.identifier %>
+                        <p><%=l(:label_report_task_start_time)%><%= date_field_tag :report_start_time %></p>
+                        <p><%=l(:label_report_task_end_time)%><%= date_field_tag :report_end_time %></p>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                    <button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_submit)%></button>
+          </div>
+        </div>
+                    <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dalog -->
+    </div><!-- /.modal -->
+  </div>
+</div>
 
 <div class="autoscroll">
 <table class="list">

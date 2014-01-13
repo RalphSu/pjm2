@@ -27,6 +27,8 @@ class ReportTask < ActiveRecord::Base
 
 	belongs_to :project
 
+
+#########################TODO
 	def label_status
 		STATUS_LABEL[@status]
 	end

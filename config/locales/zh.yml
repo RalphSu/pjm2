@@ -1096,3 +1096,7 @@ zh:
   STATUS_GENERATED: 已生成
   STATUS_REVIEWED: 已审核
   STATUS_PUBLISHED: 已发布
+  label_new_report: 新建报表
+  notice_successful_publish: 发布成功
+  notice_successful_create: 新建成功
+  notice_successful_upload: 上传成功
