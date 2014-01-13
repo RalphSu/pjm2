@@ -2,6 +2,13 @@ class ReportTask < ActiveRecord::Base
 
 	include Redmine::SafeAttributes
 
+	STATUS_PLANNED = 'planned'
+	STATUS_INPROGRESS = 'inprogress'
+	STATUS_GENERATED = 'generated'
+	STATUS_REVIEWED = 'reviewed'
+	STATUS_PUBLISHED = 'published'
+
+
 	safe_attributes 'status',
 		'gen_start_time',
 		'gen_end_time',

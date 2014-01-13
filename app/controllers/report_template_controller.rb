@@ -19,7 +19,7 @@ class ReportTemplateController < ApplicationController
 						t.classified = param['classified']
 						t.position = param['position']
 						t.project_id = param['project_id']
-						t.save
+						t.save!
 						new_templates << t
 					}
 
@@ -30,12 +30,20 @@ class ReportTemplateController < ApplicationController
 				Rails.logger.info e.inspect
 			end
 		end
+
+		# insert template task
+		# rt = ReportTask.new
+		# rt.project = @project
+		# rt.status = ReportTask::STATUS_PLANNED
+		# rt.report_start_time = (Time.now - (60 * 60 * 24 * 20))
+		# rt.report_end_time = Time.now
+		# rt.save!
+
 		respond_to do |format|
-       	 format.html {
-          flash[:notice] = l(:notice_successful_update)
-          redirect_to({:controller => 'projects', :action => 'settings', :tab=>'report', :id=>@project.identifier})
-      	  }
-      	end
-		
+			format.html {
+				flash[:notice] = l(:notice_successful_update)
+				redirect_to({:controller => 'projects', :action => 'settings', :tab=>'report', :id=>@project.identifier})
+			}
+	      	end
 	end
 end
