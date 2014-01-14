@@ -5,15 +5,7 @@ class ContentsController < ApplicationController
   @show_project_main_menu=false
 
   def index
-  	## TODO: get current users' projects
-    @projects=Project.all
-  	# allprojects = Project.all
-   #  @projects=[]
-   #      allprojects.each do |aa|
-   #        if User.current.allowed_to?('index', aa)
-   #          projects<<aa
-   #        end
-   #      end
+    @projects=User.current.projects
     @p = @projects.first unless not @project.nil?
     @category=params['category']
   end

@@ -401,6 +401,19 @@ class User < Principal
     @projects_by_role
   end
 
+    def projects
+    projects = []
+    memberships.each do |membership|
+      membership.roles.each do |role|
+        p = membership.project if membership.project
+        if p 
+          projects << p unless projects.include? p
+        end
+      end
+    end
+    projects
+  end
+
   safe_attributes 'login',
     'firstname',
     'lastname',

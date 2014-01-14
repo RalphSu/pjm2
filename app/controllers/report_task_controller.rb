@@ -5,22 +5,15 @@ class ReportTaskController < ApplicationController
   @show_project_main_menu=false
 
     def index
-  	## TODO: get current users' projects
-    @projects=Project.all
-  	# allprojects = Project.all
-   #  @projects=[]
-   #      allprojects.each do |aa|
-   #        if User.current.allowed_to?('index', aa)
-   #          projects<<aa
-   #        end
-   #      end
-    @project = @projects.first unless not @project.nil?
+    @projects=User.current.projects
+    unless @projects.blank?
+      @project = @projects.first if @project.nil?
+    end
   end
 
 
    def tasks
-    ## TODO: get current users' projects
-    @projects=Project.all
+    @projects=User.current.projects
 
    # fill the selected flag
     @reporttasks = ReportTask.find(:all, :conditions=> {:project_id => @project.id})

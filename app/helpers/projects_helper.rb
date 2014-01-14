@@ -32,7 +32,7 @@ module ProjectsHelper
             #{:name => 'activities', :action => :manage_project_activities, :partial => 'projects/settings/activities', :label => :enumeration_activities}
             ]
     Rails.logger.info "project setting tabs before permission check : #{tabs.size}"
-    tabs = tabs.select {|tab| User.current.allowed_to?(tab[:action], @project)}
+    tabs = tabs.select {|tab| User.current.allowed_to?(tab, @project)}
     Rails.logger.info "project setting tabs after permission check : #{tabs.size}"
     tabs
   end

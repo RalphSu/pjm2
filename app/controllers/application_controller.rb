@@ -172,6 +172,7 @@ class ApplicationController < ActionController::Base
 
   # Authorize the user for the requested action
   def authorize(ctrl = params[:controller], action = params[:action], global = false)
+    Rails.logger.info "controller: #{ctrl}, action : #{action}, global: #{global}"
     allowed = User.current.allowed_to?({:controller => ctrl, :action => action}, @project || @projects, :global => global)
     if allowed
       true

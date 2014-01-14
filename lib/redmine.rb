@@ -1,4 +1,4 @@
-#-- encoding: UTF-8
+  #-- encoding: UTF-8
 #-- copyright
 # ChiliProject is a project management system.
 #
@@ -61,7 +61,7 @@ end
 
 # Permissions
 Redmine::AccessControl.map do |map|
-  map.permission :view_project, {:projects => [:show], :activities => [:index]}, :public => true
+  map.permission :view_project, {:projects => [:show], :activities => [:index]}, :require=>:member
   map.permission :search_project, {:search => :index}, :public => true
   map.permission :add_project, {:projects => [:new, :create]}, :require => :loggedin
   map.permission :edit_project, {:projects => [:settings, :edit, :update]}, :require => :member
@@ -82,13 +82,22 @@ Redmine::AccessControl.map do |map|
   map.permission :update_forum, {:contents => [:index, :show, :project_content],
                                                                       :forum=> [:index, :edit_blog, :destory_forum]}
   map.permission :manager_permission, {
-    :contents => [:index, :show, :project_content],
-    :projects => [:index],
-    :forum=> [:index, :edit_blog, :destory_forum],
-  }
+     :contents => [:index, :show, :project_content],
+     :news_release => [:create, :edit_release, :delete_release],
+     :weibo=> [:index, :edit_weibo, :destory_weibo],
+     :blog=> [:index, :edit_blog, :destory_blog],
+     :forum=> [:index, :edit_blog, :destory_forum],
+     :projects => [:index, :show, :settings, :edit, :update, :modules, :new, :create, :edit_project, :manage_members, :report_index],
+     :forum=> [:index, :edit_blog, :destory_forum],
+     :report_task=>[:index, :tasks, :create,:download, :upload, :publish],
+     :report_template=>[:save]
+  }, :require => :member
+
   map.permission :reviwer_permission, {
-    :projects => [:index],
-  }
+    :projects => [:index, :show],
+    :report_task=>[:index, :tasks, :create,:download, :upload, :publish],
+    :report_template=>[:save]
+  }, :require => :member
 
 
   map.project_module :issue_tracking do |map|
@@ -130,7 +139,7 @@ Redmine::AccessControl.map do |map|
 
   map.project_module :news do |map|
     map.permission :manage_news, {:news => [:new, :create, :edit, :update, :destroy], :comments => [:destroy]}, :require => :member
-    map.permission :view_news, {:news => [:index, :show]}, :public => true
+    map.permission :view_news, {:news => [:index, :show]}, :require=>:member
     map.permission :comment_news, {:comments => :create}
   end
 
@@ -303,7 +312,7 @@ Redmine::MenuManager.map :project_menu do |menu|
                 @project = p # @project used in the helper
                 project_settings_tabs.collect do |tab|
                   Redmine::MenuManager::MenuItem.new("settings-#{tab[:name]}".to_sym,
-                                                     { :controller => 'projects', :action => 'settings', :id => p, :tab => tab[:name] },
+                                                     { :controller => 'projects', :action => tab[:action], :id => p, :tab => tab[:name] },
                                                      {
                                                        :caption => tab[:label]
                                                      })

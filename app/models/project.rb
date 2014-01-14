@@ -203,7 +203,8 @@ class Project < ActiveRecord::Base
     elsif user && user.memberships.any?
       return "#{Project.table_name}.status=#{Project::STATUS_ACTIVE} AND (#{Project.table_name}.is_public = #{connection.quoted_true} or #{Project.table_name}.id IN (#{user.memberships.collect{|m| m.project_id}.join(',')}))"
     else
-      return "#{Project.table_name}.status=#{Project::STATUS_ACTIVE} AND #{Project.table_name}.is_public = #{connection.quoted_true}"
+      #empty up this query
+      return "#{Project.table_name}.status=#{Project::STATUS_ACTIVE} AND 1 != 1"
     end
   end
 
