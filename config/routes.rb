@@ -244,6 +244,9 @@ ActionController::Routing::Routes.draw do |map|
   map.with_options :controller => 'projects' do |project_mapper|
     project_mapper.with_options :conditions => {:method => :get} do |project_views|
       project_views.connect 'projects/:id/settings/:tab', :controller => 'projects' , :action => 'settings'
+      project_views.connect 'projects/edit_project/:id/', :controller => 'projects' , :action => 'settings'
+      project_views.connect 'projects/manage_members/:id/', :controller => 'projects' , :action => 'settings'
+      project_views.connect 'projects/report_index/:id/', :controller => 'projects' , :action => 'settings'
       project_views.connect 'projects/:project_id/issues/:copy_from/copy', :controller => 'issues', :action => 'new'
     end
   end
