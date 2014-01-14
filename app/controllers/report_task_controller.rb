@@ -53,7 +53,9 @@ class ReportTaskController < ApplicationController
   end
 
   def download
-    
+    ## Download
+    prefix = File.join File.dirname(__FILE__), "../../"
+    send_file(prefix + params[:filename]) unless params[:filename].blank?  
   end
 
   def upload
@@ -61,9 +63,9 @@ class ReportTaskController < ApplicationController
     unless id.blank?
       task = ReportTask.find(id)
       unless task.blank?
-
-        ## TODO : saved
-
+        data = params[:task_file].read
+        file_name = save_reviewed_file(task, data)
+        task.reviewed_path = file_name
         task.status=ReportTask::STATUS_REVIEWED
         task.save!
       end
@@ -76,21 +78,43 @@ class ReportTaskController < ApplicationController
     end
   end
 
+  def save_reviewed_file(task, data)
+    prefix = File.join File.dirname(__FILE__), "../../"
+    file_name =  task.gen_path + "_reviewed.docx"
+    Rails.logger.info "Save file with name #{file_name}"
+    IO.binwrite(prefix + file_name, data)
+    file_name
+  end
+
   def publish
     id = params[:task_id]
     unless id.blank?
       task = ReportTask.find(id)
       unless task.blank?
-        task.status=ReportTask::STATUS_PUBLISHED
-        task.save!
+        if task.status == ReportTask::STATUS_REVIWED
+          #update path and status
+          task.report_path = task.reviewed_path
+          if task.report_path.blank?
+            task.report_path = task.gen_path
+          end
+          task.status=ReportTask::STATUS_PUBLISHED
+          task.save!
+
+          respond_to do |format|
+            format.html {
+              flash[:notice] = l(:notice_successful_publish)
+              redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
+            }
+          end
+        else
+          respond_to do |format|
+            format.html {
+              flash[:notice] = l(:notice_failed_publish)
+              redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
+            }
+          end
+        end
       end
     end
-    respond_to do |format|
-      format.html {
-        flash[:notice] = l(:notice_successful_publish)
-        redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
-      }
-    end
   end
-
 end

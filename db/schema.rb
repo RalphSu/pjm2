@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140114014942) do
+ActiveRecord::Schema.define(:version => 20140114022614) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -532,6 +532,7 @@ ActiveRecord::Schema.define(:version => 20140114014942) do
     t.datetime "updated_at"
     t.string   "gen_path"
     t.string   "reviewed_path"
+    t.string   "type"
   end
 
   create_table "report_templates", :force => true do |t|

@@ -54,28 +54,63 @@
 	<td ><%= format_date(f.report_start_time) %></td>
     <td ><%=  format_date(f.report_end_time) %></td>
     <td ><%=  f.label_status %></td>
-    <td ><%=  f.gen_path %></td>
-    <td ><%=  f.reviewed_path %></td>
-    
+    <td ><%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>f.gen_path  }, :method => :get) %></a></td>
+    <td ><%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>f.reviewed_path}, :method => :get) %></td>
+
+    <% file_path = f.reviewed_path.blank? ? f.gen_path : f.reviewed_path %>
+
   <td class="buttons">
     <% if (f.status == ReportTask::STATUS_PLANNED) or (f.status == ReportTask::STATUS_INPROGRESS) %>
         <%= l(:label_report_not_generated) %>
-   <% elsif f.status == ReportTask::STATUS_GENERATED %>
-      <%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-unlock') %>
-      <%= link_to(l(:button_upload), { :controller => 'report_task', :action => 'upload', :project_id => @project, :task_id=>f.id},  :method => :post, :class => 'icon icon-unlock') %>
-   <% elsif f.status == ReportTask::STATUS_REVIEWED %>
-      <%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-unlock') %>
-      <%= link_to(l(:button_upload), { :controller => 'report_task', :action => 'upload', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-unlock') %>
+    <% elsif f.status == ReportTask::STATUS_GENERATED %>
+      <a data-toggle="modal" href="#myModal-upload" onClick="set_task_id(<%=f.id%>); return true"><label class="icon icon-add"><%=l(:button_upload)%></label></a>
+
+    <% elsif f.status == ReportTask::STATUS_REVIEWED %>
+      <a data-toggle="modal" href="#myModal-upload" onClick="set_task_id(<%=f.id%>); return true"><label class="icon icon-add"><%=l(:button_upload)%></label></a>
       <%= link_to(l(:button_unarchive), { :controller => 'report_task', :action => 'publish', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-unlock') %>
+
     <% elsif f.status == ReportTask::published %>
       <%=l(:label_report_published)%>
-     <% else %>
-     <% end %>
+    <% else %>
+    <% end %>
    </td>
   </tr>
 <% end %>
   </tbody>
 </table>
 </div>
+<script type="TEXT/SCRIPT">
+  function set_task_id(id) {
+    jQuery("#task_id").val(id);
+  }
+</script>
 
-<% html_title(l(:label_project_plural)) -%>
+
+<!-- upload -->
+<div class="container">
+  <div class="row">
+    <div id="myModal-upload" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                    <h4 class="modal-title" id="myModalLabel"><%= l(:button_upload_report) %></h4>
+                </div>
+                <div class="modal-body">
+                    <% form_tag(url_for(controller: 'report_task', action: 'upload') , :method => :post, :multipart => true ) do %>
+                      <%= hidden_field_tag :project_id , @project.identifier %>
+                      <labe><%=l(:label_report_number)%></label><input id="task_id" name="task_id"></input>
+                      <%= file_field_tag :task_file %>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                    <button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
+                  </div>
+                </div>
+                    <% end %>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dalog -->
+    </div><!-- /.modal -->
+  </div>
+</div>

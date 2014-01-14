@@ -1100,3 +1100,5 @@ zh:
   notice_successful_publish: 发布成功
   notice_successful_create: 新建成功
   notice_successful_upload: 上传成功
+  notice_failed_publish: 还没审核不能发布
+  button_upload_report: 上传报表
