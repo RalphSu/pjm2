@@ -53,9 +53,9 @@
     <td><%=   format_date(f.created_at)%></td>
 	<td ><%= format_date(f.report_start_time) %></td>
     <td ><%=  format_date(f.report_end_time) %></td>
-    <td ><%=  f.status %></td>
-    <td ><%=  f.report_path %></td>
-    <td ><%=  f.report_path %></td>
+    <td ><%=  f.label_status %></td>
+    <td ><%=  f.gen_path %></td>
+    <td ><%=  f.reviewed_path %></td>
     
   <td class="buttons">
     <% if (f.status == ReportTask::STATUS_PLANNED) or (f.status == ReportTask::STATUS_INPROGRESS) %>

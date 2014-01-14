@@ -23,13 +23,12 @@ class ReportTask < ActiveRecord::Base
 		'report_path',
 		'reviewed_path',
 		'gen_path',
+		'type',
 		'gen_count'
 
 	belongs_to :project
 
-
-#########################TODO
 	def label_status
-		STATUS_LABEL[@status]
+		STATUS_LABEL[self.status]
 	end
 end
