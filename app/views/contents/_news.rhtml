@@ -74,10 +74,20 @@
 			<% release_fields = find_field_by_releaseId(nr.id) %>
 		<tr class="user <%= cycle("odd", "even") %>">
 		<%fields.each do |f|%>
-			<td><p title=<%= release_fields[f.id] %>><%= release_fields[f.id] %></p></td>
+			<% if release_fields[f.id].blank? %>
+				<td></td>
+			<% else %>
+				<% if release_fields[f.id].file_path.blank? %>
+				<td title=<%= release_fields[f.id].body %>><p><%= release_fields[f.id].body %></p></td>
+				<% else %>
+				<td title=<%= release_fields[f.id].body %>>
+					<p><%= release_fields[f.id].body %></p>
+				</td>
+				<% end %>
+			<% end %>
 		<%end%>
 		<td class="buttons">
-<%= link_to_function l(:button_edit), { :url => { :controller => 'news_release', :action => 'edit_release', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>
+<%= link_to_function l(:button_edit), { :url => { :controller => 'news_release', :action => 'edit_release', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>			
 <%= link_to_remote(l(:button_delete), { :url => { :controller => 'news_release', :action => 'destroy_release', :id => "#{nr.id}" },:method => :delete, :category=>@category, :project_id=>@p.identifier },:class => 'icon icon-del') %>
 		</td>
 		</tr>

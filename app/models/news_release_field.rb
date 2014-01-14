@@ -7,7 +7,7 @@ class NewsReleaseField < ActiveRecord::Base
 	belongs_to :news_classified,
 	:class_name => "NewsClassified",
 	:foreign_key => "news_classifieds_id"
-	safe_attributes 'body'
+	safe_attributes 'body', 'file_path'
 
 	validates_presence_of :news_release,:news_classified
 

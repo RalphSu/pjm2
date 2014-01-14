@@ -78,7 +78,7 @@ class Principal < ActiveRecord::Base
       return true if admin?
 
       roles = roles_for_project(context)
-      Rails.logger.info "Roles on current project : #{roles.inspect}"
+      # Rails.logger.info "Roles on current project : #{roles.inspect}"
       return false unless roles
       roles.detect {|role| (context.is_public? || role.member?) && role.allowed_to?(action)}
 

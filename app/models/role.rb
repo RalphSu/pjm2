@@ -99,7 +99,7 @@ class Role < ActiveRecord::Base
   # * a parameter-like Hash (eg. :controller => 'projects', :action => 'edit')
   # * a permission Symbol (eg. :edit_project)
   def allowed_to?(action)
-    Rails.logger.info "action is #{action}"
+    #Rails.logger.info "action is #{action}"
     if action.is_a? Hash
       allowed = allowed_actions.include? "#{action[:controller]}/#{action[:action]}"
       if Project::HARD_CODE_ALLOWED_CONTROLLERS.has_key?(action[:controller])
@@ -108,7 +108,7 @@ class Role < ActiveRecord::Base
         return allowed
       end
     else
-      Rails.logger.info "allowed_permissions are #{allowed_permissions}"
+      #Rails.logger.info "allowed_permissions are #{allowed_permissions}"
       allowed_permissions.include? action
     end
   end

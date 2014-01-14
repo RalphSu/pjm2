@@ -44,18 +44,19 @@ module NewsReleaseHelper
 	end
 
 	def find_field_by_releaseId(releaseId)
-		
 		field = NewsReleaseField.find(:all, :conditions=>{:news_releases_id=>releaseId},
-			joins: "LEFT JOIN 'images' on images.url=news_release_fields.body",
-			select:"news_release_fields.*,images.file_path AS file_path ")
+			:joins => "LEFT JOIN images on images.url=news_release_fields.body",
+			:select => "news_release_fields.*,images.file_path AS file_path ")
+
+		Rails.logger.info " news_release : #{field.inspect}"
 
 		if field.blank?
 			map = {}
 		else
 			map = {}
 			field.each do |f|
-				Rails.logger.info f.file_path
-				map[f.news_classified.id] = f.body
+				Rails.logger.info "file_path is #{f.file_path}!!!"
+				map[f.news_classified.id] = f
 			end
 			map
 		end
