@@ -23,7 +23,7 @@ module ProjectsHelper
             {:name => 'info', :controller => 'projects', :action => :edit_project, :partial => 'projects/edit', :label => :label_information_plural},    
             #{:name => 'modules', :action => :select_project_modules, :partial => 'projects/settings/modules', :label => :label_module_plural},
             {:name => 'members', :controller => 'projects', :action => :manage_members, :partial => 'projects/settings/members', :label => :label_member_plural},
-            {:name => 'report', :controller => 'report_template', :action => :report_index, :partial => 'projects/settings/report_template', :label => :label_report_plural},
+            {:name => 'report', :controller => 'projects', :action => :report_index, :partial => 'projects/settings/report_template', :label => :label_report_plural},
             #{:name => 'versions', :action => :manage_versions, :partial => 'projects/settings/versions', :label => :label_version_plural},
             #{:name => 'categories', :action => :manage_categories, :partial => 'projects/settings/issue_categories', :label => :label_issue_category_plural},
             #{:name => 'wiki', :action => :manage_wiki, :partial => 'projects/settings/wiki', :label => :label_wiki},
