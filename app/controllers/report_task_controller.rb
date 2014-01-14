@@ -91,7 +91,7 @@ class ReportTaskController < ApplicationController
     unless id.blank?
       task = ReportTask.find(id)
       unless task.blank?
-        if task.status == ReportTask::STATUS_REVIWED
+        if task.status == ReportTask::STATUS_REVIEWED
           #update path and status
           task.report_path = task.reviewed_path
           if task.report_path.blank?
