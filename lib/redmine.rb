@@ -81,6 +81,15 @@ Redmine::AccessControl.map do |map|
                                                                       :blog=> [:index, :edit_blog, :destory_blog]}
   map.permission :update_forum, {:contents => [:index, :show, :project_content],
                                                                       :forum=> [:index, :edit_blog, :destory_forum]}
+  map.permission :manager_permission, {
+    :contents => [:index, :show, :project_content],
+    :projects => [:index],
+    :forum=> [:index, :edit_blog, :destory_forum],
+  }
+  map.permission :reviwer_permission, {
+    :projects => [:index],
+  }
+
 
   map.project_module :issue_tracking do |map|
     # Issue categories
