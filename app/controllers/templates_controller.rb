@@ -51,4 +51,7 @@ class TemplatesController < ApplicationController
 		redirect_to({:controller => 'templates', :action => 'index'})
 	end
 
+
+	def new_news
+	end
 end
