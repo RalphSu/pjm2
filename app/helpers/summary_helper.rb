@@ -12,7 +12,10 @@ module SummaryHelper
 	end
 
 	def distinct_summary_templates()
-		Template.find(:all, :conditions => {:template_type =>"汇总数据类模板" })
+		templates = Template.find(:all, :conditions => {:template_type =>"汇总数据类模板" })
+		templates.select do |t| 
+			t.column_name != '截图'
+		end
 	end
 
 	def find_summary_for_project(project, category)
