@@ -69,7 +69,7 @@
       <a data-toggle="modal" href="#myModal-upload" onClick="set_task_id(<%=f.id%>); return true"><label class="icon icon-add"><%=l(:button_upload)%></label></a>
       <%= link_to(l(:button_unarchive), { :controller => 'report_task', :action => 'publish', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-unlock') %>
 
-    <% elsif f.status == ReportTask::published %>
+    <% elsif f.status == ReportTask::STATUS_PUBLISHED %>
       <%=l(:label_report_published)%>
     <% else %>
     <% end %>
