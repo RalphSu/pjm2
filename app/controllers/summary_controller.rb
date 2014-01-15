@@ -97,6 +97,47 @@ class SummaryController < ApplicationController
 		redirect_to({:controller => 'summary', :action => 'index', :category=>@category, :project_id=>@project.identifier})
 	end
 
+
+	def import_single_image
+		init(params)
+		summary = Summary.find(params[:summary_id])
+		if summary.blank?
+			raise "summary id not presented!"
+		end
+		record_data = params[:record].read
+
+		template = Template.find(:first, :conditions=>{:template_type=>"汇总数据类模板", :column_name=>"截图"})
+		classified = SummaryClassified.find(:first, :conditions=> {:classified=>summary.classified, :template_id=>template.id})
+		image_field = SummaryField.find(:first, :conditions=>{:summaries_id => summary.id, :summary_classifieds_id=> classified.id})
+
+		if image_field.blank?
+			image_field = SummaryField.new()
+			image_field.summaries = summary
+			image_field.summary_classifieds = classified
+		end
+
+		folder = File.join File.dirname(__FILE__), "../../upload/#{@project.identifier}/"
+		unless File.exists?(folder)
+				Dir.mkdir(folder)
+		end
+		uuid = UUIDTools::UUID.timestamp_create.to_s.gsub('-','')
+		file_full_name = uuid + '.png'
+		full_name = File.join folder,file_full_name
+		# write full
+		IO.binwrite(full_name, record_data)
+		
+		Rails.logger.info "============save image: #{full_name}!!"
+		image_field.body = full_name
+		image_field.save!
+
+	    respond_to do |format|
+	      format.html {
+	        flash[:notice] = l(:notice_successful_create)
+	        redirect_to({:controller => 'summary', :action => 'index',  :category=>@category, :project_id=>@project.identifier})
+	      }
+	    end
+	end
+
 	def index
 		init(params)
 	end
