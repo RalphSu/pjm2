@@ -42,6 +42,7 @@ class TemplatesController < ApplicationController
 		@weibo_field_map ={}
 		weibo_classifieds = distinct_weibo_classifieds();
 		weibo_classifieds.each do |classified|
+			
 			 @weibo_field_map[classified.classified] = find_weibo_classifieds(classified.classified).collect do | c |
 			 	c.template.column_name
 			 end

@@ -42,6 +42,16 @@ module WeiboHelper
 		map
 	end
 
+	def find_weibo_classified(classifedname,columname)
+		 aa=find_weibo_classifieds(classifedname)
+		 aa.each do |f|
+		 	if f.template.column_name==columname
+		 		return f
+		 	end
+		 end
+
+	end
+
 	def find_field_by_weiboId(weiboId)
 		field = WeiboField.find(:all, :conditions=>{:weibos_id=>weiboId},
 			:joins => "LEFT JOIN images on images.url=weibo_fields.body",

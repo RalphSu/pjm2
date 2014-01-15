@@ -1,3 +1,4 @@
+
 <h2><%= l(:label_weibo)%></h2>
 
 <label for='category'><%= l(:label_category) %> :</label>
@@ -31,21 +32,60 @@
                 	</div>
                 </div>
             <%else%>
-                <div class="modal-body">
-                    <label><%=l(:label_import_type)%></label>
-                    <% form_tag(url_for(controller: 'weibo', action: 'create') , :method => :post, :multipart => true ) do %>
+            	<%if @category=="微话题"%>
+            
+
+            	<%elsif @category=="微访谈"%>
+            		<div class="modal-body">
+                    		<label><%=l(:label_import_type)%></label>
+
+                    		<% form_tag(url_for(controller: 'weibo', action: 'create_weifantan') , :method => :post, :multipart => true ) do %>
+						
+						<!--[form:user]-->
+						<div class="box tabular">
+							<%= hidden_field_tag :category , @category %>
+							<%= hidden_field_tag :project_id , @p.identifier %>
+							<p><label for="subject">主题 </label>
+								<%= text_field 'subject', 'subject', :size => 25 %></p>
+							<p><label for="hyperlink">链接 </label>
+								<%= text_field 'hyperlink', 'hyperlink', :size => 25 %></p>
+							<p><label for="discussionnumber">讨论数 </label>
+								<%= text_field 'discussionnumber', 'discussionnumber', :size => 25 %></p>
+							
+							<p> <label for="date">日期 </label><%= date_field_tag :wei_date %></p>
+
+							<p><label for="date">图片</label>  <%= file_field_tag :record %></p>			
+						</div>
+
+
+						
+                	</div>
+                	<div class="modal-footer">
+                    		<div class="btn-group">
+                    			<button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                    			<button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
+					</div>
+				</div>
+				<% end %>
+            	<%elsif @category=="微活动"%>
+            	<%else%>
+            	 	<div class="modal-body">
+                    		<label><%=l(:label_import_type)%></label>
+
+                    		<% form_tag(url_for(controller: 'weibo', action: 'create') , :method => :post, :multipart => true ) do %>
 						<%= hidden_field_tag :category , @category %>
 						<%= hidden_field_tag :project_id , @p.identifier %>
 						<%= select_tag 'import', import_types(@import_type), :class => "large" %>
 						<%= file_field_tag :record %>					
-                </div>
-                <div class="modal-footer">
-                    <div class="btn-group">
-                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
-                    <button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
+                	</div>
+                	<div class="modal-footer">
+                    		<div class="btn-group">
+                    			<button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                    			<button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
 					</div>
 				</div>
-                    <% end %>
+                 		 <% end %>
+              	<%end %>
             <% end %>
 		    </div><!-- /.modal-content -->
 		</div><!-- /.modal-dalog -->
