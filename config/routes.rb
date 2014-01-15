@@ -251,10 +251,10 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
-  map.with_options :controller => 'templates' do |template_mapper|
+  map.with_options :controller => 'gs' do |template_mapper|
     template_mapper.with_options :conditions => {:method => :get} do |template_views|
       template_views.connect 'templates/:tab', :controller => 'templates' , :action => 'index'
-      template_views.connect 'templates/view_template', :controller => 'templates' , :action => 'index'
+      
     end
   end
 

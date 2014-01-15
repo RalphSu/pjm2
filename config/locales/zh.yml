@@ -438,6 +438,9 @@ zh:
   label_project: 项目
   label_project_new: 新建项目
   label_news_template_new: 新建新闻类模板
+  label_news_template_new_name: 名称
+  label_template_new_column: 列名
+  label_template_new_column_selected: 勾选
   label_weibo_template_new: 新建微博类模板
   label_blog_template_new: 新建博客类模板
   label_forum_template_new: 新建论坛类模板

@@ -17,12 +17,24 @@
                 </div>
                 <div class="modal-body">
                     <% form_tag(url_for(controller: 'templates', action: 'new_news') , :method => :post ) do %>
-                        <p><%= text_field :name, :required => true, :size => 60 %></p>
-                         <% news_templates.each do |t| %>
-                 
-                          <p><%= t.column_name %><%= check_box_tag :report_start_time %></p>
-                         <% end %>
-                  
+                    
+                      <p><%= l(:label_news_template_new_name) %>:<%= text_field 'classified_name','classified_name' %></p>
+                        
+                        <table class="list">
+                         <thead><tr>
+                            <th text-align="center"><%= l(:label_template_new_column)%></th>
+                            <th align="center"><%=l(:label_template_new_column_selected)%></th>
+                            </tr>
+                          </thead>
+                            <tbody>
+                                <% news_templates.each do |t| %>
+                                 <tr class="user <%= cycle("odd", "even") %> ">
+                                 <td class="name" ><span><%= t.column_name %></span></td>
+                                 <td class="name" ><span><%= check_box_tag("columns[]", t.column_name, false, :id => nil)%></span></td>
+                                   </tr>
+                                 <% end %>
+                               </tbody>
+                      </table>
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group">
