@@ -440,6 +440,7 @@ zh:
   label_news_template_new: 新建新闻类模板
   label_weibo_template_new: 新建微博类模板
   label_forum_template_new: 新建论坛类模板
+  label_weixin_template_new: 新建微信类模板
   label_blog_template_new: 新建博客类模板
   label_news_template_new_name: 名称
   label_template_new_column: 列名
@@ -505,6 +506,8 @@ zh:
   label_weibo_template: 微博类模板
   label_forum_template: 论坛类模板
   label_blog_template: 博客类模板
+  label_weixin_template: 微信类模板
+  label_summary_template: 汇总数据类模板
   label_please_login: 请登录
   label_register: 注册
   label_login_with_open_id_option: 或使用OpenID登录
