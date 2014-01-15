@@ -38,7 +38,7 @@ class SummaryController < ApplicationController
 	  	end
 	  	  rescue Exception => e
               flash[:error] =  e.message
-             end
+             
 	end
 
 	def _get_factory
