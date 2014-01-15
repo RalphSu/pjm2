@@ -2,7 +2,7 @@
 	<% unless @projects.blank? %>
 		 <% @projects.each  do |p| %>
 		             <% menu_items_for(:content_menu) do |item| %>
-	        		      <%= render_menu_node(item, p) %>
+	        		    <ul>  <%= render_menu_node(item, p) %> </ul>
 	  	             <% end %>
 		<% end%>
 	<% end %>
