@@ -85,6 +85,8 @@ Redmine::AccessControl.map do |map|
      :contents => [:index, :show, :project_content],
      :news_release => [:create, :edit_release, :delete_release],
      :weibo=> [:index, :edit_weibo, :destory_weibo],
+     :weixin=> [:index, :edit_weixin, :destory_weixin],
+     :summary=> [:index, :edit_summary, :destory_summary],
      :blog=> [:index, :edit_blog, :destory_blog],
      :forum=> [:index, :edit_blog, :destory_forum],
      :projects => [:index, :show, :settings, :edit, :update, :modules, :new, :create, :edit_project, :manage_members, :report_index],

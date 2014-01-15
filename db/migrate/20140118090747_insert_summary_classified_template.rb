@@ -4,19 +4,19 @@ class InsertSummaryClassifiedTemplate < ActiveRecord::Migration
   def self.up
 
   	summary_platform= Template.find(:first,
-        	:conditions => ["#{Template.table_name}.template_type = ? AND #{Template.table_name}.column_name = ?", "汇总数据模板","平台"])
+        	:conditions => ["#{Template.table_name}.template_type = ? AND #{Template.table_name}.column_name = ?", "汇总数据类模板","平台"])
 
   	summary_rank= Template.find(:first,
-        	:conditions => ["#{Template.table_name}.template_type = ? AND #{Template.table_name}.column_name = ?", "汇总数据模板","排名"])
+        	:conditions => ["#{Template.table_name}.template_type = ? AND #{Template.table_name}.column_name = ?", "汇总数据类模板","排名"])
 
   	summary_number= Template.find(:first,
-        	:conditions => ["#{Template.table_name}.template_type = ? AND #{Template.table_name}.column_name = ?", "汇总数据模板","数字"])
+        	:conditions => ["#{Template.table_name}.template_type = ? AND #{Template.table_name}.column_name = ?", "汇总数据类模板","数字"])
 
   	summary_date= Template.find(:first,
-        	:conditions => ["#{Template.table_name}.template_type = ? AND #{Template.table_name}.column_name = ?", "汇总数据模板","日期"])
+        	:conditions => ["#{Template.table_name}.template_type = ? AND #{Template.table_name}.column_name = ?", "汇总数据类模板","日期"])
 
   	summary_screenshot= Template.find(:first,
-        	:conditions => ["#{Template.table_name}.template_type = ? AND #{Template.table_name}.column_name = ?", "汇总数据模板","截图"])
+        	:conditions => ["#{Template.table_name}.template_type = ? AND #{Template.table_name}.column_name = ?", "汇总数据类模板","截图"])
 
 
 	summary_pc_1 = SummaryClassified.create! :classified => "PC趋势",
