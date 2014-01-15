@@ -1,4 +1,3 @@
-#-- encoding: UTF-8
 
 class SummaryController < ApplicationController
 	include SummaryHelper
@@ -37,6 +36,9 @@ class SummaryController < ApplicationController
 	  		uploadImages = poiReader.read_excel_image(data)
 	  		save_images(uploadImages)
 	  	end
+	  	  rescue Exception => e
+              flash[:error] =  e.message
+             end
 	end
 
 	def _get_factory
