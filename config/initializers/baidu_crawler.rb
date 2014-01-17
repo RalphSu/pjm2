@@ -8,7 +8,7 @@ class Crawler
 
 	def do_crawl
 		Project.find(:all, :conditions=> {:status => Project::STATUS_ACTIVE}).each do |p|
-			puts "Start crawer for project :#{p.name}, time : #{Time.now.to_s} "
+			puts "Start crawler for project :#{p.name}, time : #{Time.now.to_s} "
 			crawl_project(p)
 		end
 	end
@@ -155,11 +155,12 @@ class Crawler
 					content = author_time.content.strip;
 					#puts "Author and time : " + content
 					date_len = "2013-12-30 09:27:00".length
+					time_len = " 09:27:00".length
 					if content.length < date_len
 						site = content
 						time = ""
 					else
-						time = content[(0-date_len)..-1]
+						time = content[(0-date_len)..(0 - time_len)]
 						site = content[0, (content.length - date_len)]
 					end
 
