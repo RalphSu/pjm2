@@ -16,10 +16,9 @@
   <tbody>
   <% @weibo_field_map.each do |key, values| -%>
   <tr class="user <%= cycle("odd", "even") %> ">
-    <td class="name"><span><%= key %></span></td>
+    <td class="name" title="<%=key%>"><span><%= key %></span></td>
     <% templates.each do |t|%>
       <td align="center">
-        <!-- TODO: check box value might be changed??? -->
         <%= checked_image values.include?(t.column_name) %>
       
       </td>
