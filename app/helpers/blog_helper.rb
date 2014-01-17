@@ -44,13 +44,15 @@ module BlogHelper
 	end
 
 	def find_field_by_blogId(weiboId)
-		field = BlogField.find(:all, :conditions=>{:blogs_id=>weiboId})
+		field = BlogField.find(:all, :conditions=>{:blogs_id=>weiboId},
+			:joins => "LEFT JOIN images on images.url=blog_fields.body",
+			:select => "blog_fields.*,images.file_path AS file_path ")
 		if field.blank?
 			map = {}
 		else
 			map = {}
 			field.each do |f|
-				map[f.blog_classifieds.id] = f.body
+				map[f.blog_classifieds.id] = f
 			end
 			map
 		end

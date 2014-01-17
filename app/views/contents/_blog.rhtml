@@ -73,7 +73,13 @@
 			<% blog_fields = find_field_by_blogId(nr.id) %>
 		<tr class="user <%= cycle("odd", "even") %>">
 		<%fields.each do |f|%>
-			<td><p title=<%= blog_fields[f.id] %>><<%= blog_fields[f.id] %></td>
+			<% if blog_fields[f.id].blank? %>
+				<td></td>
+			<% else %>
+			<td title=<%= blog_fields[f.id].body %>>
+				<p><%=tag_image(blog_fields[f.id].file_path.blank? ? false : true)%><%= blog_fields[f.id].body %></p>
+			</td>
+			<% end %>
 		<%end%>
 		<td class="buttons">
 <%= link_to_function l(:button_edit), { :url => { :controller => 'blog', :action => 'edit_blog', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>

@@ -43,13 +43,15 @@ module ForumHelper
 	end
 
 	def find_field_by_forumId(weiboId)
-		field = ForumField.find(:all, :conditions=>{:forums_id=>weiboId})
+		field = ForumField.find(:all, :conditions=>{:forums_id=>weiboId},
+			:joins => "LEFT JOIN images on images.url=forum_fields.body",
+			:select => "forum_fields.*,images.file_path AS file_path ")
 		if field.blank?
 			map = {}
 		else
 			map = {}
 			field.each do |f|
-				map[f.forum_classifieds.id] = f.body
+				map[f.forum_classifieds.id] = f
 			end
 			map
 		end

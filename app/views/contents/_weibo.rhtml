@@ -73,7 +73,13 @@
 			<% weibo_fields = find_field_by_weiboId(nr.id) %>
 		<tr class="user <%= cycle("odd", "even") %>">
 			<%fields.each do |f|%>
-				<td><p title=<%= weibo_fields[f.id] %>><%= weibo_fields[f.id] %></td>
+				<% if weibo_fields[f.id].blank? %>
+					<td></td>
+				<% else %>
+				<td title=<%= weibo_fields[f.id].body %>>
+					<p><%=tag_image(weibo_fields[f.id].file_path.blank? ? false : true)%><%= weibo_fields[f.id].body %></p>
+				</td>
+				<% end %>
 			<%end%>
 		<td class="buttons">
 <%= link_to_function l(:button_edit), { :url => { :controller => 'weibo', :action => 'edit_weibo', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>

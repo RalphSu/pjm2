@@ -77,13 +77,9 @@
 			<% if release_fields[f.id].blank? %>
 				<td></td>
 			<% else %>
-				<% if release_fields[f.id].file_path.blank? %>
-				<td title=<%= release_fields[f.id].body %>><p><%= release_fields[f.id].body %></p></td>
-				<% else %>
-				<td title=<%= release_fields[f.id].body %>>
-					<p><%= release_fields[f.id].body %></p>
-				</td>
-				<% end %>
+			<td title=<%= release_fields[f.id].body %>>
+				<p><%=tag_image(release_fields[f.id].file_path.blank? ? false : true)%><%= release_fields[f.id].body %></p>
+			</td>
 			<% end %>
 		<%end%>
 		<td class="buttons">

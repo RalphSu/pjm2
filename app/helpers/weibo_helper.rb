@@ -43,13 +43,15 @@ module WeiboHelper
 	end
 
 	def find_field_by_weiboId(weiboId)
-		field = WeiboField.find(:all, :conditions=>{:weibos_id=>weiboId})
+		field = WeiboField.find(:all, :conditions=>{:weibos_id=>weiboId},
+			:joins => "LEFT JOIN images on images.url=weibo_fields.body",
+			:select => "weibo_fields.*,images.file_path AS file_path ")
 		if field.blank?
 			map = {}
 		else
 			map = {}
 			field.each do |f|
-				map[f.weibo_classifieds.id] = f.body
+				map[f.weibo_classifieds.id] = f
 			end
 			map
 		end

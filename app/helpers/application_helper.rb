@@ -888,6 +888,12 @@ module ApplicationHelper
     end
   end
 
+  def tag_image(checked=true)
+    if checked
+      image_tag 'image_s.gif'
+    end
+  end
+
   def context_menu(url)
     unless @context_menu_included
       content_for :header_tags do

@@ -73,8 +73,15 @@
 			<% forum_fields = find_field_by_forumId(nr.id) %>
 		<tr class="user <%= cycle("odd", "even") %>">
 		<%fields.each do |f|%>
-			<td><p title=<%= forum_fields[f.id] %>><%= forum_fields[f.id] %></td>
+			<% if forum_fields[f.id].blank? %>
+				<td></td>
+			<% else %>
+			<td title=<%= forum_fields[f.id].body %>>
+				<p><%=tag_image(forum_fields[f.id].file_path.blank? ? false : true)%><%= forum_fields[f.id].body %></p>
+			</td>
+			<% end %>
 		<%end%>
+
 		<td class="buttons">
 <%= link_to_function l(:button_edit), { :url => { :controller => 'forum', :action => 'edit_forum', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>
 <%= link_to_remote(l(:button_delete), { :url => { :controller => 'forum', :action => 'destory_forum', :id => "#{nr.id}" },:method => :delete, :category=>@category, :project_id=>@p.identifier },:class => 'icon icon-del') %>
