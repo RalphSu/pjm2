@@ -33,7 +33,7 @@ module ProjectsHelper
             ]
     Rails.logger.info "project setting tabs before permission check : #{tabs.size}"
     tabs = tabs.select {|tab| User.current.allowed_to?(tab, @project)}
-    Rails.logger.info "project setting tabs after permission check : #{tabs.size}"
+    Rails.logger.info "project setting tabs after permission check : #{tabs.size}, #{tabs}"
     tabs
   end
 

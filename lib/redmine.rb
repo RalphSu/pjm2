@@ -312,7 +312,7 @@ Redmine::MenuManager.map :project_menu do |menu|
                 @project = p # @project used in the helper
                 project_settings_tabs.collect do |tab|
                   Redmine::MenuManager::MenuItem.new("settings-#{tab[:name]}".to_sym,
-                                                     { :controller => 'projects', :action => tab[:action], :id => p, :tab => tab[:name] },
+                                                     { :controller => tab[:controller], :action => tab[:action], :id => p, :tab => tab[:name] },
                                                      {
                                                        :caption => tab[:label]
                                                      })

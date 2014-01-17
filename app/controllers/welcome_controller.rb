@@ -19,12 +19,12 @@ class WelcomeController < ApplicationController
   	::I18n.locale=:zh
     @news = News.latest User.current
     Rails.logger.info @news.size
-    @projects = User.current.projects
+    @projects = User.current.active_projects
   end
 
   def robots
   	::I18n.locale=:zh
-    @projects = User.current.projects
+    @projects = User.current.active_projects
     render :layout => false, :content_type => 'text/plain'
   end
 end

@@ -133,7 +133,7 @@ module Redmine::MenuManager::MenuHelper
       item.url
     end
     caption = item.caption(project)
-     
+     #Rails.logger.info "caption: #{caption}, url #{url}"
     return [caption, url, (current_menu_item == item.name)]
   end
 

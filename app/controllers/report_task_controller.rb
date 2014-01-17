@@ -5,7 +5,7 @@ class ReportTaskController < ApplicationController
   @show_project_main_menu=false
 
     def index
-    @projects=User.current.projects
+    @projects=User.current.active_projects
     unless @projects.blank?
       @project = @projects.first if @project.nil?
     end
@@ -13,7 +13,7 @@ class ReportTaskController < ApplicationController
 
 
    def tasks
-    @projects=User.current.projects
+    @projects=User.current.active_projects
 
    # fill the selected flag
     @reporttasks = ReportTask.find(:all, :conditions=> {:project_id => @project.id})

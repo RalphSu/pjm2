@@ -403,13 +403,34 @@ class User < Principal
 
     def projects
     projects = []
-    memberships.each do |membership|
-      membership.roles.each do |role|
-        p = membership.project if membership.project
-        if p 
-          projects << p unless projects.include? p
+    if not  admin
+      memberships.each do |membership|
+        membership.roles.each do |role|
+          p = membership.project if membership.project
+          if p 
+            projects << p unless projects.include? p
+          end
         end
       end
+    else 
+      projects = Project.all
+    end
+    projects
+  end
+
+    def active_projects
+    projects = []
+    if not  admin
+      memberships.each do |membership|
+        membership.roles.each do |role|
+          p = membership.project if membership.project
+          if p && p.status == 1
+            projects << p unless projects.include? p
+          end
+        end
+      end
+    else 
+      projects = Project.find(:all, :conditions=>{:status=>Project::STATUS_ACTIVE})
     end
     projects
   end

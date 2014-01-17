@@ -5,7 +5,7 @@ class ContentsController < ApplicationController
   @show_project_main_menu=false
 
   def index
-    @projects=User.current.projects
+    @projects=User.current.active_projects
     @p = @projects.first unless not @project.nil?
     @category=params['category']
   end
