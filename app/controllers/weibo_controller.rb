@@ -86,6 +86,152 @@ class WeiboController < ApplicationController
 
 	end
 
+
+	def create_weihuati
+		Rails.logger.info "record : #{params['record']}."
+		init(params)
+
+
+		#save entity
+	     weibo= Weibo.create! :classified => "微话题",
+                                 :project => @project
+           weibo.save!
+
+           
+
+		weibo_data = WeiboField.new()
+		weibo_data.weibos=weibo
+		weibo_data.weibo_classifieds=find_weibo_classified("微话题","主题")
+		weibo_data.body=params[:subject][:subject]
+		weibo_data.save!
+
+		weibo_data2 = WeiboField.new()
+		weibo_data2.weibos=weibo
+		weibo_data2.weibo_classifieds=find_weibo_classified("微话题","链接")
+		weibo_data2.body=params[:hyperlink][:hyperlink]
+		weibo_data2.save!
+
+		weibo_data3 = WeiboField.new()
+		weibo_data3.weibos=weibo
+		weibo_data3.weibo_classifieds=find_weibo_classified("微话题","讨论数")
+		weibo_data3.body=params[:discussionnumber][:discussionnumber]
+		weibo_data3.save!
+
+		weibo_data4 = WeiboField.new()
+		weibo_data4.weibos=weibo
+		weibo_data4.weibo_classifieds=find_weibo_classified("微话题","排名")
+		weibo_data4.body=params[:order][:order]
+		weibo_data4.save!
+
+		weibo_data5 = WeiboField.new()
+		weibo_data5.weibos=weibo
+		weibo_data5.weibo_classifieds=find_weibo_classified("微话题","位置")
+		weibo_data5.body=params[:place][:place]
+		weibo_data5.save!
+
+		weibo_data6 = WeiboField.new()
+		weibo_data6.weibos=weibo
+		weibo_data6.weibo_classifieds=find_weibo_classified("微话题","热门话题榜")
+		weibo_data6.body=params[:hottopic][:hottopic]
+		weibo_data6.save!
+	  	
+		weibo_data7 = WeiboField.new()
+		weibo_data7.weibos=weibo
+		weibo_data7.weibo_classifieds=find_weibo_classified("微话题","持续天数")
+		weibo_data7.body=params[:lastdays][:lastdays]
+		weibo_data7.save!
+
+		if params['record']
+			originalfilename=params['record'].original_filename
+			data = params['record'].read
+			file_name = save_tmp_file(data)
+			data =  IO.binread(file_name)
+
+			Rails.logger.info "create_weihuati read record size: #{data.size}."
+			poiReader = PoiExcelImageReader.new(@project)
+			imagePath = poiReader.save_pic(data, File.extname(originalfilename))
+			weibo_data5 = WeiboField.new()
+			weibo_data5.weibos=weibo
+			weibo_data5.weibo_classifieds=find_weibo_classified("微话题","图片")
+			weibo_data5.body=imagePath
+			weibo_data5.save!
+
+			img = Image.new()
+			img.url = params[:hyperlink][:hyperlink]
+			img.file_path = imagePath
+			img.save!
+
+			remove_tmp_file(file_name)
+		end
+
+	  	redirect_to({:controller => 'weibo', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+
+	end
+
+
+	def create_weihuodong
+		Rails.logger.info "record : #{params['record']}."
+		init(params)
+
+
+		#save entity
+	     weibo= Weibo.create! :classified => "微活动",
+                                 :project => @project
+           weibo.save!
+
+           
+
+		weibo_data = WeiboField.new()
+		weibo_data.weibos=weibo
+		weibo_data.weibo_classifieds=find_weibo_classified("微活动","活动名称")
+		weibo_data.body=params[:subject][:subject]
+		weibo_data.save!
+
+		weibo_data2 = WeiboField.new()
+		weibo_data2.weibos=weibo
+		weibo_data2.weibo_classifieds=find_weibo_classified("微活动","链接")
+		weibo_data2.body=params[:hyperlink][:hyperlink]
+		weibo_data2.save!
+
+		weibo_data3 = WeiboField.new()
+		weibo_data3.weibos=weibo
+		weibo_data3.weibo_classifieds=find_weibo_classified("微活动","参加人数")
+		weibo_data3.body=params[:attendeenumber][:attendeenumber]
+		weibo_data3.save!
+
+		weibo_data4 = WeiboField.new()
+		weibo_data4.weibos=weibo
+		weibo_data4.weibo_classifieds=find_weibo_classified("微活动","日期")
+		weibo_data4.body=params[:wei_date].to_s
+		weibo_data4.save!
+	  	
+		if params['record']
+			originalfilename=params['record'].original_filename
+			data = params['record'].read
+			file_name = save_tmp_file(data)
+			data =  IO.binread(file_name)
+
+			Rails.logger.info "create_weihuati read record size: #{data.size}."
+			poiReader = PoiExcelImageReader.new(@project)
+			imagePath = poiReader.save_pic(data, File.extname(originalfilename))
+			weibo_data5 = WeiboField.new()
+			weibo_data5.weibos=weibo
+			weibo_data5.weibo_classifieds=find_weibo_classified("微活动","图片")
+			weibo_data5.body=imagePath
+			weibo_data5.save!
+
+			img = Image.new()
+			img.url = params[:hyperlink][:hyperlink]
+			img.file_path = imagePath
+			img.save!
+
+			remove_tmp_file(file_name)
+		end
+
+	  	redirect_to({:controller => 'weibo', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+
+	end
+
 	def _import(file_name, data)
 		if  @import_type.blank? || (@import_type == '0')
 			# read text

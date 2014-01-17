@@ -33,7 +33,43 @@
                 </div>
             <%else%>
             	<%if @category=="微话题"%>
-            
+            		<div class="modal-body">
+                    		<label><%=l(:label_import_type)%></label>
+
+                    		<% form_tag(url_for(controller: 'weibo', action: 'create_weihuati') , :method => :post, :multipart => true ) do %>
+						
+						<!--[form:user]-->
+						<div class="box tabular">
+							<%= hidden_field_tag :category , @category %>
+							<%= hidden_field_tag :project_id , @p.identifier %>
+							<p><label for="subject">主题 </label>
+								<%= text_field 'subject', 'subject', :size => 25 %></p>
+							<p><label for="hyperlink">链接 </label>
+								<%= text_field 'hyperlink', 'hyperlink', :size => 25 %></p>
+							<p><label for="discussionnumber">讨论数 </label>
+								<%= text_field 'discussionnumber', 'discussionnumber', :size => 25 %></p>
+							<p><label for="order">排名 </label>
+								<%= text_field 'order', 'order', :size => 25 %></p>
+							<p><label for="place">位置 </label>
+								<%= text_field 'place', 'place', :size => 25 %></p>
+							<p><label for="hottopic">热门话题榜 </label>
+								<%= text_field 'hottopic', 'hottopic', :size => 25 %></p>
+							<p><label for="lastdays">持续天数 </label>
+								<%= text_field 'lastdays', 'lastdays', :size => 25 %></p>
+
+							<p><label for="date">图片</label>  <%= file_field_tag :record %></p>			
+						</div>
+
+
+						
+                	</div>
+                	<div class="modal-footer">
+                    		<div class="btn-group">
+                    			<button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                    			<button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_save)%></button>
+					</div>
+				</div>
+				<% end %>
 
             	<%elsif @category=="微访谈"%>
             		<div class="modal-body">
@@ -63,11 +99,42 @@
                 	<div class="modal-footer">
                     		<div class="btn-group">
                     			<button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
-                    			<button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
+                    			<button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_save)%></button>
 					</div>
 				</div>
 				<% end %>
             	<%elsif @category=="微活动"%>
+            		<div class="modal-body">
+                    		<label><%=l(:label_import_type)%></label>
+
+                    		<% form_tag(url_for(controller: 'weibo', action: 'create_weihuodong') , :method => :post, :multipart => true ) do %>
+						
+						<!--[form:user]-->
+						<div class="box tabular">
+							<%= hidden_field_tag :category , @category %>
+							<%= hidden_field_tag :project_id , @p.identifier %>
+							<p><label for="subject">活动名称 </label>
+								<%= text_field 'subject', 'subject', :size => 25 %></p>
+							<p><label for="hyperlink">链接 </label>
+								<%= text_field 'hyperlink', 'hyperlink', :size => 25 %></p>
+							<p><label for="attendeenumber">参加人数 </label>
+								<%= text_field 'attendeenumber', 'attendeenumber', :size => 25 %></p>
+							<p> <label for="date">日期 </label><%= date_field_tag :wei_date %></p>
+
+							<p><label for="date">图片</label>  <%= file_field_tag :record %></p>			
+						</div>
+
+
+						
+                	</div>
+                	<div class="modal-footer">
+                    		<div class="btn-group">
+                    			<button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                    			<button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_save)%></button>
+					</div>
+				</div>
+				<% end %>
+
             	<%else%>
             	 	<div class="modal-body">
                     		<label><%=l(:label_import_type)%></label>
