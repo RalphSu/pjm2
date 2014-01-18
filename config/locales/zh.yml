@@ -1112,3 +1112,5 @@ zh:
   notice_successful_upload: 上传成功
   notice_failed_publish: 还没审核不能发布
   button_upload_report: 上传报表
+  label_weixin_number: 微信编号
+  label_summary_number: 汇总数据编号

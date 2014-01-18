@@ -75,6 +75,10 @@
 			<%fields.each do |f|%>
 				<% if weixin_fields[f.id].blank? %>
 					<td></td>
+				<% elsif weixin_fields[f.id].weixin_classifieds.template.column_name == '截图' %>
+					<td><%=tag_image(weixin_fields[f.id].body.blank? ? false : true)%>
+      <a data-toggle="modal" href="#myModal-single-image" onClick="set_id(<%=nr.id%>); return false"><label class="icon icon-add"><%=l(:button_upload)%></label></a>
+					</td>
 				<% else %>
 				<td title=<%= weixin_fields[f.id].body %>>
 					<p><%=tag_image(weixin_fields[f.id].file_path.blank? ? false : true)%><%= weixin_fields[f.id].body %></p>
@@ -96,4 +100,40 @@
 	<%=will_paginate weixins, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
 <% end %>
 
+
+
+<!-- Modal dialog for upload single image... -->
+<script type="text/javascript">
+  function set_id(id) {
+    jQuery("#weixin_id").val(id);
+  }
+</script>
+<div class="container">
+	<div class="row">
+	<div id="myModal-single-image" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	        <div class="modal-dialog">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+	                    <h4 class="modal-title" id="myModalLabel"><%= l(:label_import_news)  %></h4>
+	                </div>
+	                <div class="modal-body">
+	                    <% form_tag(url_for(controller: 'weixin', action: 'import_single_image') , :method => :post, :multipart => true ) do %>
+				<%= hidden_field_tag :category , @category %>
+				<%= hidden_field_tag :project_id , @p.identifier %>
+          			<input id="weixin_id" class="hidden" name="weixin_id"></input>
+				<b><%=l(:label_image) %>:</b><%= file_field_tag :record %>
+	                </div>
+	                <div class="modal-footer">
+	                    <div class="btn-group">
+	                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+	                    <button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
+			   </div>
+		       </div>
+	                    <% end %>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dalog -->
+		  </div><!-- /.modal -->
+	</div>
+</div>
 

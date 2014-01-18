@@ -94,6 +94,46 @@ class WeixinController < ApplicationController
 		redirect_to({:controller => 'weixin', :action => 'index', :category=>@category, :project_id=>@project.identifier})
 	end
 
+	def import_single_image
+		init(params)
+		weixin = Weixin.find(params[:weixin_id])
+		if weixin.blank?
+			raise "weixin id not presented!"
+		end
+		record_data = params[:record].read
+
+		template = Template.find(:first, :conditions=>{:template_type=>"微信类模板", :column_name=>"截图"})
+		classified = WeixinClassified.find(:first, :conditions=> {:classified=>weixin.classified, :template_id=>template.id})
+		image_field =WeixinField.find(:first, :conditions=>{:weixins_id => weixin.id, :weixin_classifieds_id=> classified.id})
+
+		if image_field.blank?
+			image_field = WeixinField.new()
+			image_field.weixins = weixin
+			image_field.weixin_classifieds = classified
+		end
+
+		folder = File.join File.dirname(__FILE__), "../../upload/#{@project.identifier}/"
+		unless File.exists?(folder)
+				Dir.mkdir(folder)
+		end
+		uuid = UUIDTools::UUID.timestamp_create.to_s.gsub('-','')
+		file_full_name = uuid + '.png'
+		full_name = File.join folder,file_full_name
+		# write full
+		IO.binwrite(full_name, record_data)
+		
+		Rails.logger.info "============save image: #{full_name}!!"
+		image_field.body = full_name
+		image_field.save!
+
+	    respond_to do |format|
+	      format.html {
+	        flash[:notice] = l(:notice_successful_create)
+	        redirect_to({:controller => 'weixin', :action => 'index',  :category=>@category, :project_id=>@project.identifier})
+	      }
+	    end
+	end
+
 	def index
 		init(params)
 	end
