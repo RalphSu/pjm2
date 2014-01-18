@@ -4,6 +4,8 @@ class TemplatesController < ApplicationController
 	include BlogHelper
 	include WeiboHelper
 	include ForumHelper
+	include WeixinHelper
+	include SummaryHelper
 	
 	layout 'admin'
 	
@@ -44,7 +46,26 @@ class TemplatesController < ApplicationController
 			 	c.template.column_name
 			 end
 		end
+
+		# weixin
+		@weixin_field_map ={}
+		weixin_classifieds = distinct_weixin_classifieds();
+		weixin_classifieds.each do |classified|
+			 @weixin_field_map[classified.classified] = find_weixin_classifieds(classified.classified).collect do | c |
+			 	c.template.column_name
+			 end
+		end
 		
+
+
+		# summary
+		@summary_field_map ={}
+		summary_classifieds = distinct_summary_classifieds();
+		summary_classifieds.each do |classified|
+			 @summary_field_map[classified.classified] = find_summary_classifieds(classified.classified).collect do | c |
+			 	c.template.column_name
+			 end
+		end
 	end
 
 	def view_template

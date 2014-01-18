@@ -508,6 +508,8 @@ en:
   label_weibo_template: weibo_template
   label_forum_template: forum_template
   label_blog_template: blog_template
+  label_weixin_template: weixin_template
+  label_summary_template: summary_template
   label_please_login: Please log in
   label_register: Register
   label_login_with_open_id_option: or login with OpenID
