@@ -51,16 +51,34 @@ class BlogController < ApplicationController
 	def save(activeItems)
 		Rails.logger.info "Save file to databases #{activeItems}"
 		activeItems.each do |ai|
-			# save the entity line first
 			ai.entity.project = @project
-			ai.entity.save
-			Rails.logger.info "a activity line is saved: #{ai.entity}"
-			# now the fields
 			ai.items.each do |item|
-				Rails.logger.info item.blog_classifieds.id
 				item.blogs = ai.entity
-				Rails.logger.info item.blogs.id
-				item.save
+			end
+
+			duplicates = find_blog_duplicate(ai.entity, ai.items)
+			if duplicates.blank?
+				# save the entity line first
+				ai.entity.save
+				#Rails.logger.info "a activity line is saved: #{ai.entity}"
+				# now the fields
+				ai.items.each do |item|
+					#Rails.logger.info item.blog_classifieds.id
+					item.blogs = ai.entity
+					#Rails.logger.info item.blogs.id
+					item.save
+				end
+			else
+				# duplicated, update the first one duplicated
+				dup = duplicates[0]
+				dup.blog_fields.each do |f|
+					ai.items.each do | item|
+						if item.blog_classifieds.template.column_name == f.blog_classifieds.template.column_name
+							f.body =item.body
+							f.save!
+						end
+					end
+				end
 			end
 		end
 	end

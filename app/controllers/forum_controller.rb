@@ -51,16 +51,36 @@ class ForumController < ApplicationController
 	def save(activeItems)
 		Rails.logger.info "Save file to databases #{activeItems}"
 		activeItems.each do |ai|
-			# save the entity line first
 			ai.entity.project = @project
-			ai.entity.save
-			Rails.logger.info "a activity line is saved: #{ai.entity}"
-			# now the fields
 			ai.items.each do |item|
-				Rails.logger.info item.forum_classifieds.id
 				item.forums = ai.entity
-				Rails.logger.info item.forums.id
-				item.save
+			end
+
+			duplicates = find_forum_duplicate(ai.entity, ai.items)
+			if duplicates.blank?
+				# save the entity line first
+				ai.entity.save!
+				#Rails.logger.info "a activity line is saved: #{ai.entity}"
+				# now the fields
+				ai.items.each do |item|
+					#Rails.logger.info item.forum_classifieds.id
+					item.forums = ai.entity
+					#Rails.logger.info item.forums.id
+					item.save!
+				end
+			else
+				# duplicated, update the first one duplicated
+				dup = duplicates[0]
+				Rails.logger.info "Items are #{ai.items}"
+				dup.forum_fields.each do |f|
+					ai.items.each do | item|
+						if item.forum_classifieds.template.column_name == f.forum_classifieds.template.column_name
+							f.body =item.body
+							Rails.logger.info " Update from #{f.inspect} to #{item.inspect}"
+							f.save!
+						end
+					end
+				end
 			end
 		end
 	end

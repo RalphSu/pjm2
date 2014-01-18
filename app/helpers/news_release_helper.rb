@@ -78,4 +78,46 @@ module NewsReleaseHelper
 		end
 	end
 
+	def find_duplicate(nr, fields)
+		date = nil
+		url = nil
+		fields.each do |f|
+			if f.news_classified.template.column_name == '日期'
+				date = f
+			end
+			if f.news_classified.template.column_name == '链接' 
+				url = f
+			end
+		end
+		Rails.logger.info "-------- check duplicate ------- date: #{date}, url:#{url}.\n Given fields are: #{fields}"
+		# check has date and url, then procceed
+		if date.nil? or url.nil?
+			return nil
+		end
+
+		find_fields = NewsReleaseField.find(:all, :conditions=>["body in (?, ?)", "#{date.body}", "#{url.body}"])
+
+		duplicated = []
+		find_fields.each do |ff|
+			r = ff.news_release
+			unless r.blank?
+				date_match = false
+				url_match = false
+				r.news_release_fields.each do |f|
+					if f.news_classified.template.column_name == '日期' and f.body == date.body
+						date_match = true
+					end
+					if f.news_classified.template.column_name == '链接' and f.body == url.body
+						url_match = true
+					end
+				end
+			end
+
+			if date_match && url_match
+				duplicated << r
+			end
+		end
+
+		return duplicated
+	end
 end

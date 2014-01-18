@@ -198,6 +198,12 @@ class Crawler
 	def _save(nr, fields)
 		# puts "	Saved #{nr} and #{fields} for one news_release line!"
 		unless fields.blank?
+			# check duplicated.
+			duplicated = NewsReleaseHelper::find_duplicate(nr, fields)
+			unless duplicated.blank?
+				return false
+			end
+
 			saved = false
 			begin
 				ActiveRecord::Base.transaction do

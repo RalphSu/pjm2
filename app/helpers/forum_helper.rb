@@ -42,8 +42,8 @@ module ForumHelper
 		map
 	end
 
-	def find_field_by_forumId(weiboId)
-		field = ForumField.find(:all, :conditions=>{:forums_id=>weiboId},
+	def find_field_by_forumId(forumId)
+		field = ForumField.find(:all, :conditions=>{:forums_id=>forumId},
 			:joins => "LEFT JOIN images on images.url=forum_fields.body",
 			:select => "forum_fields.*,images.file_path AS file_path ")
 		if field.blank?
@@ -71,6 +71,48 @@ module ForumHelper
 			field.forum_classifieds = classified
 			return field
 		end
+	end
+
+	def find_forum_duplicate(nr, fields)
+		date = nil
+		url = nil
+		fields.each do |f|
+			if f.forum_classifieds.template.column_name == '日期'
+				date = f
+			end
+			if f.forum_classifieds.template.column_name == '链接' 
+				url = f
+			end
+		end
+		Rails.logger.info "-------- check duplicate ------- date: #{date.inspect}, url:#{url.inspect}.\n Given fields are: #{fields}"
+		# check has date and url, then procceed
+		if date.nil? or url.nil?
+			return nil
+		end
+
+		find_fields = ForumField.find(:all, :conditions=>["body in (?, ?)", "#{date.body}", "#{url.body}"])
+
+		duplicated = []
+		find_fields.each do |ff|
+			r = ff.forums
+			unless r.blank?
+				date_match = false
+				url_match = false
+				r.forum_fields.each do |f|
+					if f.forum_classifieds.template.column_name == '日期' and f.body == date.body
+						date_match = true
+					end
+					if f.forum_classifieds.template.column_name == '链接' and f.body == url.body
+						url_match = true
+					end
+				end
+				if date_match && url_match
+					duplicated << r
+				end
+			end
+		end
+
+		return duplicated
 	end
 
 end

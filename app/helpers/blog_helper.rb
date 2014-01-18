@@ -43,8 +43,8 @@ module BlogHelper
 		map
 	end
 
-	def find_field_by_blogId(weiboId)
-		field = BlogField.find(:all, :conditions=>{:blogs_id=>weiboId},
+	def find_field_by_blogId(blogId)
+		field = BlogField.find(:all, :conditions=>{:blogs_id=>blogId},
 			:joins => "LEFT JOIN images on images.url=blog_fields.body",
 			:select => "blog_fields.*,images.file_path AS file_path ")
 		if field.blank?
@@ -73,5 +73,48 @@ module BlogHelper
 			return field
 		end
 	end
+
+	def find_blog_duplicate(nr, fields)
+		date = nil
+		url = nil
+		fields.each do |f|
+			if f.blog_classifieds.template.column_name == '日期'
+				date = f
+			end
+			if f.blog_classifieds.template.column_name == '链接' 
+				url = f
+			end
+		end
+		Rails.logger.info "-------- check duplicate ------- date: #{date}, url:#{url}.\n Given fields are: #{fields}"
+		# check has date and url, then procceed
+		if date.nil? or url.nil?
+			return nil
+		end
+
+		find_fields = BlogField.find(:all, :conditions=>["body in (?, ?)", "#{date.body}", "#{url.body}"])
+
+		duplicated = []
+		find_fields.each do |ff|
+			r = ff.blogs
+			unless r.blank?
+				date_match = false
+				url_match = false
+				r.blog_fields.each do |f|
+					if f.blog_classifieds.template.column_name == '日期' and f.body == date.body
+						date_match = true
+					end
+					if f.blog_classifieds.template.column_name == '链接' and f.body == url.body
+						url_match = true
+					end
+				end
+				if date_match && url_match
+					duplicated << r
+				end
+			end
+		end
+
+		return duplicated
+	end
+
 
 end

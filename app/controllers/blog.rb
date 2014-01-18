@@ -5,5 +5,5 @@ class Blog < ActiveRecord::Base
 
 	safe_attributes 'classified'
 
-	has_many :blog_fields
+	has_many :blog_fields,  :foreign_key => "blogs_id"
 end

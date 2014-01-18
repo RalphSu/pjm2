@@ -5,5 +5,5 @@ class Forum < ActiveRecord::Base
 
 	safe_attributes 'classified'
 
-	has_many :forum_fields
+	has_many :forum_fields, :foreign_key => "forums_id"
 end

@@ -62,16 +62,35 @@ class NewsReleaseController < ApplicationController
 	def save(activeItems)
 		Rails.logger.info "Save file to databases #{activeItems}"
 		activeItems.each do |ai|
-			# save the entity line first
+			# link the entity and the columns
 			ai.entity.project = @project
-			ai.entity.save
-			Rails.logger.info "a activity line is saved: #{ai.entity}"
-			# now the fields
 			ai.items.each do |item|
-				Rails.logger.info item.news_classified.id
 				item.news_release = ai.entity
-				Rails.logger.info item.news_release.id
-				item.save
+			end
+
+			duplicates = find_duplicate(ai.entity, ai.items)
+			if duplicates.blank?
+				# no duplicated, just save
+				ai.entity.save!
+				Rails.logger.info "a activity line is saved: #{ai.entity}"
+				# now the fields
+				ai.items.each do |item|
+					# Rails.logger.info item.news_classified.id
+					item.news_release = ai.entity
+					# Rails.logger.info item.news_release.id
+					item.save!
+				end
+			else
+				# duplicated, update the first one duplicated
+				dup = duplicates[0]
+				dup.news_release_fields.each do |f|
+					ai.items.each do | item|
+						if item.news_classified.template.column_name == f.news_classified.template.column_name
+							f.body =item.body
+							f.save!
+						end
+					end
+				end
 			end
 		end
 	end
