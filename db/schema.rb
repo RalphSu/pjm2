@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140118065457) do
+ActiveRecord::Schema.define(:version => 20140118085025) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -577,6 +577,22 @@ ActiveRecord::Schema.define(:version => 20140118065457) do
     t.integer  "projects_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "classified"
+  end
+
+  create_table "summary_classifieds", :force => true do |t|
+    t.string   "classified"
+    t.integer  "template_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "summary_fields", :force => true do |t|
+    t.integer  "summaries_id"
+    t.integer  "summary_classifieds_id"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "taggings", :force => true do |t|
@@ -728,10 +744,26 @@ ActiveRecord::Schema.define(:version => 20140118065457) do
 
   add_index "weibos", ["project_id", "classified"], :name => "index_weibos_on_project_id_and_classified"
 
+  create_table "weixin_classifieds", :force => true do |t|
+    t.string   "classified"
+    t.integer  "template_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "weixin_fields", :force => true do |t|
+    t.integer  "weixins_id"
+    t.integer  "weixin_classifieds_id"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "weixins", :force => true do |t|
     t.integer  "projects_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "classified"
   end
 
   create_table "wiki_content_versions", :force => true do |t|
