@@ -5,7 +5,7 @@ class NewsReleaseController < ApplicationController
 	include ContentsHelper
 	layout 'content'
 
-	before_filter :find_project_by_project_id
+	before_filter :`, :except=>[:delete_release]
 	
 	@show_project_main_menu=false
 
@@ -101,7 +101,7 @@ class NewsReleaseController < ApplicationController
 	end
 
 	def delete_release
-		
+		@project = Project.find(params[:project_id])
 		Rails.logger.info "delete nr id  #{params['ids']}"
 		redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
 	end
