@@ -1,8 +1,42 @@
 <div>
 <div class="contextualtemplate">
-<%= link_to l(:label_news_template_new), {:controller => 'templates', :action => 'new'}, :class => 'icon icon-add' %>
+  <a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_news_template_new)%></label></a>
+
 </div>
 </div>
+<% news_templates = distinct_news_templates%>
+<!-- Modal dialog for upload -->
+<div class="container">
+  <div class="row">
+    <div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                    <h4 class="modal-title" id="myModalLabel"><%=l(:label_news_template_new) %></h4>
+                </div>
+                <div class="modal-body">
+                    <% form_tag(url_for(controller: 'templates', action: 'new_news') , :method => :post ) do %>
+                        <p><%= text_field :name, :required => true, :size => 60 %></p>
+                         <% news_templates.each do |t| %>
+                 
+                          <p><%= t.column_name %><%= check_box_tag :report_start_time %></p>
+                         <% end %>
+                  
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                    <button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_submit)%></button>
+          </div>
+        </div>
+                    <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dalog -->
+    </div><!-- /.modal -->
+  </div>
+</div>
+
 
 <% templates = distinct_news_templates()%>
 <div class="autoscroll">
