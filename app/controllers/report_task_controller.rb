@@ -24,16 +24,28 @@ class ReportTaskController < ApplicationController
 
   def create
     start_time = params[:report_start_time]
-    end_time = params[:report_end_time]
+    type=params[:report_type]
+    Rails.logger.info "task controller create type #{type}"
     task = ReportTask.new
+    
+    if type==ReportTask::TYPE_DAILY
+      end_time=Time.parse(start_time).at_beginning_of_day  + 1.day
+      task.report_start_time = Time.parse(start_time)
+      task.report_end_time=end_time
+    elsif type==ReportTask::TYPE_WEEKLY
+       task.report_start_time=Time.parse(start_time).beginning_of_week()
+       task.report_end_time=task.report_start_time+7.day
+    elsif type==ReportTask::TYPE_SUMMARY
+      task.report_start_time = Time.parse(start_time)
+      task.report_end_time = Time.parse(start_time)+1.year
+      
+    end
+   
+    Rails.logger.info "task controller create start time #{task.report_start_time} end_time  #{task.report_end_time}"
+    
     task.status= ReportTask::STATUS_PLANNED
+    task.task_type=type
     task.gen_count= 1
-    unless start_time.blank?
-          task.report_start_time = Time.parse(start_time)
-    end
-    unless end_time.blank?
-           task.report_end_time = Time.parse(end_time)
-    end
     task.project = @project
     task.save!
 

@@ -15,6 +15,16 @@ class ReportTask < ActiveRecord::Base
 		STATUS_PUBLISHED => l(:STATUS_PUBLISHED)
 	}
 
+	TYPE_DAILY="daily"
+	TYPE_WEEKLY="weekly"
+	TYPE_SUMMARY="summary"
+
+	TYPE_LABEL = {
+		TYPE_DAILY => l(:TYPE_DAILY),
+		TYPE_WEEKLY => l(:TYPE_WEEKLY),
+		TYPE_SUMMARY => l(:TYPE_SUMMARY)
+	}
+
 	safe_attributes 'status',
 		'gen_start_time',
 		'gen_end_time',
@@ -24,11 +34,16 @@ class ReportTask < ActiveRecord::Base
 		'reviewed_path',
 		'gen_path',
 		'type',
+		'task_type',
 		'gen_count'
 
 	belongs_to :project
 
 	def label_status
 		STATUS_LABEL[self.status]
+	end
+
+	def label_type
+		TYPE_LABEL[self.task_type]
 	end
 end

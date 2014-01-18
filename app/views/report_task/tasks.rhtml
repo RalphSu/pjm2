@@ -17,9 +17,12 @@
                 </div>
                 <div class="modal-body">
                     <% form_tag(url_for(controller: 'report_task', action: 'create') , :method => :post ) do %>
+                    <div class="box tabular">
                         <%= hidden_field_tag :project_id , @project.identifier %>
-                        <p><%=l(:label_report_task_start_time)%><%= date_field_tag :report_start_time %></p>
-                        <p><%=l(:label_report_task_end_time)%><%= date_field_tag :report_end_time %></p>
+                        <p><label for="subject">类型:</label><%= select_tag 'report_type', report_types(@report_type)%></p>
+                        <p><label for="ff"><%=l(:label_report_task_start_time)%>:</label><%= date_field_tag :report_start_time %></p>
+                    </div>
+                        
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group">
@@ -39,8 +42,9 @@
   <thead><tr>
     <th><%=l(:label_report_number)%></th>
     <th><%=l(:label_report_task_create_time)%></th>
+    <th><%=l(:label_report_task_type)%></th>
 	<th><%=l(:label_report_task_start_time)%></th>
-	<th><%=l(:label_report_task_end_time)%></th>
+	
     <th><%=l(:label_report_task_status)%></th>
     <th><%=l(:label_report_gen_path)%></th>
     <th><%=l(:label_report_correct_path)%></th>
@@ -51,8 +55,9 @@
   <tr class="user <%= cycle("odd", "even") %>">
 	<td class="name"><%= f.id %></td>
     <td><%=   format_date(f.created_at)%></td>
+    <td ><%=  f.label_type %></td>
 	<td ><%= format_date(f.report_start_time) %></td>
-    <td ><%=  format_date(f.report_end_time) %></td>
+    
     <td ><%=  f.label_status %></td>
     <td ><%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>f.gen_path  }, :method => :get) %></a></td>
     <td ><%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>f.reviewed_path}, :method => :get) %></td>

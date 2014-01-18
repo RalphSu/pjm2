@@ -1098,6 +1098,7 @@ zh:
   label_next_page: 下一页
   button_save: 保存
   label_report_task_start_time: 起始时间
+  label_report_task_type: 类型
   label_report_task_end_time: 结束时间
   label_report_number: 报表编号
   label_report_not_generated: 生成中...
@@ -1109,6 +1110,9 @@ zh:
   STATUS_GENERATED: 已生成
   STATUS_REVIEWED: 已审核
   STATUS_PUBLISHED: 已发布
+  TYPE_DAILY: 日报
+  TYPE_WEEKLY: 周报
+  TYPE_SUMMARY: 结案报告
   label_new_report: 新建报表
   notice_successful_publish: 发布成功
   notice_successful_create: 新建成功
