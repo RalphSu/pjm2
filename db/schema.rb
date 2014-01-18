@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140118041420) do
+ActiveRecord::Schema.define(:version => 20140118065457) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -573,6 +573,12 @@ ActiveRecord::Schema.define(:version => 20140118041420) do
 
   add_index "settings", ["name"], :name => "index_settings_on_name"
 
+  create_table "summaries", :force => true do |t|
+    t.integer  "projects_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"
     t.integer  "taggable_id"
@@ -721,6 +727,12 @@ ActiveRecord::Schema.define(:version => 20140118041420) do
   end
 
   add_index "weibos", ["project_id", "classified"], :name => "index_weibos_on_project_id_and_classified"
+
+  create_table "weixins", :force => true do |t|
+    t.integer  "projects_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "wiki_content_versions", :force => true do |t|
     t.integer  "wiki_content_id",                                       :null => false
