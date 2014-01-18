@@ -1,9 +1,53 @@
 <div>
 <div class="contextualtemplate">
-<%= link_to l(:label_forum_template_new), {:controller => 'templates', :action => 'new'}, :class => 'icon icon-add' %>
-</div>
-</div>
 
+ <a data-toggle="modal" href="#myModal2"><label class="icon icon-add"><%=l(:label_forum_template_new)%></label></a>
+</div>
+</div>
+<% news_templates = distinct_forum_templates%>
+<!-- Modal dialog for upload -->
+<div class="container">
+  <div class="row">
+    <div id="myModal2" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                    <h4 class="modal-title" id="myModalLabel"><%=l(:label_forum_template_new) %></h4>
+                </div>
+                <div class="modal-body">
+                    <% form_tag(url_for(controller: 'templates', action: 'new_forum') , :method => :post ) do %>
+                    
+                      <p><%= l(:label_news_template_new_name) %>:<%= text_field 'classified_name','classified_name' %></p>
+                        
+                        <table class="list">
+                         <thead><tr>
+                            <th text-align="center"><%= l(:label_template_new_column)%></th>
+                            <th align="center"><%=l(:label_template_new_column_selected)%></th>
+                            </tr>
+                          </thead>
+                            <tbody>
+                                <% news_templates.each do |t| %>
+                                 <tr class="user <%= cycle("odd", "even") %> ">
+                                 <td class="name" ><span><%= t.column_name %></span></td>
+                                 <td class="name" ><span><%= check_box_tag("columns[]", t.column_name, false, :id => nil)%></span></td>
+                                   </tr>
+                                 <% end %>
+                               </tbody>
+                      </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                    <button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_submit)%></button>
+          </div>
+        </div>
+                    <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dalog -->
+    </div><!-- /.modal -->
+  </div>
+</div>
 <% templates = distinct_forum_templates()%>
 <div class="autoscroll">
 <table class="list">

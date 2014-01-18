@@ -99,4 +99,150 @@ class TemplatesController < ApplicationController
 
     	
 	end
+
+
+	def new_weibo
+		name = params[:classified_name][:classified_name].strip()
+    		columns = params[:columns]
+    		Rails.logger.info "name: #{name}, columns #{columns}"
+    		if columns
+    		     news_classifieds = distinct_weibo_classifieds();
+			news_classifieds.each do |classified|
+				if(classified.classified==name)
+					respond_to do |format|
+					format.html {
+						flash[:error] = "Name #{name} already exists"
+						redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/weibo'})
+					}
+					end
+	      			return
+	      		end
+			end
+			news_templates= distinct_weibo_templates();
+			columns.each do |column|
+				news_templates.each do |template|
+					if(column==template.column_name)
+						 newone = WeiboClassified.create! :classified => name,
+                                 :template => template
+     						newone.save!
+
+					end
+
+				end
+    			end
+			
+    			respond_to do |format|
+			format.html {
+				flash[:notice] = l(:notice_successful_update)
+				redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/weibo'})
+			}
+	      	end
+    		else
+    			respond_to do |format|
+			format.html {
+				flash[:notice] = "No Column selected"
+				redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/weibo'})
+			}
+	      	end
+    		end
+
+    	
+	end
+
+	def new_forum
+		name = params[:classified_name][:classified_name].strip()
+    		columns = params[:columns]
+    		Rails.logger.info "name: #{name}, columns #{columns}"
+    		if columns
+    		     news_classifieds = distinct_forum_classifieds();
+			news_classifieds.each do |classified|
+				if(classified.classified==name)
+					respond_to do |format|
+					format.html {
+						flash[:error] = "Name #{name} already exists"
+						redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/forum'})
+					}
+					end
+	      			return
+	      		end
+			end
+			news_templates= distinct_forum_templates();
+			columns.each do |column|
+				news_templates.each do |template|
+					if(column==template.column_name)
+						 newone = ForumClassified.create! :classified => name,
+                                 :template => template
+     						newone.save!
+
+					end
+
+				end
+    			end
+			
+    			respond_to do |format|
+			format.html {
+				flash[:notice] = l(:notice_successful_update)
+				redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/forum'})
+			}
+	      	end
+    		else
+    			respond_to do |format|
+			format.html {
+				flash[:notice] = "No Column selected"
+				redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/forum'})
+			}
+	      	end
+    		end
+
+    	
+	end
+
+
+	def new_blog
+		name = params[:classified_name][:classified_name].strip()
+    		columns = params[:columns]
+    		Rails.logger.info "name: #{name}, columns #{columns}"
+    		if columns
+    		     news_classifieds = distinct_blog_classifieds();
+			news_classifieds.each do |classified|
+				if(classified.classified==name)
+					respond_to do |format|
+					format.html {
+						flash[:error] = "Name #{name} already exists"
+						redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/blog'})
+					}
+					end
+	      			return
+	      		end
+			end
+			news_templates= distinct_blog_templates();
+			columns.each do |column|
+				news_templates.each do |template|
+					if(column==template.column_name)
+						 newone = BlogClassified.create! :classified => name,
+                                 :template => template
+     						newone.save!
+
+					end
+
+				end
+    			end
+			
+    			respond_to do |format|
+			format.html {
+				flash[:notice] = l(:notice_successful_update)
+				redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/blog'})
+			}
+	      	end
+    		else
+    			respond_to do |format|
+			format.html {
+				flash[:notice] = "No Column selected"
+				redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/blog'})
+			}
+	      	end
+    		end
+
+    	
+	end
 end

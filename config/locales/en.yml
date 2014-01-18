@@ -455,6 +455,9 @@ en:
   label_project: Project
   label_project_new: New project
   label_news_template_new: New template
+  label_weibo_template_new: New template
+  label_forum_template_new: New template
+  label_blog_template_new: New template
   label_news_template_new_name: Name
   label_template_new_column: Column Name
   label_template_new_column_selected: Select
