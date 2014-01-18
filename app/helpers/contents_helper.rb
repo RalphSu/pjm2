@@ -7,8 +7,10 @@ module ContentsHelper
 		tabs = [
 				{:name => 'news', :controller=> 'news_release', :action => 'index', :partial => 'contents/news', :label => :label_news},
 				{:name => 'weibo',  :controller=> 'weibo', :action => 'index', :partial => 'contents/weibo', :label => :label_weibo},
+				{:name => 'weixin',  :controller=> 'weixin', :action => 'index', :partial => 'contents/weixin', :label => :label_weixin},
 				{:name => 'blog', :controller=> 'blog', :action => 'index', :partial => 'contents/blog', :label => :label_blog},
 				{:name => 'forum', :controller=> 'forum', :action => 'index' , :partial => 'contents/forum', :label => :label_forum},
+				{:name => 'summary',  :controller=> 'summary', :action => 'index', :partial => 'contents/summary', :label => :label_summary},
 		]
 		tabs.select {|tab| User.current.allowed_to?(tab[:action], @project)}
 		tabs

@@ -26,6 +26,8 @@ class Project < ActiveRecord::Base
     'contents' => 1,
     'news_release' => 1, 
     'weibo' => 1, 
+    'weixin' => 1,
+    'summary' => 1,
     'blog' => 1, 
     'forum' => 1,
     'templates' => 1,
@@ -45,7 +47,9 @@ class Project < ActiveRecord::Base
   has_many :users, :through => :members
   has_many :principals, :through => :member_principals, :source => :principal
   has_many :news_release
-  has_many :weibos
+  has_many :weibos, :foreign_key=>'projects_id'
+  has_many :weixins, :foreign_key=>"projects_id"
+  has_many :summaries, :class_name=>'Summary'
   has_many :forums
   has_many :blogs
   has_many :report_templates, :dependent => :delete_all

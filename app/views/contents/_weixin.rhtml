@@ -1,0 +1,99 @@
+<h2><%= l(:label_weixin)%></h2>
+
+<label for='category'><%= l(:label_category) %> :</label>
+<% form_tag({}, :method => :get) do %>
+<%= select_tag 'category', weixin_option_for_select(@category), :class => "large", :onchange => "this.form.submit(); return false;"  %>
+<% end %>
+
+<div class="contextual">
+	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_weixin_new)%></label></a>
+</div>
+</fieldset>
+
+<!-- Modal dialog for upload -->
+<div class="container">
+	<div class="row">
+		<div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                    <% title = @p.nil? ? l(:no_project_selected) : l(:label_import_news) %>
+                    <h4 class="modal-title" id="myModalLabel"><%= title %></h4>
+                </div>
+			<% if @p.nil?%>
+                <div class="modal-body">
+                		<h4 class="modal-title" id="myModalLabel"><%= title %></h4>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                	</div>
+                </div>
+            <%else%>
+                <div class="modal-body">
+                    <label><%=l(:label_import_type)%></label>
+                    <% form_tag(url_for(controller: 'weixin', action: 'create') , :method => :post, :multipart => true ) do %>
+						<%= hidden_field_tag :category , @category %>
+						<%= hidden_field_tag :project_id , @p.identifier %>
+						<%= select_tag 'import', import_types(@import_type), :class => "large" %>
+						<%= file_field_tag :record %>					
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                    <button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
+					</div>
+				</div>
+                    <% end %>
+            <% end %>
+		    </div><!-- /.modal-content -->
+		</div><!-- /.modal-dalog -->
+		</div><!-- /.modal -->
+	</div>
+</div>
+
+
+<!-- show contents table -->
+<% fields = find_weixin_classifieds(@category)%>
+<table class="list">
+	<thead>
+		<% fields.each do |f|%>
+			<th><%= f.template.column_name %></th> 
+		<% end %>
+		<th></th> <!-- Place holder column for actions -->
+	</thread>
+	<tbody>
+<% weixins = nil # init %>
+<% unless (@p.blank? or @category.blank?)%>
+	<% weixins = find_weixin_for_project(@p, @category) %>
+	<% unless weixins.blank? %>
+		<% weixins.each do | nr| %>
+			<% if nr.classified == @category %>
+			<% weixin_fields = find_field_by_weixinId(nr.id) %>
+		<tr class="user <%= cycle("odd", "even") %>">
+			<%fields.each do |f|%>
+				<% if weixin_fields[f.id].blank? %>
+					<td></td>
+				<% else %>
+				<td title=<%= weixin_fields[f.id].body %>>
+					<p><%=tag_image(weixin_fields[f.id].file_path.blank? ? false : true)%><%= weixin_fields[f.id].body %></p>
+				</td>
+				<% end %>
+			<%end%>
+		<td class="buttons">
+<%= link_to_function l(:button_edit), { :url => { :controller => 'weixin', :action => 'edit_weixin', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>
+<%= link_to_remote(l(:button_delete), { :url => { :controller => 'weixin', :action => 'destory_weixin', :id => "#{nr.id}" },:method => :delete, :category=>@category, :project_id=>@p.identifier },:class => 'icon icon-del') %>
+		</td>
+		</tr>
+		<% end %>
+		<% end %>
+	<%end%>
+<% end %>
+	</tbody>
+</table>
+<% unless weixins.blank? %>
+	<%=will_paginate weixins, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
+<% end %>
+
+

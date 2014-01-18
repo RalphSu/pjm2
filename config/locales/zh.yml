@@ -561,6 +561,10 @@ zh:
   label_news_added: 新闻已添加
   label_weibo: 微博
   label_weibo_new: 添加微博
+  label_weixin: 微信
+  label_weixin_new: 添加微信
+  label_summary: 汇总数据
+  label_summary_new: 添加汇总数据
   label_blog_new: 添加博客
   label_forum_new: 添加论坛
   label_settings: 项目配置

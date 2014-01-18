@@ -107,6 +107,18 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
+  map.with_options :controller => 'weixin' do |weixin_routes|
+    weixin_routes.with_options :conditions => {:method => :get} do |weixin_views|
+      weixin_views.connect 'weixin/index/:project_id/', :action => 'index'
+    end
+  end
+
+  map.with_options :controller => 'summary' do |summary_routes|
+    summary_routes.with_options :conditions => {:method => :get} do |summary_views|
+      summary_views.connect 'summary/index/:project_id/', :action => 'index'
+    end
+  end
+
   map.with_options :controller => 'blog' do |blog_routes|
     blog_routes.with_options :conditions => {:method => :get} do |blog_views|
       blog_views.connect 'blog/index/:project_id/', :action => 'index'
