@@ -98,7 +98,13 @@ ActionController::Routing::Routes.draw do |map|
   map.with_options :controller => 'news_release' do |news_release_routes|
     news_release_routes.with_options :conditions => {:method => :get} do |news_relase_views|
       news_relase_views.connect 'news_release/index/:project_id/', :action => 'index'
+
     end
+    news_release_routes.with_options :conditions => {:method => :post} do |news_relase_views|
+      news_relase_views.connect 'news_release/delete_release', :action => 'delete_release'
+      
+    end
+
   end
   
   map.with_options :controller => 'weibo' do |weibo_routes|

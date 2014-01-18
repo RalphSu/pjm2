@@ -7,9 +7,66 @@
 <% end %>
 
 <div class="contextual">
+	
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_news_new)%></label></a>
+
+
+	  <% form_tag(url_for(controller: 'news_release', action: 'delete_release') , :method => :post ) do %>
+	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_delete)%></button>
+	
+	
 </div>
 </fieldset>
+
+
+
+<!-- show contents table -->
+
+<% fields = find_new_classifieds(@category)%>
+<table class="list">
+	<thead>
+		<% fields.each do |f|%>
+			<th><%= f.template.column_name %></th> 
+		<% end %>
+		<th class="checkboxforremove"></th> <!-- Place holder column for actions -->
+	</thread>
+	<tbody>
+<% news_release = nil # init %>
+<% unless (@p.blank? or @category.blank?)%>
+	<% news_release = find_news_release_for_project(@p, @category) %>
+	<% unless news_release.blank? %>
+		<% news_release.each do | nr| %>
+			<% release_fields = find_field_by_releaseId(nr.id) %>
+		<tr class="user <%= cycle("odd", "even") %>">
+		<%fields.each do |f|%>
+			<% if release_fields[f.id].blank? %>
+				<td></td>
+			<% else %>
+			<td title=<%= release_fields[f.id].body %>>
+				<p><%=tag_image(release_fields[f.id].file_path.blank? ? false : true)%><%= release_fields[f.id].body %></p>
+			</td>
+			<% end %>
+		<%end%>
+		<td class="checkboxforremove">
+			<span><%= check_box_tag("ids[]", nr.id, false, :id => nil)%></span>
+
+		</td>
+		
+		
+		</tr>
+		<% end %>
+	<%end%>
+<% end %>
+	</tbody>
+</table>
+<% unless news_release.blank? %>
+	<%=will_paginate news_release, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
+<% end %>
+
+<% end %>
+
+
+
 
 <!-- Modal dialog for upload -->
 <div class="container">
@@ -54,45 +111,3 @@
 	</div>
 </div>
 
-
-<!-- show contents table -->
-
-<% fields = find_new_classifieds(@category)%>
-<table class="list">
-	<thead>
-		<% fields.each do |f|%>
-			<th><%= f.template.column_name %></th> 
-		<% end %>
-		<th></th> <!-- Place holder column for actions -->
-	</thread>
-	<tbody>
-<% news_release = nil # init %>
-<% unless (@p.blank? or @category.blank?)%>
-	<% news_release = find_news_release_for_project(@p, @category) %>
-	<% unless news_release.blank? %>
-		<% news_release.each do | nr| %>
-			<% release_fields = find_field_by_releaseId(nr.id) %>
-		<tr class="user <%= cycle("odd", "even") %>">
-		<%fields.each do |f|%>
-			<% if release_fields[f.id].blank? %>
-				<td></td>
-			<% else %>
-			<td title=<%= release_fields[f.id].body %>>
-				<p><%=tag_image(release_fields[f.id].file_path.blank? ? false : true)%><%= release_fields[f.id].body %></p>
-			</td>
-			<% end %>
-		<%end%>
-		<td class="buttons">
-<%= link_to_function l(:button_edit), { :url => { :controller => 'news_release', :action => 'edit_release', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>			
-<%= link_to_remote(l(:button_delete), { :url => { :controller => 'news_release', :action => 'destroy_release', :id => "#{nr.id}" },:method => :delete, :category=>@category, :project_id=>@p.identifier },:class => 'icon icon-del') %>
-		</td>
-		</tr>
-		<% end %>
-	<%end%>
-<% end %>
-	</tbody>
-</table>
-
-<% unless news_release.blank? %>
-	<%=will_paginate news_release, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
-<% end %>

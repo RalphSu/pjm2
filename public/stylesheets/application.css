@@ -292,6 +292,10 @@ table.list th {
   white-space: nowrap;
 }
 
+table.list th.checkboxforremove {
+    width: 2%;
+}
+
 table.list td {
   vertical-align: top;
 }
@@ -305,6 +309,12 @@ table.list td.checkbox {
   width: 15px;
   padding: 2px 0 0 0;
 }
+
+table.list td.checkboxforremove {
+  width: 2%;
+  padding: 2px 0 0 0;
+}
+
 
 table.list td.checkbox input {
   padding: 0px;
@@ -2340,6 +2350,7 @@ a.close-icon:hover {
 
 .icon-del {
   background-image: url(../images/delete.png);
+  border:0px;
 }
 
 .icon-move {

@@ -101,7 +101,8 @@ class NewsReleaseController < ApplicationController
 	end
 
 	def delete_release
-		init(params)
+		
+		Rails.logger.info "delete nr id  #{params['ids']}"
 		redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
 	end
 
