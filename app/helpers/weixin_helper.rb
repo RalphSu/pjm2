@@ -53,9 +53,7 @@ module WeixinHelper
 		else
 			map = {}
 			field.each do |f|
-				unless f.weixin_classifieds.blank?
-					map[f.weixin_classifieds.id] = f
-				end
+				map[f.weixin_classifieds.id] = f
 			end
 			map
 		end

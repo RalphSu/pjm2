@@ -81,7 +81,7 @@
 				</td>
 				<% end %>
 			<%end%>
-		<td class="buttons">
+		<td class="newbuttons">
 <%= link_to_function l(:button_edit), { :url => { :controller => 'weixin', :action => 'edit_weixin', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>
 <%= link_to_remote(l(:button_delete), { :url => { :controller => 'weixin', :action => 'destory_weixin', :id => "#{nr.id}" },:method => :delete, :category=>@category, :project_id=>@p.identifier },:class => 'icon icon-del') %>
 		</td>

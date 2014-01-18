@@ -316,6 +316,12 @@ table.list td.buttons {
   text-align: right;
 }
 
+table.list td.newbuttons {
+  width: 15%;
+  white-space: nowrap;
+  text-align: right;
+}
+
 table.list td.buttons a {
   padding-right: 0.6em;
 }
