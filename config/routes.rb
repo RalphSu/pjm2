@@ -121,6 +121,10 @@ ActionController::Routing::Routes.draw do |map|
     weixin_routes.with_options :conditions => {:method => :get} do |weixin_views|
       weixin_views.connect 'weixin/index/:project_id/', :action => 'index'
     end
+
+     weixin_routes.with_options :conditions => {:method => :post} do |weixin_views|
+      weixin_views.connect 'weixin/index/:project_id/destory_weixin', :action => 'destory_weixin'
+    end
   end
 
   map.with_options :controller => 'summary' do |summary_routes|
