@@ -10,6 +10,7 @@
 	<% form_tag(url_for(controller: 'summary', action: 'destory_summary',:project_id=>@p.identifier) , :method => :post ) do %>
 	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_delete)%></button>
 		<%= hidden_field_tag :category , @category %>
+</div>
 
 </fieldset>
 
@@ -62,48 +63,6 @@
 <% end %>
 <% end %>
 
-<!-- Modal dialog for upload -->
-<div class="container">
-	<div class="row">
-		<div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
-                    <% title = @p.nil? ? l(:no_project_selected) : l(:label_import_news) %>
-                    <h4 class="modal-title" id="myModalLabel"><%= title %></h4>
-                </div>
-			<% if @p.nil?%>
-                <div class="modal-body">
-                		<h4 class="modal-title" id="myModalLabel"><%= title %></h4>
-                </div>
-                <div class="modal-footer">
-                    <div class="btn-group">
-                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
-                	</div>
-                </div>
-            <%else%>
-                <div class="modal-body">
-                    <label><%=l(:label_import_type)%></label>
-                    <% form_tag(url_for(controller: 'summary', action: 'create') , :method => :post, :multipart => true ) do %>
-						<%= hidden_field_tag :category , @category %>
-						<%= hidden_field_tag :project_id , @p.identifier %>
-						<%= select_tag 'import', import_types(@import_type), :class => "large" %>
-						<%= file_field_tag :record %>					
-                </div>
-                <div class="modal-footer">
-                    <div class="btn-group">
-                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
-                    <button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
-					</div>
-				</div>
-                    <% end %>
-            <% end %>
-		    </div><!-- /.modal-content -->
-		</div><!-- /.modal-dalog -->
-		</div><!-- /.modal -->
-	</div>
-</div>
 
 
 <!-- Modal dialog for upload single image... -->

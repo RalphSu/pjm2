@@ -7,9 +7,57 @@
 
 <div class="contextual">
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_forum_new)%></label></a>
+		<% form_tag(url_for(controller: 'forum', action: 'destroy_forum',:project_id=>@p.identifier) , :method => :post ) do %>
+	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_delete)%></button>
+		<%= hidden_field_tag :category , @category %>
 </div>
 </fieldset>
 
+
+
+
+<!-- show contents table -->
+<% fields = find_forum_classifieds(@category)%>
+<table class="list">
+	<thead>
+		<% fields.each do |f|%>
+			<th><%= f.template.column_name %></th> 
+		<% end %>
+		<th class="checkboxforremove"></th><!-- Place holder column for actions -->
+	</thread>
+	<tbody>
+<% forums = nil # init %>
+<% unless (@p.blank? or @category.blank?)%>
+	<% forums = find_forum_for_project(@p, @category) %>
+	<% unless forums.blank? %>
+		<% forums.each do | nr| %>
+			<% if nr.classified == @category %>
+			<% forum_fields = find_field_by_forumId(nr.id) %>
+		<tr class="user <%= cycle("odd", "even") %>">
+		<%fields.each do |f|%>
+			<% if forum_fields[f.id].blank? %>
+				<td></td>
+			<% else %>
+			<td title=<%= forum_fields[f.id].body %>>
+				<p><%=tag_image(forum_fields[f.id].file_path.blank? ? false : true)%><%= forum_fields[f.id].body %></p>
+			</td>
+			<% end %>
+		<%end%>
+		<td class="checkboxforremove">
+			<span><%= check_box_tag("ids[]", nr.id, false, :id => nil)%></span>
+
+		</td>
+		</tr>
+		<% end %>
+		<% end %>
+	<%end%>
+<% end %>
+	</tbody>
+</table>
+<% unless forums.blank? %>
+	<%=will_paginate forums, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
+<% end %>
+<% end %>
 <!-- Modal dialog for upload -->
 <div class="container">
 	<div class="row">
@@ -52,49 +100,5 @@
 		</div><!-- /.modal -->
 	</div>
 </div>
-
-
-<!-- show contents table -->
-<% fields = find_forum_classifieds(@category)%>
-<table class="list">
-	<thead>
-		<% fields.each do |f|%>
-			<th><%= f.template.column_name %></th> 
-		<% end %>
-		<th></th> <!-- Place holder column for actions -->
-	</thread>
-	<tbody>
-<% forums = nil # init %>
-<% unless (@p.blank? or @category.blank?)%>
-	<% forums = find_forum_for_project(@p, @category) %>
-	<% unless forums.blank? %>
-		<% forums.each do | nr| %>
-			<% if nr.classified == @category %>
-			<% forum_fields = find_field_by_forumId(nr.id) %>
-		<tr class="user <%= cycle("odd", "even") %>">
-		<%fields.each do |f|%>
-			<% if forum_fields[f.id].blank? %>
-				<td></td>
-			<% else %>
-			<td title=<%= forum_fields[f.id].body %>>
-				<p><%=tag_image(forum_fields[f.id].file_path.blank? ? false : true)%><%= forum_fields[f.id].body %></p>
-			</td>
-			<% end %>
-		<%end%>
-
-		<td class="buttons">
-<%= link_to_function l(:button_edit), { :url => { :controller => 'forum', :action => 'edit_forum', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>
-<%= link_to_remote(l(:button_delete), { :url => { :controller => 'forum', :action => 'destory_forum', :id => "#{nr.id}" },:method => :delete, :category=>@category, :project_id=>@p.identifier },:class => 'icon icon-del') %>
-		</td>
-		</tr>
-		<% end %>
-		<% end %>
-	<%end%>
-<% end %>
-	</tbody>
-</table>
-<% unless forums.blank? %>
-	<%=will_paginate forums, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
-<% end %>
 
 

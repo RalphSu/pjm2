@@ -13,6 +13,54 @@
 </div>
 </fieldset>
 
+
+
+
+<!-- show contents table -->
+<% fields = find_blog_classifieds(@category)%>
+<table class="list">
+	<thead>
+		<% fields.each do |f|%>
+			<th><%= f.template.column_name %></th> 
+		<% end %>
+		<th class="checkboxforremove"></th><!-- Place holder column for actions -->
+	</thread>
+	<tbody>
+<% blogs = nil # init %>
+<% unless (@p.blank? or @category.blank?)%>
+	<% blogs = find_blog_for_project(@p, @category) %>
+	<% unless blogs.blank? %>
+		<% blogs.each do | nr| %>
+			<% if nr.classified == @category %>
+			<% blog_fields = find_field_by_blogId(nr.id) %>
+		<tr class="user <%= cycle("odd", "even") %>">
+		<%fields.each do |f|%>
+			<% if blog_fields[f.id].blank? %>
+				<td></td>
+			<% else %>
+			<td title=<%= blog_fields[f.id].body %>>
+				<p><%=tag_image(blog_fields[f.id].file_path.blank? ? false : true)%><%= blog_fields[f.id].body %></p>
+			</td>
+			<% end %>
+		<%end%>
+		<td class="checkboxforremove">
+			<span><%= check_box_tag("ids[]", nr.id, false, :id => nil)%></span>
+		</td>
+
+		</tr>
+		<% end %>
+		<% end %>
+	<%end%>
+<% end %>
+	</tbody>
+</table>
+
+<% unless blogs.blank? %>
+	<%=will_paginate blogs, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
+<% end %>
+
+<% end %>
+
 <!-- Modal dialog for upload -->
 <div class="container">
 	<div class="row">
@@ -55,52 +103,6 @@
 		</div><!-- /.modal -->
 	</div>
 </div>
-
-
-<!-- show contents table -->
-<% fields = find_blog_classifieds(@category)%>
-<table class="list">
-	<thead>
-		<% fields.each do |f|%>
-			<th><%= f.template.column_name %></th> 
-		<% end %>
-		<th></th> <!-- Place holder column for actions -->
-	</thread>
-	<tbody>
-<% blogs = nil # init %>
-<% unless (@p.blank? or @category.blank?)%>
-	<% blogs = find_blog_for_project(@p, @category) %>
-	<% unless blogs.blank? %>
-		<% blogs.each do | nr| %>
-			<% if nr.classified == @category %>
-			<% blog_fields = find_field_by_blogId(nr.id) %>
-		<tr class="user <%= cycle("odd", "even") %>">
-		<%fields.each do |f|%>
-			<% if blog_fields[f.id].blank? %>
-				<td></td>
-			<% else %>
-			<td title=<%= blog_fields[f.id].body %>>
-				<p><%=tag_image(blog_fields[f.id].file_path.blank? ? false : true)%><%= blog_fields[f.id].body %></p>
-			</td>
-			<% end %>
-		<%end%>
-		<td class="checkboxforremove">
-			<span><%= check_box_tag("ids[]", nr.id, false, :id => nil)%></span>
-		</td>
-
-		</tr>
-		<% end %>
-		<% end %>
-	<%end%>
-<% end %>
-	</tbody>
-</table>
-
-<% unless blogs.blank? %>
-	<%=will_paginate blogs, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
-<% end %>
-
-<% end %>
 
 
 
