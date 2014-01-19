@@ -299,7 +299,38 @@ class WeiboController < ApplicationController
 
 	def destory_weibo
 		init(params)
-		redirect_to({:controller => 'weibo', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+		ids = params['ids']
+		#Rails.logger.info "delete nr id  #{ids}"
+		msg = l(:label_reocrd_delete_success)
+		fail_msg = nil
+		unless ids.blank?
+			ids_int = []
+			ids.each do | id |
+				ids_int << id.to_i
+			end
+			begin
+				Weibo.destroy(ids_int)
+			rescue Exception => e 
+				Rails.logger.error "delete record failed : #{e.inspect}!!!"
+				fail_msg =  l(:label_reocrd_delete_fail)
+			end
+		end
+		if fail_msg.blank?
+			respond_to do |format|
+			  format.html {
+				flash[:notice] = msg
+				redirect_to({:controller => 'weibo', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		else
+			respond_to do |format|
+			  format.html {
+				flash[:error] = fail_msg
+				redirect_to({:controller => 'weibo', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		end
+		
 	end
 
 	def index

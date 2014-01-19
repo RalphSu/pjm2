@@ -111,6 +111,10 @@ ActionController::Routing::Routes.draw do |map|
     weibo_routes.with_options :conditions => {:method => :get} do |weibo_views|
       weibo_views.connect 'weibo/index/:project_id/', :action => 'index'
     end
+
+    weibo_routes.with_options :conditions => {:method => :post} do |weibo_views|
+      weibo_views.connect 'weibo/index/:project_id/destory_weibo', :action => 'destory_weibo'
+    end
   end
 
   map.with_options :controller => 'weixin' do |weixin_routes|

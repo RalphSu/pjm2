@@ -8,9 +8,59 @@
 
 <div class="contextual">
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_weibo_new)%></label></a>
+	
+	  <% form_tag(url_for(controller: 'weibo', action: 'destory_weibo',:project_id=>@p.identifier) , :method => :post ) do %>
+	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_delete)%></button>
+		<%= hidden_field_tag :category , @category %>
+	
 </div>
 </fieldset>
 
+
+
+
+<!-- show contents table -->
+<% fields = find_weibo_classifieds(@category)%>
+<table class="list">
+	<thead>
+		<% fields.each do |f|%>
+			<th><%= f.template.column_name %></th> 
+		<% end %>
+		<th class="checkboxforremove"></th> <!-- Place holder column for actions -->
+	</thread>
+	<tbody>
+<% weibos = nil # init %>
+<% unless (@p.blank? or @category.blank?)%>
+	<% weibos = find_weibo_for_project(@p, @category) %>
+	<% unless weibos.blank? %>
+		<% weibos.each do | nr| %>
+			<% if nr.classified == @category %>
+			<% weibo_fields = find_field_by_weiboId(nr.id) %>
+		<tr class="user <%= cycle("odd", "even") %>">
+			<%fields.each do |f|%>
+				<% if weibo_fields[f.id].blank? %>
+					<td></td>
+				<% else %>
+				<td title=<%= weibo_fields[f.id].body %>>
+					<p><%=tag_image(weibo_fields[f.id].file_path.blank? ? false : true)%><%= weibo_fields[f.id].body %></p>
+				</td>
+				<% end %>
+			<%end%>
+		<td class="checkboxforremove">
+			<span><%= check_box_tag("ids[]", nr.id, false, :id => nil)%></span>
+
+		</td>
+		</tr>
+		<% end %>
+		<% end %>
+	<%end%>
+<% end %>
+	</tbody>
+</table>
+<% unless weibos.blank? %>
+	<%=will_paginate weibos, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
+<% end %>
+<% end %>
 <!-- Modal dialog for upload -->
 <div class="container">
 	<div class="row">
@@ -159,48 +209,5 @@
 		</div><!-- /.modal -->
 	</div>
 </div>
-
-
-<!-- show contents table -->
-<% fields = find_weibo_classifieds(@category)%>
-<table class="list">
-	<thead>
-		<% fields.each do |f|%>
-			<th><%= f.template.column_name %></th> 
-		<% end %>
-		<th></th> <!-- Place holder column for actions -->
-	</thread>
-	<tbody>
-<% weibos = nil # init %>
-<% unless (@p.blank? or @category.blank?)%>
-	<% weibos = find_weibo_for_project(@p, @category) %>
-	<% unless weibos.blank? %>
-		<% weibos.each do | nr| %>
-			<% if nr.classified == @category %>
-			<% weibo_fields = find_field_by_weiboId(nr.id) %>
-		<tr class="user <%= cycle("odd", "even") %>">
-			<%fields.each do |f|%>
-				<% if weibo_fields[f.id].blank? %>
-					<td></td>
-				<% else %>
-				<td title=<%= weibo_fields[f.id].body %>>
-					<p><%=tag_image(weibo_fields[f.id].file_path.blank? ? false : true)%><%= weibo_fields[f.id].body %></p>
-				</td>
-				<% end %>
-			<%end%>
-		<td class="buttons">
-<%= link_to_function l(:button_edit), { :url => { :controller => 'weibo', :action => 'edit_weibo', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>
-<%= link_to_remote(l(:button_delete), { :url => { :controller => 'weibo', :action => 'destory_weibo', :id => "#{nr.id}" },:method => :delete, :category=>@category, :project_id=>@p.identifier },:class => 'icon icon-del') %>
-		</td>
-		</tr>
-		<% end %>
-		<% end %>
-	<%end%>
-<% end %>
-	</tbody>
-</table>
-<% unless weibos.blank? %>
-	<%=will_paginate weibos, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
-<% end %>
 
 
