@@ -2336,6 +2336,17 @@ a.close-icon:hover {
   background-image: url(../images/add.png);
 }
 
+.icon-publish {
+  background-image: url(../images/publish.png);
+}
+
+.icon-unpublish {
+  background-image: url(../images/cancel_publish.png);
+}
+
+.icon-republish {
+  background-image: url(../images/republish.png);
+}
 .icon-edit {
   background-image: url(../images/edit.png);
 }

@@ -115,6 +115,7 @@ class NewsReleaseController < ApplicationController
 			end
 			begin
 				NewsRelease.destroy(ids_int)
+				_save_news_event("删除新闻数据","删除新闻数据", "删除新闻数据")
 			rescue Exception => e 
 				Rails.logger.error "delete record failed : #{e.inspect}!!!"
 				fail_msg =  l(:label_reocrd_delete_fail)

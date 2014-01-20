@@ -858,6 +858,7 @@ zh:
   button_reply: 回复
   button_archive: 存档
   button_unarchive: 取消存档
+  button_publish: 
   button_reset: 重置
   button_rename: 重命名
   button_change_password: 修改密码
@@ -1106,20 +1107,28 @@ zh:
   label_report_not_generated: 生成中...
   button_download: 下载
   button_publish: 发布
+  button_cancelpublish: 取消发布 
+  button_republish: 重新发布
   label_report_published: 已发布
+  label_report_unpublished: 取消发布
   STATUS_PLANNED: 已提交
   STATUS_INPROGRESS: 生成中
   STATUS_GENERATED: 已生成
   STATUS_REVIEWED: 已审核
   STATUS_PUBLISHED: 已发布
+  STATUS_CANCELPUBLISH: 取消发布
   TYPE_DAILY: 日报
   TYPE_WEEKLY: 周报
   TYPE_SUMMARY: 结案报告
   label_new_report: 新建报表
   notice_successful_publish: 发布成功
+  notice_successful_unpublish: 取消发布成功
+  notice_successful_republish: 重新发布成功
   notice_successful_create: 新建成功
   notice_successful_upload: 上传成功
   notice_failed_publish: 还没审核不能发布
+  notice_failed_unpublish: 还没发布不能取消
+  notice_failed_republish: 还没取消不能重新发布
   button_upload_report: 上传报表
   label_weixin_number: 微信编号
   label_summary_number: 汇总数据编号

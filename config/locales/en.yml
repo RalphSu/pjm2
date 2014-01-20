@@ -890,6 +890,8 @@ en:
   button_reply: Reply
   button_archive: Archive
   button_unarchive: Unarchive
+  button_publish: Publish
+  button_cancelpublish: Cancel
   button_reset: Reset
   button_rename: Rename
   button_change_password: Change password

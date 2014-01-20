@@ -31,11 +31,13 @@ class SummaryController < ApplicationController
 			poiReader = PoiExcelReader.new(_get_classified_hash, _get_factory)
 		  	uploadItems = poiReader.read_excel_text(file_name, headers)
 		  	save(uploadItems)
+		  	_save_news_event(l(:label_manually_import), l(:label_import_data_file), l(:label_import_data_file))
 	  	else 
 			# read image
 	  		poiReader = PoiExcelImageReader.new(@project)
 	  		uploadImages = poiReader.read_excel_image(data)
 	  		save_images(uploadImages)
+	  		_save_news_event(l(:label_manually_import), l(:label_import_image_file), l(:label_import_image_file))
 	  	end
 	  	rescue Exception => e
               	 	flash[:error] =  e.message
@@ -104,6 +106,7 @@ class SummaryController < ApplicationController
 			end
 			begin
 				Summary.destroy(ids_int)
+				_save_news_event("删除汇总数据","删除汇总数据", "删除汇总数据")
 			rescue Exception => e 
 				Rails.logger.error "delete record failed : #{e.inspect}!!!"
 				fail_msg =  l(:label_reocrd_delete_fail)
@@ -158,7 +161,7 @@ class SummaryController < ApplicationController
 		Rails.logger.info "============save image: #{full_name}!!"
 		image_field.body = full_name
 		image_field.save!
-
+		_save_news_event(l(:label_manually_import), l(:label_import_image_file), l(:label_import_image_file))
 	    respond_to do |format|
 	      format.html {
 	        flash[:notice] = l(:notice_successful_create)

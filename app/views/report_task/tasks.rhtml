@@ -73,11 +73,23 @@
 
     <% elsif f.status == ReportTask::STATUS_REVIEWED %>
       <a data-toggle="modal" href="#myModal-upload" onClick="set_task_id(<%=f.id%>); return true"><label class="icon icon-add"><%=l(:button_upload)%></label></a>
-      <%= link_to(l(:button_unarchive), { :controller => 'report_task', :action => 'publish', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-unlock') %>
+      <%= link_to(l(:button_publish), { :controller => 'report_task', :action => 'publish', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-publish') %>
 
     <% elsif f.status == ReportTask::STATUS_PUBLISHED %>
-      <%=l(:label_report_published)%>
-    <% else %>
+      
+      <% if User.current.admin?%>
+          <%= link_to(l(:button_cancelpublish), { :controller => 'report_task', :action => 'unpublish', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-unpublish') %>
+      <%else%>
+        <%=l(:label_report_published)%>
+      <% end %>
+
+    <% elsif f.status == ReportTask::STATUS_CANCELPUBLISH %>
+      
+      <% if User.current.admin?%>
+          <%= link_to(l(:button_republish), { :controller => 'report_task', :action => 'republish', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-republish') %>
+      <%else%>
+        <%=l(:label_report_unpublished)%>
+      <% end %>
     <% end %>
    </td>
   </tr>

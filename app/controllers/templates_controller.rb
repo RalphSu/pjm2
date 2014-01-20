@@ -1,3 +1,4 @@
+#encoding: utf-8
 class TemplatesController < ApplicationController
 	include TemplatesHelper
 	include NewsReleaseHelper
@@ -41,9 +42,20 @@ class TemplatesController < ApplicationController
 		# weibo
 		@weibo_field_map ={}
 		weibo_classifieds = distinct_weibo_classifieds();
-		weibo_classifieds.each do |classified|
+		weibo_classifieds.each do |f|
 			
-			 @weibo_field_map[classified.classified] = find_weibo_classifieds(classified.classified).collect do | c |
+			if f.classified =='微访谈'
+				next
+			end
+
+			if f.classified =='微话题'
+				next
+			end
+
+			if f.classified =='微活动'
+				next
+			end
+			 @weibo_field_map[f.classified] = find_weibo_classifieds(f.classified).collect do | c |
 			 	c.template.column_name
 			 end
 		end

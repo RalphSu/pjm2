@@ -18,6 +18,10 @@ module WeiboHelper
 		Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc',:conditions=>{:project_id => project, :classified => category})
 	end
 
+	def invisible_column()
+		columns=["主题","讨论数","排名","位置","热门话题榜","持续天数","活动名称","参加人数"]
+	end
+
 	def weibo_option_for_select(selected)
 		container = []
 		container << ["", ""]

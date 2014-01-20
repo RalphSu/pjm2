@@ -31,11 +31,13 @@ class WeixinController < ApplicationController
 			poiReader = PoiExcelReader.new(_get_classified_hash, _get_factory)
 		  	uploadItems = poiReader.read_excel_text(file_name, headers)
 		  	save(uploadItems)
+		  	_save_news_event(l(:label_manually_import), l(:label_import_data_file), l(:label_import_data_file))
 	  	else 
 			# read image
 	  		poiReader = PoiExcelImageReader.new(@project)
 	  		uploadImages = poiReader.read_excel_image(data)
 	  		save_images(uploadImages)
+	  		_save_news_event(l(:label_manually_import), l(:label_import_image_file), l(:label_import_image_file))
 	  	end
 
 	  	rescue Exception => e
@@ -105,6 +107,7 @@ class WeixinController < ApplicationController
 			end
 			begin
 				Weixin.destroy(ids_int)
+				_save_news_event("删除微信数据","删除微信数据", "删除微信数据")
 			rescue Exception => e 
 				Rails.logger.error "delete record failed : #{e.inspect}!!!"
 				fail_msg =  l(:label_reocrd_delete_fail)
