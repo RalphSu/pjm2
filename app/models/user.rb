@@ -375,6 +375,11 @@ class User < Principal
     true
   end
 
+  def employee?
+    return true if self.admin?
+    return self.user_type == USER_NORMAL
+  end
+
   def anonymous?
     !logged?
   end
@@ -434,6 +439,30 @@ class User < Principal
     end
     projects
   end
+
+
+   def active_client_projects
+ # Version.scoped(:include => :project,
+ #                     :conditions => "#{Project.table_name}.id = #{id}" +
+ #                                    " OR (#{Project.table_name}.status = #{Project::STATUS_ACTIVE} AND (" +
+ #                                          " #{Version.table_name}.sharing = 'system'" +
+ #                                          " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND #{Version.table_name}.sharing = 'tree')" +
+ #                                          " OR (#{Project.table_name}.lft < #{lft} AND #{Project.table_name}.rgt > #{rgt} AND #{Version.table_name}.sharing IN ('hierarchy', 'descendants'))" +
+ #                                          " OR (#{Project.table_name}.lft > #{lft} AND #{Project.table_name}.rgt < #{rgt} AND #{Version.table_name}.sharing = 'hierarchy')" +
+ #                                          "))")
+
+ # field = WeixinField.find(:all, :conditions=>{:weixins_id=>weixinId},
+ #      :joins => "LEFT JOIN images on images.url=weixin_fields.body",
+ #      :select => "weixin_fields.*,images.file_path AS file_path ")
+
+#   time_range = (Time.now.midnight - 1.day)..Time.now.midnight
+# Client.joins(:orders).where('orders.created_at' => time_range)
+
+     projects = Project.find(:all, :conditions=>{:status=>Project::STATUS_ACTIVE,"#{User.table_name}.id"=>self},
+      :joins=>"LEFT JOIN project_clients on project_clients.project_id=projects.id LEFT JOIN users on project_clients.user_id=users.id")
+  
+   end
+
 
   safe_attributes 'login',
     'firstname',

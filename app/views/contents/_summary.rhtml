@@ -6,10 +6,14 @@
 <% end %>
 
 <div class="contextual">
+	<% if User.current.employee?%>
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_summary_new)%></label></a>
+	<%end%>
 	<% form_tag(url_for(controller: 'summary', action: 'destory_summary',:project_id=>@p.identifier) , :method => :post ) do %>
+	<% if User.current.employee?%>
 	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_delete)%></button>
 		<%= hidden_field_tag :category , @category %>
+	<%end%>
 	</div>
 
 </fieldset>
@@ -23,7 +27,9 @@
 		<% fields.each do |f|%>
 			<th><%= f.template.column_name %></th> 
 		<% end %>
+		<% if User.current.employee?%>
 		<th class="checkboxforremove"></th><!-- Place holder column for actions -->
+		<%end%>
 	</thread>
 	<tbody>
 <% summarys = nil # init %>
@@ -37,7 +43,9 @@
 			<%fields.each do |f|%>
 				<% if f.template.column_name=='截图' %>
 					<td><%=tag_image( (summary_fields[f.id].blank? or summary_fields[f.id].body.blank?) ? false : true)%>
+				<% if User.current.employee?%>
       <a data-toggle="modal" href="#myModal-single-image" onClick="set_id(<%=nr.id%>); return false"><label class="icon icon-add"><%=l(:button_upload)%></label></a>
+      			<%end%>
 					</td>
 				<% elsif summary_fields[f.id].blank? %>
 					<td></td>
@@ -47,9 +55,10 @@
 					</td>
 				<% end %>
 			<%end%>
+			<% if User.current.employee?%>
 		<td class="checkboxforremove">
 			<span><%= check_box_tag("ids[]", nr.id, false, :id => nil)%></span>
-
+			<%end%>
 		</td>
 		</tr>
 		<% end %>

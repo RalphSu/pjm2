@@ -1082,21 +1082,31 @@ module ApplicationHelper
 
   # Split the :top_menu into separate :main and :more items
   def split_top_menu_into_main_or_more_menus
-    unless @top_menu_split
+   unless @top_menu_split
       items_for_main_level = []
       items_for_more_level = []
-      menu_items_for(:top_menu) do |item|
-        if item.name == :welcome #|| item.name == :my_page
-          items_for_main_level << item
-        elsif item.name == :admin
-          items_for_main_level << item
-        elsif item.name == :report
-          items_for_main_level << item
-        elsif item.name == :contents
-          items_for_main_level << item
-        elsif item.name == :pjconfig
-          items_for_main_level << item
-        end
+      if User.current.employee?
+           menu_items_for(:top_menu) do |item|
+              if item.name == :welcome #|| item.name == :my_page
+                items_for_main_level << item
+              elsif item.name == :admin
+                items_for_main_level << item
+              elsif item.name == :report
+                items_for_main_level << item
+              elsif item.name == :contents
+                items_for_main_level << item
+              elsif item.name == :pjconfig
+                items_for_main_level << item
+              end
+            end
+      else
+           menu_items_for(:top_menu) do |item|
+              if item.name == :report
+                items_for_main_level << item
+              elsif item.name == :contents
+                items_for_main_level << item
+              end
+           end
       end
       @top_menu_split = {
         :main => items_for_main_level,

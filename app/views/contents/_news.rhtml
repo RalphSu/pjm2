@@ -1,3 +1,4 @@
+
 <h2> <%=l(:label_news)%></h2>
 
 
@@ -7,13 +8,16 @@
 <% end %>
 
 <div class="contextual">
-	
+	<% if User.current.employee?%>
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_news_new)%></label></a>
+	<%end%>
 
-
-	  <% form_tag(url_for(controller: 'news_release', action: 'delete_release',:project_id=>@p.identifier) , :method => :post ) do %>
+	  <% form_tag(url_for(controller: 'news_release', action: 'delete_release') , :method => :post ) do %>
+	  <% if User.current.employee?%>
 	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_delete)%></button>
 		<%= hidden_field_tag :category , @category %>
+		<%= hidden_field_tag :project_id , @p.identifier %>
+	<%end%>
 	
 </div>
 </fieldset>
@@ -28,11 +32,13 @@
 		<% fields.each do |f|%>
 			<th><%= f.template.column_name %></th> 
 		<% end %>
+		 <% if User.current.employee?%>
 		<th class="checkboxforremove"></th> <!-- Place holder column for actions -->
+		<%end%>
 	</thread>
 	<tbody>
 <% news_release = nil # init %>
-<% unless (@p.blank? or @category.blank?)%>
+	<% unless (@p.blank? or @category.blank?)%>
 	<% news_release = find_news_release_for_project(@p, @category) %>
 	<% unless news_release.blank? %>
 		<% news_release.each do | nr| %>
@@ -47,11 +53,12 @@
 			</td>
 			<% end %>
 		<%end%>
+		<% if User.current.employee?%>
 		<td class="checkboxforremove">
 			<span><%= check_box_tag("ids[]", nr.id, false, :id => nil)%></span>
 
 		</td>
-		
+		<%end%>
 		
 		</tr>
 		<% end %>

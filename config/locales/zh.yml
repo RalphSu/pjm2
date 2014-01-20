@@ -1099,6 +1099,8 @@ zh:
   button_save: 保存
   label_report_task_start_time: 起始时间
   label_report_task_type: 类型
+  label_report_client_path: 下载地址
+  label_report_update_time: 更新时间
   label_report_task_end_time: 结束时间
   label_report_number: 报表编号
   label_report_not_generated: 生成中...

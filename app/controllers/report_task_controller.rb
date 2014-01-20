@@ -5,7 +5,12 @@ class ReportTaskController < ApplicationController
   @show_project_main_menu=false
 
     def index
-    @projects=User.current.active_projects
+
+    if User.current.employee?
+      @projects=User.current.active_projects
+    else 
+      @projects=User.current.active_client_projects
+    end
     unless @projects.blank?
       @project = @projects.first if @project.nil?
     end
@@ -13,10 +18,14 @@ class ReportTaskController < ApplicationController
 
 
    def tasks
+     if User.current.employee?
     @projects=User.current.active_projects
-
-   # fill the selected flag
+    # fill the selected flag
     @reporttasks = ReportTask.find(:all, :conditions=> {:project_id => @project.id})
+      else 
+      @projects=User.current.active_client_projects
+      @reporttasks = ReportTask.find(:all, :conditions=> {:project_id => @project.id,:status=>ReportTask::STATUS_PUBLISHED})
+    end
 
     render :action => "tasks",:layout => false if request.xhr?
 

@@ -1,5 +1,6 @@
 
 <h2><%=l(:label_report_plural)%></h2>
+<% if User.current.employee?%>
 <div class="contextual">
   <a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_new_report)%></label></a>
 </div>
@@ -119,3 +120,26 @@
     </div><!-- /.modal -->
   </div>
 </div>
+<% else %>
+  <div class="autoscroll">
+<table class="list">
+  <thead><tr>
+    <th><%=l(:label_report_task_type)%></th>
+    <th><%=l(:label_report_update_time)%></th>
+    <th><%=l(:label_report_client_path)%></th>
+  
+  </tr></thead>
+  <tbody>
+<% @reporttasks.each  do |f|%>
+  <tr class="user <%= cycle("odd", "even") %>">
+  
+    <td ><%=  f.label_type %></td>
+  
+    <td ><%= format_date(f.updated_at) %></td>
+    <td ><%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>f.reviewed_path}, :method => :get) %></td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+</div>
+<% end %>

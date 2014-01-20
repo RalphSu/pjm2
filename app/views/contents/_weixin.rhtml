@@ -6,10 +6,14 @@
 <% end %>
 
 <div class="contextual">
+	<% if User.current.employee?%>
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_weixin_new)%></label></a>
+	<%end%>
 	<% form_tag(url_for(controller: 'weixin', action: 'destory_weixin',:project_id=>@p.identifier) , :method => :post ) do %>
+	<% if User.current.employee?%>
 	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_delete)%></button>
 		<%= hidden_field_tag :category , @category %>
+	<%end%>
 </div>
 </fieldset>
 
@@ -22,7 +26,9 @@
 		<% fields.each do |f|%>
 			<th><%= f.template.column_name %></th> 
 		<% end %>
+		<% if User.current.employee?%>
 		<th class="checkboxforremove"></th> <!-- Place holder column for actions -->
+		<%end%>
 	</thread>
 	<tbody>
 <% weixins = nil # init %>
@@ -42,10 +48,12 @@
 				</td>
 				<% end %>
 			<%end%>
+			<% if User.current.employee?%>
 		<td class="checkboxforremove">
 			<span><%= check_box_tag("ids[]", nr.id, false, :id => nil)%></span>
 
 		</td>
+		<%end%>
 		</tr>
 		<% end %>
 		<% end %>
