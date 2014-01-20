@@ -55,11 +55,11 @@ module ContentsHelper
 
 			sheet = wb.getSheetAt(0)
 			if sheet.nil?
-				raise 'sheet is not found!'
+				raise '没有Excel内容!'
 			end
 			headrow = sheet.getRow(sheet.getFirstRowNum())
 			if headrow.nil?
-				raise ' head row not found!'
+				raise ' 没有列头行!'
 			end
 			# read header row
 			head_array = validate_text_header(headrow, headers)
@@ -187,7 +187,7 @@ module ContentsHelper
 			cell = row.getCell(i)
 			value = cell.getRichStringCellValue().getString()
 			unless is_category_col( value )
-				raise "First column must be the category!"
+				raise "第一列必须是类别!"
 			end
 			head << value
 			i = i + 1
@@ -206,7 +206,7 @@ module ContentsHelper
 					# ignore blank type
 				else
 					Rails.logger.info cell_type
-					raise "File head is invalid. header row must be string!"
+					raise "列头行不符合格式，头行必须是文字类型，不应含有别的类型数据！"
 				end
 
 				head << value
@@ -215,9 +215,13 @@ module ContentsHelper
 			end
 
 			# validate expectation
+			miss_head = []
 			headers.each { |expected|
-				raise "File head is invalid. header #{expected.column_name} not presented!" unless head.include?(expected.column_name)
+				miss_head << expected.column_name unless  head.include?(expected.column_name)
 			}
+			unless miss_head.blank?
+				# raise "列头行不符合格式. 列 #{miss_head} 没在头行里!"
+			end
 
 			#Rails.logger.info head
 			return head
@@ -324,7 +328,7 @@ module ContentsHelper
 
 				row = sheet.getRow(anchor.getRow())
 				if row.nil?
-					raise "Row not found for image at position row: #{anchor.getRow()}, col: #{anchor.getCol()}"
+					raise "在 : #{anchor.getRow()}, col: #{anchor.getCol()} 找不到对应的行，请注意图片的位置必须被单元格完全包含！"
 				end
 				# FIXME :: why enforce title column just one column before the image??
 				## title
@@ -404,12 +408,12 @@ module ContentsHelper
 				when cell_type = cell.CELL_TYPE_BLANK
 					head << ""
 				else
-					raise "Image file head is invalid. Expected : #{expected_head} !"
+					raise "图片文件头格式错误。期望包含列：#{expected_head} !"
 				end
 			end
 			# validation for head existence
 			expected_head.each do |e|
-				raise "Image file head is invalid. Expected : #{expected_head} !" unless head.include?(e)
+				raise "图片文件头格式错误。期望包含列：#{expected_head} ! 列 #{e} 没在头行里!" unless head.include?(e)
 			end
 			return head
 		end
@@ -434,11 +438,11 @@ module ContentsHelper
 			wb = @@workbook_class.new(byte_stream)
 			sheet = wb.getSheetAt(0)
 			if sheet.nil?
-				raise 'Can not find sheet!'
+				raise '没有Excel内容!'
 			end
 			headrow = sheet.getRow(sheet.getFirstRowNum())
 			if headrow.nil?
-				raise 'No head row!'
+				raise '没有列头行!'
 			end
 			# read header row
 			head_array = validate_image_header(headrow)

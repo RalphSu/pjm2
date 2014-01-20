@@ -47,13 +47,34 @@ module SummaryHelper
 	end
 
 	def find_field_by_summaryId(summaryId)
-		field = SummaryField.find(:all, :conditions=>{:summaries_id=>summaryId},
-			:joins => "LEFT JOIN images on images.url=summary_fields.body",
-			:select => "summary_fields.*,images.file_path AS file_path ")
+		field = SummaryField.find(:all, :conditions=>{:summaries_id=>summaryId})
+		# ,
+		# 	:joins => "LEFT JOIN images on images.url=summary_fields.body",
+		# 	:select => "summary_fields.*,images.file_path AS file_path ")
 		if field.blank?
 			map = {}
 		else
 			map = {}
+			## check image path
+			## find date column and link column
+			date_field = nil
+			link_field = nil
+			field.each do |f|
+				if f.summary_classifieds.template.column_name == "日期"
+					date_field = f
+				elsif f.summary_classifieds.template.column_name == "链接"
+					link_field = f
+				end
+			end
+			# find correct _image 
+			if (not date_field.blank?) and (not link_field.blank?)
+				date = Date.strptime(date_field.body, "%Y-%m-%d")
+				img = Image.find(:first, :conditions=> {:url => link_field.body, :image_date=> date})
+				unless img.blank?
+					link_field.file_path = img.file_path
+				end
+			end
+			##
 			field.each do |f|
 				map[f.summary_classifieds.id] = f
 			end

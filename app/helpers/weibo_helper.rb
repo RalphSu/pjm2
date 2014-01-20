@@ -53,13 +53,34 @@ module WeiboHelper
 	end
 
 	def find_field_by_weiboId(weiboId)
-		field = WeiboField.find(:all, :conditions=>{:weibos_id=>weiboId},
-			:joins => "LEFT JOIN images on images.url=weibo_fields.body",
-			:select => "weibo_fields.*,images.file_path AS file_path ")
+		field = WeiboField.find(:all, :conditions=>{:weibos_id=>weiboId})
+			# ,
+			# :joins => "LEFT JOIN images on images.url=weibo_fields.body",
+			# :select => "weibo_fields.*,images.file_path AS file_path ")
 		if field.blank?
 			map = {}
 		else
 			map = {}
+			## check image path
+			## find date column and link column
+			date_field = nil
+			link_field = nil
+			field.each do |f|
+				if f.weibo_classifieds.template.column_name == "日期"
+					date_field = f
+				elsif f.weibo_classifieds.template.column_name == "链接"
+					link_field = f
+				end
+			end
+			# find correct _image 
+			if (not date_field.blank?) and (not link_field.blank?)
+				date = Date.strptime(date_field.body, "%Y-%m-%d")
+				img = Image.find(:first, :conditions=> {:url => link_field.body, :image_date=> date})
+				unless img.blank?
+					link_field.file_path = img.file_path
+				end
+			end
+			##
 			field.each do |f|
 				map[f.weibo_classifieds.id] = f
 			end

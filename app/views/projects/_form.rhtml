@@ -19,8 +19,8 @@
 
 <!-- only show manager&reviewer when new project -->
 <% if @project.new_record? %>
-  <p><%= f.select :project_manager,  User.nonClients.collect {|u| [u.firstname,  u.id] }, :selected=> @project.get_project_singlerole_uid(Role::SYSTEM_PROJECT_MANAGER) %></p>
-  <p><%= f.select :reviewer,  User.nonClients.collect {|u| [u.firstname,  u.id] } , :selected=>@project.get_project_singlerole_uid(Role::SYSTEM_PROJECT_REVIEWER) %></p>
+  <p><%= f.select :project_manager,  User.nonClients.collect {|u| [u.firstname,  u.id] }, :selected=> @project.get_project_singlerole_uid(get_project_manager_role_id) %></p>
+  <p><%= f.select :reviewer,  User.nonClients.collect {|u| [u.firstname,  u.id] } , :selected=>@project.get_project_singlerole_uid(get_project_reviewer_role_id) %></p>
 <% end %>
 
 <p><%= f.select :client,  User.allClients.collect {|u| [u.firstname,  u.id] },  :selected=>@project.get_project_client_id %></p>

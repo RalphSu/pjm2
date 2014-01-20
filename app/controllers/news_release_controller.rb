@@ -46,6 +46,8 @@ class NewsReleaseController < ApplicationController
 			save_images(uploadImages)
 			_save_news_event(l(:label_manually_import), l(:label_import_image_file), l(:label_import_image_file))
 		end
+	  rescue Exception => e
+             flash[:error] =  e.message
 	end
 
 	def _get_factory
