@@ -894,6 +894,15 @@ module ApplicationHelper
     end
   end
 
+  
+
+
+  def tag_icon(checked=true,url)
+    if checked
+       image_tag('image_s.gif',:alt => url)
+      # "<img alt='img' src='/upload/project1/b798ceb0826e11e3a9bb000c29d2d736--0.png'  onmouseover='alert('您的鼠标在图片上！')'/>"
+    end
+  end
   def context_menu(url)
     unless @context_menu_included
       content_for :header_tags do

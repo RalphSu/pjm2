@@ -1426,6 +1426,13 @@ p.pagination {
   margin-top: 8px;
 }
 
+#screenshot{
+ position:absolute;
+ border:0px solid #ccc;
+ 
+ padding:2px;
+ display:none;
+ }
 /***** Tabular forms ******/
 .tabular p {
   margin: 0;

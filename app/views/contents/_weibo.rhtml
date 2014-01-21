@@ -47,7 +47,12 @@
 					<td></td>
 				<% else %>
 				<td title=<%= weibo_fields[f.id].body %>>
-					<p><%=tag_image(weibo_fields[f.id].file_path.blank? ? false : true)%><%= weibo_fields[f.id].body %></p>
+					<%if weibo_fields[f.id].file_path.blank?%>
+					<p><%= weibo_fields[f.id].body %></p>
+					<%else%>
+					<%=tag_icon(true,weibo_fields[f.id].file_path)%><%= weibo_fields[f.id].body %>
+					<%end%>
+					
 				</td>
 				<% end %>
 			<%end%>
@@ -216,5 +221,42 @@
 		</div><!-- /.modal -->
 	</div>
 </div>
+
+
+<script type="text/javascript">
+
+  	
+
+
+
+jQuery(document).ready(function($) {
+
+    $('img').hover(function(e){
+   		
+  	    xOffset = 10;
+    		yOffset = 30;
+    	   var imagepath=this.alt;
+    	  var  input ="/public";
+    	   if (imagepath.substring(0, input.length) === input){
+    	   	imagepath=imagepath.substring(input.length,this.alt.length);
+    	   }
+
+
+
+        $("body").append("<p id='screenshot'><img src='" + imagepath + "'  />" + "</p>");
+        $("#screenshot")
+   			.css("top", (e.pageY - xOffset) + "px")
+   			.css("left", (e.pageX + yOffset) + "px")
+   			.fadeIn("fast");
+    	   }, 
+  		function(){
+ 		 $("#screenshot").remove();
+ 		});
+	screenshotPreview();
+
+
+}); //document.ready
+</script>
+
 
 

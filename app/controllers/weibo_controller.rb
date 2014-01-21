@@ -67,7 +67,7 @@ class WeiboController < ApplicationController
 
 			Rails.logger.info "create_weihuati read record size: #{data.size}."
 			poiReader = PoiExcelImageReader.new(@project)
-			imagePath = poiReader.save_pic(data, File.extname(originalfilename))
+			imagePath = poiReader.save_pic(data, File.extname(originalfilename),0)
 			weibo_data5 = WeiboField.new()
 			weibo_data5.weibos=weibo
 			weibo_data5.weibo_classifieds=find_weibo_classified("微访谈","图片")
@@ -77,6 +77,7 @@ class WeiboController < ApplicationController
 			img = Image.new()
 			img.url = params[:hyperlink][:hyperlink]
 			img.file_path = imagePath
+			img.image_date=params[:wei_date]
 			img.save!
 
 			remove_tmp_file(file_name)
@@ -149,7 +150,7 @@ class WeiboController < ApplicationController
 
 			Rails.logger.info "create_weihuati read record size: #{data.size}."
 			poiReader = PoiExcelImageReader.new(@project)
-			imagePath = poiReader.save_pic(data, File.extname(originalfilename))
+			imagePath = poiReader.save_pic(data, File.extname(originalfilename),0)
 			weibo_data5 = WeiboField.new()
 			weibo_data5.weibos=weibo
 			weibo_data5.weibo_classifieds=find_weibo_classified("微话题","图片")
@@ -213,7 +214,7 @@ class WeiboController < ApplicationController
 
 			Rails.logger.info "create_weihuati read record size: #{data.size}."
 			poiReader = PoiExcelImageReader.new(@project)
-			imagePath = poiReader.save_pic(data, File.extname(originalfilename))
+			imagePath = poiReader.save_pic(data, File.extname(originalfilename),0)
 			weibo_data5 = WeiboField.new()
 			weibo_data5.weibos=weibo
 			weibo_data5.weibo_classifieds=find_weibo_classified("微活动","图片")
@@ -223,6 +224,7 @@ class WeiboController < ApplicationController
 			img = Image.new()
 			img.url = params[:hyperlink][:hyperlink]
 			img.file_path = imagePath
+			img.image_date=params[:wei_date]
 			img.save!
 
 			remove_tmp_file(file_name)
