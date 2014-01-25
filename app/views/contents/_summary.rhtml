@@ -35,12 +35,12 @@
 			<% summary_fields = find_field_by_summaryId(nr.id) %>
 		<tr class="user <%= cycle("odd", "even") %>">
 			<%fields.each do |f|%>
-				<% if summary_fields[f.id].blank? %>
-					<td></td>
-				<% elsif summary_fields[f.id].summary_classifieds.template.column_name == '截图' %>
-					<td><%=tag_image(summary_fields[f.id].body.blank? ? false : true)%>
+				<% if f.template.column_name=='截图' %>
+					<td><%=tag_image( (summary_fields[f.id].blank? or summary_fields[f.id].body.blank?) ? false : true)%>
       <a data-toggle="modal" href="#myModal-single-image" onClick="set_id(<%=nr.id%>); return false"><label class="icon icon-add"><%=l(:button_upload)%></label></a>
 					</td>
+				<% elsif summary_fields[f.id].blank? %>
+					<td></td>
 				<% else %>
 					<td title=<%= summary_fields[f.id].body %>>
 						<p><%=tag_image(summary_fields[f.id].file_path.blank? ? false : true)%><%= summary_fields[f.id].body %></p>
