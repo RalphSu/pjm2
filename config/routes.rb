@@ -111,17 +111,28 @@ ActionController::Routing::Routes.draw do |map|
     weibo_routes.with_options :conditions => {:method => :get} do |weibo_views|
       weibo_views.connect 'weibo/index/:project_id/', :action => 'index'
     end
+
+    weibo_routes.with_options :conditions => {:method => :post} do |weibo_views|
+      weibo_views.connect 'weibo/:project_id/destory_weibo', :action => 'destory_weibo'
+    end
   end
 
   map.with_options :controller => 'weixin' do |weixin_routes|
     weixin_routes.with_options :conditions => {:method => :get} do |weixin_views|
       weixin_views.connect 'weixin/index/:project_id/', :action => 'index'
     end
+
+     weixin_routes.with_options :conditions => {:method => :post} do |weixin_views|
+      weixin_views.connect 'weixin/:project_id/destory_weixin', :action => 'destory_weixin'
+    end
   end
 
   map.with_options :controller => 'summary' do |summary_routes|
     summary_routes.with_options :conditions => {:method => :get} do |summary_views|
       summary_views.connect 'summary/index/:project_id/', :action => 'index'
+    end
+     summary_routes.with_options :conditions => {:method => :post} do |summary_views|
+      summary_views.connect 'summary/:project_id/destory_summary', :action => 'destory_summary'
     end
   end
 

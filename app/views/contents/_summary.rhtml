@@ -7,8 +7,60 @@
 
 <div class="contextual">
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_summary_new)%></label></a>
-</div>
+	<% form_tag(url_for(controller: 'summary', action: 'destory_summary',:project_id=>@p.identifier) , :method => :post ) do %>
+	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_delete)%></button>
+		<%= hidden_field_tag :category , @category %>
+
 </fieldset>
+
+
+
+<!-- show contents table -->
+<% fields = find_summary_classifieds(@category)%>
+<table class="list">
+	<thead>
+		<% fields.each do |f|%>
+			<th><%= f.template.column_name %></th> 
+		<% end %>
+		<th class="checkboxforremove"></th><!-- Place holder column for actions -->
+	</thread>
+	<tbody>
+<% summarys = nil # init %>
+<% unless (@p.blank? or @category.blank?)%>
+	<% summarys = find_summary_for_project(@p, @category) %>
+	<% unless summarys.blank? %>
+		<% summarys.each do | nr| %>
+			<% if nr.classified == @category %>
+			<% summary_fields = find_field_by_summaryId(nr.id) %>
+		<tr class="user <%= cycle("odd", "even") %>">
+			<%fields.each do |f|%>
+				<% if summary_fields[f.id].blank? %>
+					<td></td>
+				<% elsif summary_fields[f.id].summary_classifieds.template.column_name == '截图' %>
+					<td><%=tag_image(summary_fields[f.id].body.blank? ? false : true)%>
+      <a data-toggle="modal" href="#myModal-single-image" onClick="set_id(<%=nr.id%>); return false"><label class="icon icon-add"><%=l(:button_upload)%></label></a>
+					</td>
+				<% else %>
+					<td title=<%= summary_fields[f.id].body %>>
+						<p><%=tag_image(summary_fields[f.id].file_path.blank? ? false : true)%><%= summary_fields[f.id].body %></p>
+					</td>
+				<% end %>
+			<%end%>
+		<td class="checkboxforremove">
+			<span><%= check_box_tag("ids[]", nr.id, false, :id => nil)%></span>
+
+		</td>
+		</tr>
+		<% end %>
+		<% end %>
+	<%end%>
+<% end %>
+	</tbody>
+</table>
+<% unless summarys.blank? %>
+	<%=will_paginate summarys, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
+<% end %>
+<% end %>
 
 <!-- Modal dialog for upload -->
 <div class="container">
@@ -52,55 +104,6 @@
 		</div><!-- /.modal -->
 	</div>
 </div>
-
-
-<!-- show contents table -->
-<% fields = find_summary_classifieds(@category)%>
-<table class="list">
-	<thead>
-		<% fields.each do |f|%>
-			<th><%= f.template.column_name %></th> 
-		<% end %>
-		<th></th> <!-- Place holder column for actions -->
-	</thread>
-	<tbody>
-<% summarys = nil # init %>
-<% unless (@p.blank? or @category.blank?)%>
-	<% summarys = find_summary_for_project(@p, @category) %>
-	<% unless summarys.blank? %>
-		<% summarys.each do | nr| %>
-			<% if nr.classified == @category %>
-			<% summary_fields = find_field_by_summaryId(nr.id) %>
-		<tr class="user <%= cycle("odd", "even") %>">
-			<%fields.each do |f|%>
-				<% if summary_fields[f.id].blank? %>
-					<td></td>
-				<% elsif summary_fields[f.id].summary_classifieds.template.column_name == '截图' %>
-					<td><%=tag_image(summary_fields[f.id].body.blank? ? false : true)%>
-      <a data-toggle="modal" href="#myModal-single-image" onClick="set_id(<%=nr.id%>); return false"><label class="icon icon-add"><%=l(:button_upload)%></label></a>
-					</td>
-				<% else %>
-					<td title=<%= summary_fields[f.id].body %>>
-						<p><%=tag_image(summary_fields[f.id].file_path.blank? ? false : true)%><%= summary_fields[f.id].body %></p>
-					</td>
-				<% end %>
-			<%end%>
-		<td class="buttons">
-<%= link_to_function l(:button_edit), { :url => { :controller => 'summary', :action => 'edit_summary', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>
-<%= link_to_remote(l(:button_delete), { :url => { :controller => 'summary', :action => 'destory_summary', :id => "#{nr.id}" },:method => :delete, :category=>@category, :project_id=>@p.identifier },:class => 'icon icon-del') %>
-		</td>
-		</tr>
-		<% end %>
-		<% end %>
-	<%end%>
-<% end %>
-	</tbody>
-</table>
-<% unless summarys.blank? %>
-	<%=will_paginate summarys, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
-<% end %>
-
-
 
 
 <!-- Modal dialog for upload single image... -->
