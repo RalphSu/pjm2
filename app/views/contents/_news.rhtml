@@ -13,7 +13,7 @@
 
 	  <% form_tag(url_for(controller: 'news_release', action: 'delete_release',:project_id=>@p.identifier) , :method => :post ) do %>
 	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_delete)%></button>
-	
+		<%= hidden_field_tag :category , @category %>
 	
 </div>
 </fieldset>

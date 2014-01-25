@@ -5,7 +5,7 @@ class NewsReleaseController < ApplicationController
 	include ContentsHelper
 	layout 'content'
 
-	before_filter :`, :except=>[:delete_release]
+	before_filter :find_project_by_project_id
 	
 	@show_project_main_menu=false
 
@@ -26,8 +26,8 @@ class NewsReleaseController < ApplicationController
 
 		_import(file_name, data)
 
-	  	remove_tmp_file(file_name)
-	  	redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+		remove_tmp_file(file_name)
+		redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
 	end
 
 	def _import(file_name, data)
@@ -36,16 +36,16 @@ class NewsReleaseController < ApplicationController
 			# read text
 			headers = _get_header()
 			poiReader = PoiExcelReader.new(_get_classified_hash, _get_factory)
-		  	uploadItems = poiReader.read_excel_text(file_name, headers)
-		  	save(uploadItems)
-		  	_save_news_event(l(:label_manually_import), l(:label_import_data_file), l(:label_import_data_file))
-	  	else 
+			uploadItems = poiReader.read_excel_text(file_name, headers)
+			save(uploadItems)
+			_save_news_event(l(:label_manually_import), l(:label_import_data_file), l(:label_import_data_file))
+		else 
 			# read image
-	  		poiReader = PoiExcelImageReader.new(@project)
-	  		uploadImages = poiReader.read_excel_image(data)
-	  		save_images(uploadImages)
+			poiReader = PoiExcelImageReader.new(@project)
+			uploadImages = poiReader.read_excel_image(data)
+			save_images(uploadImages)
 			_save_news_event(l(:label_manually_import), l(:label_import_image_file), l(:label_import_image_file))
-	  	end
+		end
 	end
 
 	def _get_factory
@@ -101,9 +101,38 @@ class NewsReleaseController < ApplicationController
 	end
 
 	def delete_release
-		@project = Project.find(params[:project_id])
-		Rails.logger.info "delete nr id  #{params['ids']}"
-		redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+		init(params)
+		ids = params['ids']
+		#Rails.logger.info "delete nr id  #{ids}"
+		msg = l(:label_reocrd_delete_success)
+		fail_msg = nil
+		unless ids.blank?
+			ids_int = []
+			ids.each do | id |
+				ids_int << id.to_i
+			end
+			begin
+				NewsRelease.destroy(ids_int)
+			rescue Exception => e 
+				Rails.logger.error "delete record failed : #{e.inspect}!!!"
+				fail_msg =  l(:label_reocrd_delete_fail)
+			end
+		end
+		if fail_msg.blank?
+			respond_to do |format|
+			  format.html {
+				flash[:notice] = msg
+				redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		else
+			respond_to do |format|
+			  format.html {
+				flash[:error] = fail_msg
+				redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		end
 	end
 
 	def index

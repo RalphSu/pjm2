@@ -101,7 +101,7 @@ ActionController::Routing::Routes.draw do |map|
 
     end
     news_release_routes.with_options :conditions => {:method => :post} do |news_relase_views|
-      news_relase_views.connect 'news_release/delete_release', :action => 'delete_release'
+      news_relase_views.connect 'news_release/:project_id/delete_release', :action => 'delete_release'
       
     end
 

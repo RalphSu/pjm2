@@ -1121,3 +1121,5 @@ zh:
   button_upload_report: 上传报表
   label_weixin_number: 微信编号
   label_summary_number: 汇总数据编号
+  label_reocrd_delete_success: 删除成功!
+  label_reocrd_delete_fail: 删除失败，请刷新页面重试!

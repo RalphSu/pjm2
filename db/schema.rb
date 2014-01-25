@@ -9,15 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140118154710) do
-
-  create_table "A", :id => false, :force => true do |t|
-    t.integer "a"
-  end
-
-  create_table "B", :id => false, :force => true do |t|
-    t.integer "b"
-  end
+ActiveRecord::Schema.define(:version => 20140118211719) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -495,7 +487,6 @@ ActiveRecord::Schema.define(:version => 20140118154710) do
     t.integer  "status",          :default => 1,    :null => false
     t.integer  "lft"
     t.integer  "rgt"
-    t.string   "key"
     t.string   "keywords"
     t.string   "keywords_except"
     t.date     "end_time"
@@ -542,6 +533,7 @@ ActiveRecord::Schema.define(:version => 20140118154710) do
     t.string   "gen_path"
     t.string   "reviewed_path"
     t.string   "type"
+    t.string   "task_type"
   end
 
   create_table "report_templates", :force => true do |t|
@@ -692,8 +684,8 @@ ActiveRecord::Schema.define(:version => 20140118154710) do
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
     t.string   "phone_number"
-    t.boolean  "client"
     t.string   "user_type"
+    t.boolean  "client"
   end
 
   add_index "users", ["auth_source_id"], :name => "index_users_on_auth_source_id"

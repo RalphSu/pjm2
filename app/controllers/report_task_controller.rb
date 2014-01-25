@@ -114,7 +114,7 @@ class ReportTaskController < ApplicationController
         else
           respond_to do |format|
             format.html {
-              flash[:notice] = l(:notice_failed_publish)
+              flash[:error] = l(:notice_failed_publish)
               redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
             }
           end
