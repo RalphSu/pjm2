@@ -304,7 +304,7 @@ module ContentsHelper
 							if shape.getPictureData().suggestFileExtension.blank?
 								ext = ".png"
 							else 
-								ext = ".#{pic_data.suggestFileExtension}"
+								ext = ".#{shape.getPictureData().suggestFileExtension}"
 							end
 							paths = save_pic(shape.getPictureData().getData(), ext)
 							picture_path[anchor] = paths
