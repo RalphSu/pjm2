@@ -90,7 +90,7 @@ class ForumController < ApplicationController
 		redirect_to({:controller => 'forum', :action => 'index', :category=>@category, :project_id=>@project.identifier})
 	end
 
-	def destory_forum
+	def destroy_forum
 		init(params)
 		redirect_to({:controller => 'forum', :action => 'index', :category=>@category, :project_id=>@project.identifier})
 	end

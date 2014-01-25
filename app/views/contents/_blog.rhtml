@@ -7,6 +7,9 @@
 
 <div class="contextual">
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_blog_new)%></label></a>
+	<% form_tag(url_for(controller: 'blog', action: 'destroy_blog',:project_id=>@p.identifier) , :method => :post ) do %>
+	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_delete)%></button>
+		<%= hidden_field_tag :category , @category %>
 </div>
 </fieldset>
 
@@ -81,10 +84,10 @@
 			</td>
 			<% end %>
 		<%end%>
-		<td class="buttons">
-<%= link_to_function l(:button_edit), { :url => { :controller => 'blog', :action => 'edit_blog', :id => "#{nr.id}" },:method => :post, :category=>@category, :project_id=>@p.identifier}, :class => 'icon icon-edit' %>
-<%= link_to_remote(l(:button_delete), { :url => { :controller => 'blog', :action => 'destory_blog', :id => "#{nr.id}" },:method => :delete, :category=>@category, :project_id=>@p.identifier },:class => 'icon icon-del') %>
+		<td class="checkboxforremove">
+			<span><%= check_box_tag("ids[]", nr.id, false, :id => nil)%></span>
 		</td>
+
 		</tr>
 		<% end %>
 		<% end %>
@@ -92,8 +95,12 @@
 <% end %>
 	</tbody>
 </table>
+
 <% unless blogs.blank? %>
 	<%=will_paginate blogs, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
 <% end %>
+
+<% end %>
+
 
 

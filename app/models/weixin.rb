@@ -6,7 +6,7 @@ class Weixin < ActiveRecord::Base
 
 	safe_attributes 'classified'
 
-	has_many :weixin_fields, :foreign_key => "weixins_id"
+	has_many :weixin_fields, :foreign_key => "weixins_id", :dependent => :delete_all
 
 
 end

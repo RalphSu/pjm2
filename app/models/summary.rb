@@ -6,6 +6,6 @@ class Summary < ActiveRecord::Base
 
 	safe_attributes 'classified'
 
-	has_many :summary_fields, :foreign_key => "summaries_id"
+	has_many :summary_fields, :foreign_key => "summaries_id", :dependent => :delete_all
 
 end

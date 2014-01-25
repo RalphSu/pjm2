@@ -129,11 +129,17 @@ ActionController::Routing::Routes.draw do |map|
     blog_routes.with_options :conditions => {:method => :get} do |blog_views|
       blog_views.connect 'blog/index/:project_id/', :action => 'index'
     end
+    blog_routes.with_options :conditions => {:method => :post} do |blog_views|
+      blog_views.connect 'blog/:project_id/destroy_blog', :action => 'destroy_blog'
+    end
   end
   
   map.with_options :controller => 'forum' do |forum_routes|
     forum_routes.with_options :conditions => {:method => :get} do |forum_views|
       forum_views.connect 'forum/index/:project_id/', :action => 'index'
+    end
+    forum_routes.with_options :conditions => {:method => :post} do |forum_views|
+      forum_views.connect 'forum/:project_id/destroy_forum', :action => 'destroy_forum'
     end
   end
 

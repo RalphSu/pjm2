@@ -5,6 +5,6 @@ class Weibo < ActiveRecord::Base
 
 	safe_attributes 'classified'
 
-	has_many :weibo_fields, :foreign_key => "weibos_id"
+	has_many :weibo_fields, :foreign_key => "weibos_id", :dependent => :delete_all
 
 end
