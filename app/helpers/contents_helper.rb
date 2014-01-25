@@ -321,16 +321,49 @@ module ContentsHelper
 					raise "Row not found for image at position row: #{anchor.getRow()}, col: #{anchor.getCol()}"
 				end
 				# FIXME :: why enforce title column just one column before the image??
-				title_col = anchor.getCol() - 1
+				## title
+				title_col = anchor.getCol() - 2
 				if title_col < row.getFirstCellNum()
 					title_col = row.getFirstCellNum()
 				end
 				cell = row.getCell(title_col)
 				url = validate_get_cell_string(cell)
 
+				## date
+				date_col = anchor.getCol() - 1
+				if date_col < row.getFirstCellNum()
+					date_col = row.getFirstCellNum()
+				end
+				date_cell = row.getCell(date_col)
+				date = nil ## to be a time instance
+				unless date_cell.blank?
+					cell_type = date_cell.getCellType()
+					case
+					when cell_type == cell.CELL_TYPE_NUMERIC
+						Rails.logger.info "--------------------date cell is numeric!!"
+						if (@@date_util_class.isCellDateFormatted(date_cell) || @@date_util_class.isCellInternalDateFormatted(date_cell) )
+							Rails.logger.info "--------------------date cell is  date !!"
+							begin
+								date = date_cell.getDateCellValue()
+								dateFormat = @@date_format_class.new('yyyy-MM-dd')
+								date = dateFormat.format(date)
+							rescue Exception
+								Rails.logger.info "Invalid date value : #{date_cell.toString()}"
+								date = ''
+							end
+						else
+							Rails.logger.info "--------------------date cell is  not date !!"
+						end
+					else 
+						Rails.logger.info "Invalid date value : cell type not numeric #{cell_type}"
+					end
+				end
+				Rails.logger.info "----------------Image --- date --- :#{date}"
+
 				img_meta = ImageMeta.new()
 				img_meta.url = url
 				img_meta.paths = paths
+				img_meta.date = date
 				image_metas << img_meta
 			end
 
@@ -348,7 +381,7 @@ module ContentsHelper
 
 		def validate_image_header(header_row)
 			head = []
-			expected_head = ['文章链接','贴图']
+			expected_head = ['文章链接','日期', '贴图']
 			i = 0
 			# read heads
 			while i < header_row.getLastCellNum()
@@ -423,11 +456,12 @@ module ContentsHelper
 	end # end of POIExcelImageReader
 
 	class ImageMeta
-		attr_accessor :url, :paths
+		attr_accessor :url, :paths, :date
 		# the url which the image screenshot matches
 		@url
 		# the image stored path
 		@paths
+		@date
 	end
 
 	def save_images(uploadImages)
@@ -435,6 +469,7 @@ module ContentsHelper
 			img = Image.new()
 			img.url = m.url
 			img.file_path = m.paths
+			img.image_date = m.date
 			img.save
 		end
 	end
