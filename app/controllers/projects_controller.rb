@@ -36,6 +36,7 @@ class ProjectsController < ApplicationController
   include QueriesHelper
   include RepositoriesHelper
   include ProjectsHelper
+  include RolesHelper
 
   # Lists visible projects
   def index
@@ -73,14 +74,17 @@ class ProjectsController < ApplicationController
     saved = @project.save
     if saved
       begin
+        #Rails.logger.info "=================================================save project members start. Manager: #{params[:project][:project_manager]}, Reviewer: #{params[:project][:reviewer] }!"
         if params[:project][:reviewer] == params[:project][:project_manager]
-          @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_REVIEWER, Role::SYSTEM_PROJECT_MANAGER], :user_id => params[:project][:reviewer])
+          @project.members << Member.new(:role_ids => [get_project_manager_role_id, get_project_reviewer_role_id], :user_id => params[:project][:reviewer])
         else 
-          @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_REVIEWER], :user_id => params[:project][:reviewer])
-          @project.members << Member.new(:role_ids => [Role::SYSTEM_PROJECT_MANAGER], :user_id =>params[:project][:project_manager])
+          @project.members << Member.new(:role_ids => [get_project_manager_role_id], :user_id => params[:project][:reviewer])
+          @project.members << Member.new(:role_ids => [get_project_reviewer_role_id], :user_id =>params[:project][:project_manager])
         end
+        #Rails.logger.info '=================================================save project members end!'
       rescue => error
         # project has been created, when member assignment failed, just let the creation succeed.
+        Rails.logger.info "=================================================save project members failed! #{error.inspect}"
       end
       @project.set_project_client(params[:project][:client])
     end

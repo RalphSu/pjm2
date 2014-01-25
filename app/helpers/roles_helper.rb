@@ -13,4 +13,14 @@
 #++
 
 module RolesHelper
+
+	def get_project_manager_role_id
+		role = Role.find(:all, :conditions=>{:name=>'项目管理员'}).first
+		role.id
+	end
+
+	def get_project_reviewer_role_id
+		role = Role.find(:all, :conditions=>{:name=>'项目审核员'}).first
+		role.id
+	end
 end
