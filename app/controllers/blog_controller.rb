@@ -35,6 +35,8 @@ class BlogController < ApplicationController
 	  		uploadImages = poiReader.read_excel_image(data)
 	  		save_images(uploadImages)
 	  	end
+		rescue Exception => e
+             		flash[:error] =  e.message
 	end
 
 	def _get_factory
