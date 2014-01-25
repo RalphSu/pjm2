@@ -220,7 +220,7 @@ module ContentsHelper
 				miss_head << expected.column_name unless  head.include?(expected.column_name)
 			}
 			unless miss_head.blank?
-				raise "列头行不符合格式. 列 #{miss_head} 没在头行里!"
+				# raise "列头行不符合格式. 列 #{miss_head} 没在头行里!"
 			end
 
 			#Rails.logger.info head
