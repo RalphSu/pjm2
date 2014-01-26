@@ -44,16 +44,34 @@ module NewsReleaseHelper
 	end
 
 	def find_field_by_releaseId(releaseId)
-		field = NewsReleaseField.find(:all, :conditions=>{:news_releases_id=>releaseId},
-			:joins => "LEFT JOIN images on images.url=news_release_fields.body",
-			:select => "news_release_fields.*,images.file_path AS file_path ")
-
-		Rails.logger.info " news_release : #{field.inspect}"
-
+		field = NewsReleaseField.find(:all, :conditions=>{:news_releases_id=>releaseId})
+			# ,
+			# :joins => "LEFT JOIN images on images.url=news_release_fields.body",
+			# :select => "news_release_fields.*,images.file_path AS file_path ")
 		if field.blank?
 			map = {}
 		else
 			map = {}
+			## check image path
+			## find date column and link column
+			date_field = nil
+			link_field = nil
+			field.each do |f|
+				if f.news_classified.template.column_name == "日期"
+					date_field = f
+				elsif f.news_classified.template.column_name == "链接"
+					link_field = f
+				end
+			end
+			# find correct _image 
+			if (not date_field.blank?) and (not link_field.blank?)
+				date = Date.strptime(date_field.body, "%Y-%m-%d")
+				img = Image.find(:first, :conditions=> {:url => link_field.body, :image_date=> date})
+				unless img.blank?
+					link_field.file_path = img.file_path
+				end
+			end
+			##
 			field.each do |f|
 				Rails.logger.info "file_path is #{f.file_path}!!!"
 				map[f.news_classified.id] = f
