@@ -60,20 +60,21 @@ class WeiboController < ApplicationController
 		weibo_data4.save!
 	  	
 		if params['record']
+			originalfilename=params['record'].original_filename
 			data = params['record'].read
 			file_name = save_tmp_file(data)
 			data =  IO.binread(file_name)
 
 			Rails.logger.info "create_weihuati read record size: #{data.size}."
 			poiReader = PoiExcelImageReader.new(@project)
-			imagePath = poiReader.save_pic(data)
+			imagePath = poiReader.save_pic(data, File.extname(originalfilename))
 			weibo_data5 = WeiboField.new()
 			weibo_data5.weibos=weibo
 			weibo_data5.weibo_classifieds=find_weibo_classified("微访谈","图片")
 			weibo_data5.body=imagePath
 			weibo_data5.save!
 
-			mg = Image.new()
+			img = Image.new()
 			img.url = params[:hyperlink][:hyperlink]
 			img.file_path = imagePath
 			img.save!

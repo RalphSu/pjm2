@@ -11,6 +11,14 @@
 
 ActiveRecord::Schema.define(:version => 20140118154710) do
 
+  create_table "A", :id => false, :force => true do |t|
+    t.integer "a"
+  end
+
+  create_table "B", :id => false, :force => true do |t|
+    t.integer "b"
+  end
+
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
     t.string   "container_type", :limit => 30, :default => "", :null => false
@@ -487,6 +495,7 @@ ActiveRecord::Schema.define(:version => 20140118154710) do
     t.integer  "status",          :default => 1,    :null => false
     t.integer  "lft"
     t.integer  "rgt"
+    t.string   "key"
     t.string   "keywords"
     t.string   "keywords_except"
     t.date     "end_time"
@@ -683,8 +692,8 @@ ActiveRecord::Schema.define(:version => 20140118154710) do
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
     t.string   "phone_number"
-    t.string   "user_type"
     t.boolean  "client"
+    t.string   "user_type"
   end
 
   add_index "users", ["auth_source_id"], :name => "index_users_on_auth_source_id"

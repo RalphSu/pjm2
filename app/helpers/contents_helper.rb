@@ -300,7 +300,13 @@ module ContentsHelper
 							anchor = shape.getPreferredSize().getFrom()
 							row = anchor.getRow()
 							col = anchor.getCol()
-							paths = save_pic(shape.getPictureData())
+							# detect the file extension
+							if shape.getPictureData().suggestFileExtension.blank?
+								ext = ".png"
+							else 
+								ext = ".#{pic_data.suggestFileExtension}"
+							end
+							paths = save_pic(shape.getPictureData().getData(), ext)
 							picture_path[anchor] = paths
 
 							puts "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s + ", paths: " + paths.to_s
@@ -408,21 +414,17 @@ module ContentsHelper
 			return head
 		end
 
-		def save_pic(pic_data)
+		def save_pic(pic_data, ext)
 			folder = File.join File.dirname(__FILE__), "../../upload/#{@project.identifier}/"
 			unless File.exists?(folder)
 				Dir.mkdir(folder)
 			end
-			if pic_data.suggestFileExtension.blank?
-				ext = ".png"
-			else 
-				ext = ".#{pic_data.suggestFileExtension}"
-			end
+
 			uuid = UUIDTools::UUID.timestamp_create.to_s.gsub('-','')
 			file_full_name = uuid + ext
 			full_name = File.join folder,file_full_name
 			# write full
-			IO.binwrite(full_name, pic_data.getData())
+			IO.binwrite(full_name, pic_data)
 			full_name
 		end
 
