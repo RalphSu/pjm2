@@ -27,10 +27,13 @@
                           </thead>
                             <tbody>
                                 <% news_templates.each do |t| %>
+                                <%if not invisible_column().include?(t.column_name)  %>
+
                                  <tr class="user <%= cycle("odd", "even") %> ">
                                  <td class="name" ><span><%= t.column_name %></span></td>
                                  <td class="name" ><span><%= check_box_tag("columns[]", t.column_name, false, :id => nil)%></span></td>
                                    </tr>
+                                  <%end%>
                                  <% end %>
                                </tbody>
                       </table>
@@ -53,7 +56,9 @@
   <thead><tr>
     <th align="center"><%= l(:field_category)%></th>
     <% templates.each do |t| %>
-     <th align="center"><%= t.column_name %></th>
+      <%if not invisible_column().include?(t.column_name)  %>
+        <th align="center"><%= t.column_name %></th>
+      <%end%>
     <% end %>
   </tr></thead>
   <tbody>
@@ -61,10 +66,13 @@
   <tr class="user <%= cycle("odd", "even") %> ">
     <td class="name" title="<%=key%>"><span><%= key %></span></td>
     <% templates.each do |t|%>
-      <td align="center">
+    <%if not invisible_column().include?(t.column_name)  %>
+        <td align="center">
         <%= checked_image values.include?(t.column_name) %>
       
       </td>
+      <%end%>
+      
     <% end %>
     </tr>
   <% end %>

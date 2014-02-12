@@ -1,3 +1,4 @@
+#-- encoding: UTF-8
 class ForumController < ApplicationController
 	include ForumHelper
 	include ContentsHelper
@@ -29,11 +30,13 @@ class ForumController < ApplicationController
 			poiReader = PoiExcelReader.new(_get_classified_hash, _get_factory)
 		  	uploadItems = poiReader.read_excel_text(file_name, headers)
 		  	save(uploadItems)
+		  	_save_news_event(l(:label_manually_import), l(:label_import_data_file), l(:label_import_data_file))
 	  	else 
 			# read image
 	  		poiReader = PoiExcelImageReader.new(@project)
 	  		uploadImages = poiReader.read_excel_image(data)
 	  		save_images(uploadImages)
+	  		_save_news_event(l(:label_manually_import), l(:label_import_image_file), l(:label_import_image_file))
 	  	end
 
 		rescue Exception => e
@@ -110,6 +113,7 @@ class ForumController < ApplicationController
 			end
 			begin
 				Forum.destroy(ids_int)
+				_save_news_event("删除论坛数据","删除论坛数据", "删除论坛数据")
 			rescue Exception => e 
 				Rails.logger.error "delete record failed : #{e.inspect}!!!"
 				fail_msg =  l(:label_reocrd_delete_fail)
