@@ -36,6 +36,7 @@ class BlogController < ApplicationController
 	  		save_images(uploadImages)
 	  	end
 		rescue Exception => e
+			Rails.logger.info e.backtrace.join("\n")
              		flash[:error] =  e.message
 	end
 

@@ -249,6 +249,7 @@ class WeiboController < ApplicationController
 	  	end
 
 	  rescue Exception => e
+	  	Rails.logger.info e.backtrace.join("\n")
              flash[:error] =  e.message
              
 	end

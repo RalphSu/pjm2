@@ -80,6 +80,7 @@ module ContentsHelper
 			result = []
 			Rails.logger.info "sheet has : #{sheet.getFirstRowNum()} to #{sheet.getLastRowNum()} row."
 			m = sheet.getFirstRowNum() + 1
+			regions = init_merged_cells(sheet)
 			while m <= sheet.getLastRowNum()
 				Rails.logger.info "starting row : #{m}"
 				row = sheet.getRow(m)
@@ -94,48 +95,27 @@ module ContentsHelper
 				i = row.getFirstCellNum()
 				category_map = nil
 				category_name = nil
-				Rails.logger.info "	Row : #{m} has #{i} to #{sheet.getLastRowNum()} cells."
+				Rails.logger.info "	Row : #{m} has #{i} to #{row.getLastCellNum()} cells."
 				while i < row.getLastCellNum()
 					if i >= head_array.length
 						# ingore mismatch with head
 						break
 					end
 
-					# read columns, validation on type
+					# read columns with value validation on type
 					cell = row.getCell(i)
 					if cell.nil?
 						i = i + 1
 						next
 					end
 
-					cell_type = cell.getCellType()
-					value = nil
-					case
-					when cell_type == cell.CELL_TYPE_BLANK
-						#ignore blank type
-					when cell_type == cell.CELL_TYPE_BOOLEAN
-						value = cell.getBooleanCellValue()
-					when cell_type == cell.CELL_TYPE_FORMULA
-						value = cell.getCellFormula()
-					when cell_type == cell.CELL_TYPE_NUMERIC
-						is_date_col = head_array[i] == "日期"
-						if (@@date_util_class.isCellDateFormatted(cell) || @@date_util_class.isCellInternalDateFormatted(cell) || is_date_col)
-							begin
-								value = cell.getDateCellValue()
-								value = parseDateValue(value)
-							rescue Exception
-								Rails.logger.info "Invalid date value : #{cell.toString()}"
-								value=cell.getNumericCellValue()
-							end
-						else 
-							value = cell.getNumericCellValue()
-						end
-					when cell_type == cell.CELL_TYPE_STRING
-						value = cell.getRichStringCellValue().getString()
-					when cell_type == cell.CELL_TYPE_ERROR
-						# ignore error column
-					else
-						raise :unknow_cell_content
+					# read the cell value itself, if blanck, double check the merged value
+					value = get_cell_value(cell, head_array[i])
+					if value.blank?
+			  			merged_cell = get_merged_cell(sheet, regions, m, i)
+			  			unless merged_cell.nil?
+			  				value = get_cell_value(merged_cell, head_array[i])
+			  			end
 					end
 
 					unless value.nil?
@@ -176,6 +156,66 @@ module ContentsHelper
 
 			#Rails.logger.info result
 			return result
+		end
+
+		def get_cell_value(cell, head_column_name)
+			cell_type = cell.getCellType()
+			value = nil
+			case
+			when cell_type == cell.CELL_TYPE_BLANK
+				#ignore blank type
+			when cell_type == cell.CELL_TYPE_BOOLEAN
+				value = cell.getBooleanCellValue()
+			when cell_type == cell.CELL_TYPE_FORMULA
+				value = cell.getCellFormula()
+			when cell_type == cell.CELL_TYPE_NUMERIC
+				is_date_col = head_column_name == "日期"
+				if (@@date_util_class.isCellDateFormatted(cell) || @@date_util_class.isCellInternalDateFormatted(cell) || is_date_col)
+					begin
+						value = cell.getDateCellValue()
+						value = parseDateValue(value)
+					rescue Exception
+						Rails.logger.info "Invalid date value : #{cell.toString()}"
+						value=cell.getNumericCellValue()
+					end
+				else 
+					value = cell.getNumericCellValue()
+				end
+			when cell_type == cell.CELL_TYPE_STRING
+				value = cell.getRichStringCellValue().getString()
+			when cell_type == cell.CELL_TYPE_ERROR
+				# ignore error column
+			else
+				raise :unknow_cell_content
+			end
+			# return the value
+			return value
+		end
+
+		def init_merged_cells(sheet)
+			merged_regions = []
+			region_num = sheet.getNumMergedRegions()
+			#puts " number of merged regions : #{region_num}"
+			if  region_num > 0 
+				for index in 0 ... region_num
+					merged_regions << sheet.getMergedRegion(index)
+				end
+			end
+			#puts "merged_regions size : #{merged_regions.length}"
+			return merged_regions
+		end
+		def get_merged_cell(sheet, regions, row, col)
+			#puts "looking for merged cell at row: #{row}, column : #{col}.."
+			match_regions = regions.select do |r|
+				r.isInRange(row, col)
+			end
+			#puts "finded #{match_regions.length} for merged cell at row: #{row}, column : #{col}.."
+			unless match_regions.length == 0
+				r = match_regions.first
+				r_row = r.getFirstRow()
+				r_col = r.getFirstColumn()
+				sheet.getRow(r_row).getCell(r_col)
+			end
 		end
 
 		def validate_text_header(row, headers)

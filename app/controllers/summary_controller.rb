@@ -40,6 +40,7 @@ class SummaryController < ApplicationController
 	  		_save_news_event(l(:label_manually_import), l(:label_import_image_file), l(:label_import_image_file))
 	  	end
 	  	rescue Exception => e
+	  		Rails.logger.info e.backtrace.join("\n")
               	 	flash[:error] =  e.message
 	end
 

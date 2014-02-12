@@ -64,8 +64,10 @@ class PoiExcelReader
 		## texts
 		m = sheet.getFirstRowNum() + 1
 		p "sheet contains row from #{sheet.getFirstRowNum() } to #{sheet.getLastRowNum()}"
+
+		regions = init_merged_cells(sheet)
 		while m <= sheet.getLastRowNum()
-			p "starting row : #{m}"
+			p "starting row : #{m}====="
 			row = sheet.getRow(m)
 		  	i = row.getFirstCellNum()
 		  	while i < row.getLastCellNum()
@@ -88,12 +90,48 @@ class PoiExcelReader
 		  		else
 		  			raise 'unknown cell type'
 		  		end
+		  		#if value.nil?
+		  			merged_cell = get_merged_cell(sheet, regions, m, i)
+		  			#puts "#{merged_cell.inspect}"
+		  			unless merged_cell.nil?
+		  				value = merged_cell.getRichStringCellValue().getString()
+		  			end
+		  		#end
 
 		  		## FIXME :: DATE
 		  		p value
 		  		i= i+1
 		  	end
+
+		  	p "ending row : #{m}====="
 		  	m = m+1
+		end
+	end
+
+
+	def init_merged_cells(sheet)
+		merged_regions = []
+		region_num = sheet.getNumMergedRegions()
+		#puts " number of merged regions : #{region_num}"
+		if  region_num > 0 
+			for index in 0 ... region_num
+				merged_regions << sheet.getMergedRegion(index)
+			end
+		end
+		#puts "merged_regions size : #{merged_regions.length}"
+		return merged_regions
+	end
+	def get_merged_cell(sheet, regions, row, col)
+		#puts "looking for merged cell at row: #{row}, column : #{col}.."
+		match_regions = regions.select do |r|
+			r.isInRange(row, col)
+		end
+		#puts "finded #{match_regions.length} for merged cell at row: #{row}, column : #{col}.."
+		unless match_regions.length == 0
+			r = match_regions.first
+			r_row = r.getFirstRow()
+			r_col = r.getFirstColumn()
+			sheet.getRow(r_row).getCell(r_col)
 		end
 	end
 
@@ -135,7 +173,7 @@ class PoiExcelReader
 end
 
 pr = PoiExcelReader.new
-file_name = File.join File.dirname(__FILE__), '/keyi_sample.xlsx'
+file_name = File.join File.dirname(__FILE__), '/data_new.xlsx'
 #f = File.open(file_name)
 data = IO.binread(file_name)
 
