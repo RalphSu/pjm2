@@ -57,9 +57,9 @@ module BlogHelper
 			date_field = nil
 			link_field = nil
 			field.each do |f|
-				if f.blog_classifieds.template.column_name == "日期"
+				if f.blog_classifieds.template.column_name == "日期" and (not f.body.blank?)
 					date_field = f
-				elsif f.blog_classifieds.template.column_name == "链接"
+				elsif f.blog_classifieds.template.column_name == "链接" and (not f.body.blank?)
 					link_field = f
 				end
 			end

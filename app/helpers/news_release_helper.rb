@@ -57,9 +57,9 @@ module NewsReleaseHelper
 			date_field = nil
 			link_field = nil
 			field.each do |f|
-				if f.news_classified.template.column_name == "日期"
+				if f.news_classified.template.column_name == "日期" and (not f.body.blank?)
 					date_field = f
-				elsif f.news_classified.template.column_name == "链接"
+				elsif f.news_classified.template.column_name == "链接" and (not f.body.blank?)
 					link_field = f
 				end
 			end
