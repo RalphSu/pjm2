@@ -60,8 +60,14 @@
 	<td ><%= format_date(f.report_start_time) %></td>
     
     <td ><%=  f.label_status %></td>
-    <td ><%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>f.gen_path  }, :method => :get) %></a></td>
-    <td ><%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>f.reviewed_path}, :method => :get) %></td>
+    <td >
+      <% unless f.gen_path.blank? %>
+      <%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>f.gen_path  }, :method => :get) %></a>
+     <% end %></td>
+    <td >
+      <% unless f.reviewed_path.blank?%>
+      <%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>f.reviewed_path}, :method => :get) %>
+      <% end %></td>
 
     <% file_path = f.reviewed_path.blank? ? f.gen_path : f.reviewed_path %>
 
