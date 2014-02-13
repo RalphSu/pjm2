@@ -173,7 +173,7 @@ class PoiExcelReader
 end
 
 pr = PoiExcelReader.new
-file_name = File.join File.dirname(__FILE__), '/data_new.xlsx'
+file_name = File.join File.dirname(__FILE__), '/image_new_import.xlsx'
 #f = File.open(file_name)
 data = IO.binread(file_name)
 

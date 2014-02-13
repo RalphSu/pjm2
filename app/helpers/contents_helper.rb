@@ -235,6 +235,10 @@ module ContentsHelper
 			# read other heads
 			while i < row.getLastCellNum()
 				cell = row.getCell(i)
+				if cell.blank?
+					i = i + 1
+					next
+				end
 				cell_type = cell.getCellType()
 				value = nil
 				# validate type
@@ -338,6 +342,9 @@ module ContentsHelper
 
 			# construct image metadata
 			image_metas = []
+			url_col = head_array['文章链接'].to_i
+			date_col = head_array['日期'].to_i
+			Rails.logger.info "url_col : #{url_col}, date_col : #{date_col}"
 			picture_path.each do |anchor, paths|
 
 				row = sheet.getRow(anchor.getRow())
@@ -346,19 +353,10 @@ module ContentsHelper
 				end
 				# FIXME :: why enforce title column just one column before the image??
 				## title
-				title_col = anchor.getCol() - 2
-				if title_col < row.getFirstCellNum()
-					title_col = row.getFirstCellNum()
-				end
-				cell = row.getCell(title_col)
-				url = validate_get_cell_string(cell)
+				cell = row.getCell(url_col)
+				url = validate_get_cell_string(cell, anchor.getRow(), url_col)
 
 				## date
-				date_col = anchor.getCol() - 1
-				if date_col < row.getFirstCellNum()
-					date_col = row.getFirstCellNum()
-				end
-				
 				date_cell = row.getCell(date_col)
 				date = validate_get_cell_date(date_cell)
 
@@ -377,7 +375,7 @@ module ContentsHelper
 			unless date_cell.blank?
 				cell_type = date_cell.getCellType()
 				case
-				when cell_type == cell.CELL_TYPE_NUMERIC
+				when cell_type == date_cell.CELL_TYPE_NUMERIC
 					Rails.logger.info "-------------------- cell is numeric!!"
 					if (@@date_util_class.isCellDateFormatted(date_cell) || @@date_util_class.isCellInternalDateFormatted(date_cell) )
 						Rails.logger.info "--------------------date cell is  date !!"
@@ -391,12 +389,20 @@ module ContentsHelper
 						end
 					else
 						Rails.logger.info "--------------------date cell is  not date !!"
+						begin
+							date = date_cell.getDateCellValue()
+							dateFormat = @@date_format_class.new('yyyy-MM-dd')
+							date = dateFormat.format(date)
+						rescue Exception => e
+							Rails.logger.info "Invalid date value : #{date_cell.toString()}"
+							date = ''
+						end
 					end
 				else 
 					Rails.logger.info "Invalid date value : cell type not numeric #{cell_type}"
 				end
 			end
-			Rails.logger.info "----------------Image --- date --- :#{date}"
+			puts "----------------Image --- date --- :#{date}"
 			return date
 		end
 
@@ -419,8 +425,8 @@ module ContentsHelper
 							else 
 								ext = ".#{shape.getPictureData().suggestFileExtension}"
 							end
-							paths = save_pic(shape.getPictureData().getData(), ext)
-							if not picture_path.has_key(anchor)
+							paths = save_pic(shape.getPictureData().getData(), ext, pic_num)
+							if not picture_path.has_key?(anchor)
 								picture_path[anchor] = []
 							end
 							picture_path[anchor] << paths
@@ -434,57 +440,62 @@ module ContentsHelper
 			end # end of relations loop
 		end
 
-		def validate_get_cell_string(cell)
-			case
-			when cell.getCellType() == cell.CELL_TYPE_STRING
-				return cell.getRichStringCellValue().getString()
-			else
-				raise "Expected string for the cell!"
+		def validate_get_cell_string(cell, row, col)
+			unless cell.blank?
+				case
+				when cell.getCellType() == cell.CELL_TYPE_STRING
+					return cell.getRichStringCellValue().getString()
+				else
+					raise "Expected string for the cell! But got cell type as #{cell.getCellType()}, row: #{row}, col: #{col}"
+				end
 			end
 		end
 
 		def validate_image_header(header_row)
-			head = []
+			head = {}
 			expected_head = ['文章链接','日期', '贴图']
 			i = 0
 			# read heads
 			while i < header_row.getLastCellNum()
 				cell = header_row.getCell(i)
-				i = i + 1
 				if cell.nil?
+					i = i + 1
 					next
 				end
 
 				cell_type = cell.getCellType()
 				case
 				when cell_type == cell.CELL_TYPE_STRING
-					head << value = cell.getRichStringCellValue().getString()
+					value = cell.getRichStringCellValue().getString()
+					head[value] = i
 				when cell_type = cell.CELL_TYPE_BLANK
-					head << ""
+					;
 				else
 					raise "图片文件头格式错误。期望包含列：#{expected_head} !"
 				end
+
+				i = i + 1
 			end
 			# validation for head existence
 			expected_head.each do |e|
-				raise "图片文件头格式错误。期望包含列：#{expected_head} ! 列 #{e} 没在头行里!" unless head.include?(e)
+				raise "图片文件头格式错误。期望包含列：#{expected_head} ! 列 #{e} 没在头行里!" unless head.has_key?(e)
 			end
 			return head
 		end
 
-		def save_pic(pic_data, ext)
+		def save_pic(pic_data, ext, pic_num)
 			# prefix supposed to be the $PJM_HOME
 			prefix = File.join File.dirname(__FILE__), "../../"
 			# relative path is the file path related to the $PJM_HOME
 			relative_path = "/upload/#{@project.identifier}/"
 			# check foler existence
-			folder = File.join prefix, path
+			folder = File.join prefix, relative_path
 			unless File.exists?(folder)
 				Dir.mkdir(folder)
 			end
 
 			uuid = UUIDTools::UUID.timestamp_create.to_s.gsub('-','')
-			file_full_name = uuid + ext
+			file_full_name = uuid + '--' + pic_num.to_s + ext
 			# append the file name to the relative path
 			relative_path = File.join relative_path,file_full_name
 			full_name = File.join prefix, relative_path
