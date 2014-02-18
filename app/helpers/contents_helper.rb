@@ -170,15 +170,27 @@ module ContentsHelper
 				value = cell.getCellFormula()
 			when cell_type == cell.CELL_TYPE_NUMERIC
 				is_date_col = head_column_name == "日期"
-				if (@@date_util_class.isCellDateFormatted(cell) || @@date_util_class.isCellInternalDateFormatted(cell) || is_date_col)
-					begin
-						value = cell.getDateCellValue()
-						value = parseDateValue(value)
-					rescue Exception
-						Rails.logger.info "Invalid date value : #{cell.toString()}"
-						value=cell.getNumericCellValue()
+				if is_date_col
+					if (@@date_util_class.isCellDateFormatted(cell) || @@date_util_class.isCellInternalDateFormatted(cell) || is_date_col)
+						Rails.logger.info "--------------------date cell is  date !!"
+						begin
+							value = cell.getDateCellValue()
+							value = parseDateValue(value)
+						rescue Exception
+							Rails.logger.info "Invalid date value : #{cell.toString()}"
+							value=cell.getNumericCellValue()
+						end 
+					else
+						Rails.logger.info "--------------------date cell is  not date !!"
+						begin
+							value = cell.getDateCellValue()
+							value = parseDateValue(value)
+						rescue Exception => e
+							Rails.logger.info "Invalid date value : #{cell.toString()}"
+							value = cell.getNumericCellValue()
+						end
 					end
-				else 
+				else
 					value = cell.getNumericCellValue()
 				end
 			when cell_type == cell.CELL_TYPE_STRING
@@ -487,7 +499,7 @@ module ContentsHelper
 			# prefix supposed to be the $PJM_HOME
 			prefix = File.join File.dirname(__FILE__), "../../"
 			# relative path is the file path related to the $PJM_HOME
-			relative_path = "/upload/#{@project.identifier}/"
+			relative_path = "/public/upload/#{@project.identifier}/"
 			# check foler existence
 			folder = File.join prefix, relative_path
 			unless File.exists?(folder)

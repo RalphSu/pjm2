@@ -66,10 +66,14 @@ module WeixinHelper
 			end
 			# find correct _image 
 			if (not date_field.blank?) and (not link_field.blank?)
-				date = Date.strptime(date_field.body, "%Y-%m-%d")
-				img = Image.find(:first, :conditions=> {:url => link_field.body, :image_date=> date})
-				unless img.blank?
-					link_field.file_path = img.file_path
+				begin
+					date = Date.strptime(date_field.body, "%Y-%m-%d")
+					img = Image.find(:first, :conditions=> {:url => link_field.body, :image_date=> date})
+					unless img.blank?
+						link_field.file_path = img.file_path
+					end
+				rescue Exception => e
+					Rails.logger.info e
 				end
 			end
 			##
