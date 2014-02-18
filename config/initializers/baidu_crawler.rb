@@ -5,6 +5,7 @@ require 'nokogiri'
 require 'open-uri'
 
 class Crawler
+	include NewsReleaseHelper
 
 	def do_crawl
 		Project.find(:all, :conditions=> {:status => Project::STATUS_ACTIVE}).each do |p|
@@ -38,6 +39,7 @@ class Crawler
 		# start crawl
 		while (not page_url.blank?)
 			begin 
+				puts "	handling page #{num_of_pages_read} with url: #{page_url}	"
 				doc = Nokogiri::HTML(open(page_url))
 				stat = _handle_one_page(job, doc, project, news_classifieds_hash, num_of_pages_read+1)
 				page_url = stat[0]
@@ -199,7 +201,7 @@ class Crawler
 		# puts "	Saved #{nr} and #{fields} for one news_release line!"
 		unless fields.blank?
 			# check duplicated.
-			duplicated = NewsReleaseHelper::find_duplicate(nr, fields)
+			duplicated = find_duplicate(nr, fields)
 			unless duplicated.blank?
 				return false
 			end
@@ -247,6 +249,7 @@ scheduler = Rufus::Scheduler.new
 sys_crawler = Crawler.new
 
 scheduler.cron '5 0 * * *' do
+#scheduler.every("2m") do
 # scheduler.every("5m") do
 	sys_crawler.do_crawl()
 end
