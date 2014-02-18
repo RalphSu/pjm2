@@ -9,7 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140118211719) do
+ActiveRecord::Schema.define(:version => 20140218075946) do
+
+  create_table "A", :id => false, :force => true do |t|
+    t.integer "a"
+  end
+
+  create_table "B", :id => false, :force => true do |t|
+    t.integer "b"
+  end
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -267,6 +275,8 @@ ActiveRecord::Schema.define(:version => 20140118211719) do
     t.date     "image_date"
   end
 
+  add_index "images", ["url", "image_date"], :name => "index_images_on_url_and_image_date"
+
   create_table "issue_categories", :force => true do |t|
     t.integer "project_id",                   :default => 0,  :null => false
     t.string  "name",           :limit => 30, :default => "", :null => false
@@ -487,6 +497,7 @@ ActiveRecord::Schema.define(:version => 20140118211719) do
     t.integer  "status",          :default => 1,    :null => false
     t.integer  "lft"
     t.integer  "rgt"
+    t.string   "key"
     t.string   "keywords"
     t.string   "keywords_except"
     t.date     "end_time"
@@ -684,8 +695,8 @@ ActiveRecord::Schema.define(:version => 20140118211719) do
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
     t.string   "phone_number"
-    t.string   "user_type"
     t.boolean  "client"
+    t.string   "user_type"
   end
 
   add_index "users", ["auth_source_id"], :name => "index_users_on_auth_source_id"

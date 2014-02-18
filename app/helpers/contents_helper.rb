@@ -331,35 +331,9 @@ module ContentsHelper
 
 		def read_images(wb, sheet, head_array)
 			puts "read images from sheet"
-			it = sheet.getRelations().iterator()
 			picture_path = {}
-			pic_num = 0
-			while it.hasNext()
-				doc_part = it.next()
-				if doc_part.getClass().equals(@@xssf_drawing_class)
-					shape_it = doc_part.getShapes().iterator()
-					while shape_it.hasNext()
-						shape = shape_it.next()
-						if shape.getClass().equals(@@xssf_picture_class)
-							anchor = shape.getPreferredSize().getFrom()
-							row = anchor.getRow()
-							col = anchor.getCol()
-							# detect the file extension
-							if shape.getPictureData().suggestFileExtension.blank?
-								ext = ".png"
-							else 
-								ext = ".#{shape.getPictureData().suggestFileExtension}"
-							end
-							paths = save_pic(shape.getPictureData().getData(), ext)
-							picture_path[anchor] = paths
-
-							puts "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s + ", paths: " + paths.to_s
-
-							pic_num = pic_num + 1
-						end
-					end # end of shapes loop
-				end
-			end # end of relations loop
+			# first find all images; save them, and record the information
+			pic_num = find_save_images(sheet, picture_path)
 			puts "Total picture number : #{pic_num}"
 
 			# construct image metadata
@@ -384,31 +358,9 @@ module ContentsHelper
 				if date_col < row.getFirstCellNum()
 					date_col = row.getFirstCellNum()
 				end
+				
 				date_cell = row.getCell(date_col)
-				date = nil ## to be a time instance
-				unless date_cell.blank?
-					cell_type = date_cell.getCellType()
-					case
-					when cell_type == cell.CELL_TYPE_NUMERIC
-						Rails.logger.info "--------------------date cell is numeric!!"
-						if (@@date_util_class.isCellDateFormatted(date_cell) || @@date_util_class.isCellInternalDateFormatted(date_cell) )
-							Rails.logger.info "--------------------date cell is  date !!"
-							begin
-								date = date_cell.getDateCellValue()
-								dateFormat = @@date_format_class.new('yyyy-MM-dd')
-								date = dateFormat.format(date)
-							rescue Exception
-								Rails.logger.info "Invalid date value : #{date_cell.toString()}"
-								date = ''
-							end
-						else
-							Rails.logger.info "--------------------date cell is  not date !!"
-						end
-					else 
-						Rails.logger.info "Invalid date value : cell type not numeric #{cell_type}"
-					end
-				end
-				Rails.logger.info "----------------Image --- date --- :#{date}"
+				date = validate_get_cell_date(date_cell)
 
 				img_meta = ImageMeta.new()
 				img_meta.url = url
@@ -418,6 +370,68 @@ module ContentsHelper
 			end
 
 			image_metas
+		end
+
+		def validate_get_cell_date(date_cell)
+			date = nil ## to be a time instance
+			unless date_cell.blank?
+				cell_type = date_cell.getCellType()
+				case
+				when cell_type == cell.CELL_TYPE_NUMERIC
+					Rails.logger.info "-------------------- cell is numeric!!"
+					if (@@date_util_class.isCellDateFormatted(date_cell) || @@date_util_class.isCellInternalDateFormatted(date_cell) )
+						Rails.logger.info "--------------------date cell is  date !!"
+						begin
+							date = date_cell.getDateCellValue()
+							dateFormat = @@date_format_class.new('yyyy-MM-dd')
+							date = dateFormat.format(date)
+						rescue Exception
+							Rails.logger.info "Invalid date value : #{date_cell.toString()}"
+							date = ''
+						end
+					else
+						Rails.logger.info "--------------------date cell is  not date !!"
+					end
+				else 
+					Rails.logger.info "Invalid date value : cell type not numeric #{cell_type}"
+				end
+			end
+			Rails.logger.info "----------------Image --- date --- :#{date}"
+			return date
+		end
+
+		def find_save_images(sheet, picture_path)
+			pic_num = 0
+			it = sheet.getRelations().iterator()
+			while it.hasNext()
+				doc_part = it.next()
+				if doc_part.getClass().equals(@@xssf_drawing_class)
+					shape_it = doc_part.getShapes().iterator()
+					while shape_it.hasNext()
+						shape = shape_it.next()
+						if shape.getClass().equals(@@xssf_picture_class)
+							anchor = shape.getPreferredSize().getFrom()
+							row = anchor.getRow()
+							col = anchor.getCol()
+							# detect the file extension
+							if shape.getPictureData().suggestFileExtension.blank?
+								ext = ".png"
+							else 
+								ext = ".#{shape.getPictureData().suggestFileExtension}"
+							end
+							paths = save_pic(shape.getPictureData().getData(), ext)
+							if not picture_path.has_key(anchor)
+								picture_path[anchor] = []
+							end
+							picture_path[anchor] << paths
+
+							puts "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s + ", paths: " + paths.to_s
+
+							pic_num = pic_num + 1
+						end
+					end # end of shapes loop
+				end
+			end # end of relations loop
 		end
 
 		def validate_get_cell_string(cell)
@@ -459,17 +473,24 @@ module ContentsHelper
 		end
 
 		def save_pic(pic_data, ext)
-			folder = File.join File.dirname(__FILE__), "../../upload/#{@project.identifier}/"
+			# prefix supposed to be the $PJM_HOME
+			prefix = File.join File.dirname(__FILE__), "../../"
+			# relative path is the file path related to the $PJM_HOME
+			relative_path = "/upload/#{@project.identifier}/"
+			# check foler existence
+			folder = File.join prefix, path
 			unless File.exists?(folder)
 				Dir.mkdir(folder)
 			end
 
 			uuid = UUIDTools::UUID.timestamp_create.to_s.gsub('-','')
 			file_full_name = uuid + ext
-			full_name = File.join folder,file_full_name
+			# append the file name to the relative path
+			relative_path = File.join relative_path,file_full_name
+			full_name = File.join prefix, relative_path
 			# write full
 			IO.binwrite(full_name, pic_data)
-			full_name
+			relative_path
 		end
 
 		def read_excel_image(data)
@@ -512,11 +533,19 @@ module ContentsHelper
 
 	def save_images(uploadImages)
 		uploadImages.each do |m|
-			img = Image.new()
-			img.url = m.url
-			img.file_path = m.paths
-			img.image_date = m.date
-			img.save
+			existed_image = Image.find(:first, :conditions=>{:url => m.url, :image_date => m.date})
+			if existed_image.blank?
+				# no duplication, update
+				img = Image.new()
+				img.url = m.url
+				img.file_path = m.paths.join(';')
+				img.image_date = m.date
+				img.save!
+			else
+				# find a existing, just appending the path
+				existed_image.file_path = [ existed_image.file_path, m.paths.join(';')].join(';')
+				existed_image.save!
+			end
 		end
 	end
 
