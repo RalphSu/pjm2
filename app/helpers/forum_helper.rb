@@ -15,7 +15,7 @@ module ForumHelper
 	end
 
 	def find_forum_for_project(project, category)
-		Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc',:conditions=>{:project_id => project, :classified => category})
+		Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>{:project_id => project, :classified => category})
 	end
 
 	def forum_option_for_select(selected)
@@ -104,9 +104,11 @@ module ForumHelper
 		fields.each do |f|
 			if f.forum_classifieds.template.column_name == '日期'
 				date = f
+				nr.image_date = date.body
 			end
 			if f.forum_classifieds.template.column_name == '链接' 
 				url = f
+				nr.url = url.body
 			end
 		end
 		Rails.logger.info "-------- check duplicate ------- date: #{date.inspect}, url:#{url.inspect}.\n Given fields are: #{fields}"
@@ -115,29 +117,33 @@ module ForumHelper
 			return nil
 		end
 
-		find_fields = ForumField.find(:all, :conditions=>["body in (?, ?)", "#{date.body}", "#{url.body}"])
+		duplicated = Forum.find(:all, :conditions=>{:classified => nr.classified, :image_date => nr.image_date, :url => nr.url})
 
-		duplicated = []
-		find_fields.each do |ff|
-			r = ff.forums
-			unless r.blank?
-				date_match = false
-				url_match = false
-				r.forum_fields.each do |f|
-					if f.forum_classifieds.template.column_name == '日期' and f.body == date.body
-						date_match = true
-					end
-					if f.forum_classifieds.template.column_name == '链接' and f.body == url.body
-						url_match = true
-					end
-				end
-				if date_match && url_match
-					duplicated << r
-				end
-			end
-		end
+		# find_fields = ForumField.find(:all, :conditions=>["body in (?, ?)", "#{date.body}", "#{url.body}"])
 
-		return duplicated
+		# duplicated = []
+		# find_fields.each do |ff|
+		# 	r = ff.forums
+		# 	unless r.blank?
+		# 		if r.classified == nr.classified
+		# 			date_match = false
+		# 			url_match = false
+		# 			r.forum_fields.each do |f|
+		# 				if f.forum_classifieds.template.column_name == '日期' and f.body == date.body
+		# 					date_match = true
+		# 				end
+		# 				if f.forum_classifieds.template.column_name == '链接' and f.body == url.body
+		# 					url_match = true
+		# 				end
+		# 			end
+		# 			if date_match && url_match
+		# 				duplicated << r
+		# 			end
+		# 		end
+		# 	end
+		# end
+
+		# return duplicated
 	end
 
 end

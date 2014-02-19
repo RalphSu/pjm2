@@ -15,7 +15,7 @@ module WeiboHelper
 	end
 
 	def find_weibo_for_project(project, category)
-		Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc',:conditions=>{:project_id => project, :classified => category})
+		Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>{:project_id => project, :classified => category})
 	end
 
 	def invisible_column()
@@ -115,43 +115,48 @@ module WeiboHelper
 	def find_weibo_duplicate(nr, fields)
 		date = nil
 		url = nil
+		# find the field in the given fields
 		fields.each do |f|
 			if f.weibo_classifieds.template.column_name == '日期'
 				date = f
+				nr.image_date = date.body
 			end
 			if f.weibo_classifieds.template.column_name == '链接' 
 				url = f
+				nr.url = url.body
 			end
 		end
-		Rails.logger.info "-------- check duplicate ------- date: #{date}, url:#{url}.\n Given fields are: #{fields}"
+		Rails.logger.info "-------- check duplicate ------- date: #{date.body}, url:#{url.body}.\n"
 		# check has date and url, then procceed
-		if date.nil? or url.nil?
+		if date.blank? or url.blank?
 			return nil
 		end
 
-		find_fields = WeiboField.find(:all, :conditions=>["body in (?, ?)", "#{date.body}", "#{url.body}"])
-
-		duplicated = []
-		find_fields.each do |ff|
-			r = ff.weibos
-			unless r.blank?
-				date_match = false
-				url_match = false
-				r.weibo_fields.each do |f|
-					if f.weibo_classifieds.template.column_name == '日期' and f.body == date.body
-						date_match = true
-					end
-					if f.weibo_classifieds.template.column_name == '链接' and f.body == url.body
-						url_match = true
-					end
-				end
-				if date_match && url_match
-					duplicated << r
-				end
-			end
-		end
-
-		return duplicated
+		duplicated = Weibo.find(:all, :conditions=>{:classified => nr.classified, :image_date => nr.image_date, :url => nr.url})
+		# find_fields = WeiboField.find(:all, :conditions=>["body in (?, ?)", "#{date.body}", "#{url.body}"])
+		# duplicated = []
+		# find_fields.each do |ff|
+		# 	r = ff.weibos
+		# 	# check with the classified
+		# 	unless r.blank?
+		# 		if r.classified == nr.classified
+		# 			date_match = false
+		# 			url_match = false
+		# 			r.weibo_fields.each do |f|
+		# 				if f.weibo_classifieds.template.column_name == '日期' and f.body == date.body
+		# 					date_match = true
+		# 				end
+		# 				if f.weibo_classifieds.template.column_name == '链接' and f.body == url.body
+		# 					url_match = true
+		# 				end
+		# 			end
+		# 			if date_match && url_match
+		# 				duplicated << r
+		# 			end
+		# 		end
+		# 	end
+		# end
+		#return duplicated
 	end
 
 end

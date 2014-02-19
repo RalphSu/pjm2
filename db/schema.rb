@@ -9,15 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140218075946) do
-
-  create_table "A", :id => false, :force => true do |t|
-    t.integer "a"
-  end
-
-  create_table "B", :id => false, :force => true do |t|
-    t.integer "b"
-  end
+ActiveRecord::Schema.define(:version => 20140219142153) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -79,8 +71,11 @@ ActiveRecord::Schema.define(:version => 20140218075946) do
     t.datetime "updated_at"
     t.integer  "project_id"
     t.string   "classified"
+    t.string   "image_date"
+    t.string   "url"
   end
 
+  add_index "blogs", ["classified", "image_date", "url"], :name => "index_blogs_on_classified_and_image_date_and_url"
   add_index "blogs", ["project_id", "classified"], :name => "index_blogs_on_project_id_and_classified"
 
   create_table "boards", :force => true do |t|
@@ -256,8 +251,11 @@ ActiveRecord::Schema.define(:version => 20140218075946) do
     t.datetime "updated_at"
     t.integer  "project_id"
     t.string   "classified"
+    t.string   "image_date"
+    t.string   "url"
   end
 
+  add_index "forums", ["classified", "image_date", "url"], :name => "index_forums_on_classified_and_image_date_and_url"
   add_index "forums", ["project_id", "classified"], :name => "index_forums_on_project_id_and_classified"
 
   create_table "groups_users", :id => false, :force => true do |t|
@@ -451,8 +449,11 @@ ActiveRecord::Schema.define(:version => 20140218075946) do
     t.integer  "project_id"
     t.string   "classified"
     t.integer  "crawler_id"
+    t.string   "image_date"
+    t.string   "url"
   end
 
+  add_index "news_releases", ["classified", "image_date", "url"], :name => "index_news_releases_on_classified_and_image_date_and_url"
   add_index "news_releases", ["project_id", "classified"], :name => "index_news_releases_on_project_id_and_classified"
 
   create_table "open_id_authentication_associations", :force => true do |t|
@@ -497,7 +498,6 @@ ActiveRecord::Schema.define(:version => 20140218075946) do
     t.integer  "status",          :default => 1,    :null => false
     t.integer  "lft"
     t.integer  "rgt"
-    t.string   "key"
     t.string   "keywords"
     t.string   "keywords_except"
     t.date     "end_time"
@@ -590,7 +590,11 @@ ActiveRecord::Schema.define(:version => 20140218075946) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "classified"
+    t.string   "image_date"
+    t.string   "url"
   end
+
+  add_index "summaries", ["classified", "image_date", "url"], :name => "index_summaries_on_classified_and_image_date_and_url"
 
   create_table "summary_classifieds", :force => true do |t|
     t.string   "classified"
@@ -695,8 +699,8 @@ ActiveRecord::Schema.define(:version => 20140218075946) do
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
     t.string   "phone_number"
-    t.boolean  "client"
     t.string   "user_type"
+    t.boolean  "client"
   end
 
   add_index "users", ["auth_source_id"], :name => "index_users_on_auth_source_id"
@@ -752,8 +756,11 @@ ActiveRecord::Schema.define(:version => 20140218075946) do
     t.datetime "updated_at"
     t.integer  "project_id"
     t.string   "classified"
+    t.string   "image_date"
+    t.string   "url"
   end
 
+  add_index "weibos", ["classified", "image_date", "url"], :name => "index_weibos_on_classified_and_image_date_and_url"
   add_index "weibos", ["project_id", "classified"], :name => "index_weibos_on_project_id_and_classified"
 
   create_table "weixin_classifieds", :force => true do |t|
@@ -776,7 +783,11 @@ ActiveRecord::Schema.define(:version => 20140218075946) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "classified"
+    t.string   "image_date"
+    t.string   "url"
   end
+
+  add_index "weixins", ["classified", "image_date", "url"], :name => "index_weixins_on_classified_and_image_date_and_url"
 
   create_table "wiki_content_versions", :force => true do |t|
     t.integer  "wiki_content_id",                                       :null => false

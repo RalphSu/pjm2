@@ -16,7 +16,7 @@ module BlogHelper
 	end
 
 	def find_blog_for_project(project, category)
-		Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc',:conditions=>{:project_id => project, :classified => category})
+		Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>{:project_id => project, :classified => category})
 	end
 
 	def blog_option_for_select(selected)
@@ -105,9 +105,11 @@ module BlogHelper
 		fields.each do |f|
 			if f.blog_classifieds.template.column_name == '日期'
 				date = f
+				nr.image_date = date.body
 			end
 			if f.blog_classifieds.template.column_name == '链接' 
 				url = f
+				nr.url = url.body
 			end
 		end
 		Rails.logger.info "-------- check duplicate ------- date: #{date}, url:#{url}.\n Given fields are: #{fields}"
@@ -116,29 +118,33 @@ module BlogHelper
 			return nil
 		end
 
-		find_fields = BlogField.find(:all, :conditions=>["body in (?, ?)", "#{date.body}", "#{url.body}"])
+		duplicated = Blog.find(:all, :conditions=>{:classified => nr.classified, :image_date => nr.image_date, :url => nr.url})
 
-		duplicated = []
-		find_fields.each do |ff|
-			r = ff.blogs
-			unless r.blank?
-				date_match = false
-				url_match = false
-				r.blog_fields.each do |f|
-					if f.blog_classifieds.template.column_name == '日期' and f.body == date.body
-						date_match = true
-					end
-					if f.blog_classifieds.template.column_name == '链接' and f.body == url.body
-						url_match = true
-					end
-				end
-				if date_match && url_match
-					duplicated << r
-				end
-			end
-		end
+		# find_fields = BlogField.find(:all, :conditions=>["body in (?, ?)", "#{date.body}", "#{url.body}"])
 
-		return duplicated
+		# duplicated = []
+		# find_fields.each do |ff|
+		# 	r = ff.blogs
+		# 	unless r.blank?
+		# 		if r.classified == nr.classified
+		# 			date_match = false
+		# 			url_match = false
+		# 			r.blog_fields.each do |f|
+		# 				if f.blog_classifieds.template.column_name == '日期' and f.body == date.body
+		# 					date_match = true
+		# 				end
+		# 				if f.blog_classifieds.template.column_name == '链接' and f.body == url.body
+		# 					url_match = true
+		# 				end
+		# 			end
+		# 			if date_match && url_match
+		# 				duplicated << r
+		# 			end
+		# 		end
+		# 	end
+		# end
+
+		# return duplicated
 	end
 
 

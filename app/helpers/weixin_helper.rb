@@ -17,7 +17,7 @@ module WeixinHelper
 	end
 
 	def find_weixin_for_project(project, category)
-		Weixin.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc',:conditions=>{:projects_id => project, :classified => category})
+		Weixin.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>{:projects_id => project, :classified => category})
 	end
 
 	def weixin_option_for_select(selected)
@@ -106,9 +106,11 @@ module WeixinHelper
 		fields.each do |f|
 			if f.weixin_classifieds.template.column_name == '日期'
 				date = f
+				nr.image_date = date.body
 			end
 			if f.weixin_classifieds.template.column_name == '链接' 
 				url = f
+				nr.url = url.body
 			end
 		end
 		Rails.logger.info "-------- check duplicate ------- date: #{date}, url:#{url}.\n Given fields are: #{fields}"
@@ -117,29 +119,33 @@ module WeixinHelper
 			return nil
 		end
 
-		find_fields = WeixinField.find(:all, :conditions=>["body in (?, ?)", "#{date.body}", "#{url.body}"])
+		duplicated = Weixin.find(:all, :conditions=>{:classified => nr.classified, :image_date => nr.image_date, :url => nr.url})
 
-		duplicated = []
-		find_fields.each do |ff|
-			r = ff.weixins
-			unless r.blank?
-				date_match = false
-				url_match = false
-				r.weixin_fields.each do |f|
-					if f.weixin_classifieds.template.column_name == '日期' and f.body == date.body
-						date_match = true
-					end
-					if f.weixin_classifieds.template.column_name == '链接' and f.body == url.body
-						url_match = true
-					end
-				end
-				if date_match && url_match
-					duplicated << r
-				end
-			end
-		end
+		# find_fields = WeixinField.find(:all, :conditions=>["body in (?, ?)", "#{date.body}", "#{url.body}"])
 
-		return duplicated
+		# duplicated = []
+		# find_fields.each do |ff|
+		# 	r = ff.weixins
+		# 	unless r.blank?
+		# 		if r.classified == nr.classified
+		# 			date_match = false
+		# 			url_match = false
+		# 			r.weixin_fields.each do |f|
+		# 				if f.weixin_classifieds.template.column_name == '日期' and f.body == date.body
+		# 					date_match = true
+		# 				end
+		# 				if f.weixin_classifieds.template.column_name == '链接' and f.body == url.body
+		# 					url_match = true
+		# 				end
+		# 			end
+		# 			if date_match && url_match
+		# 				duplicated << r
+		# 			end
+		# 		end
+		# 	end
+		# end
+
+		# return duplicated
 	end
 
 end
