@@ -29,6 +29,7 @@ module ContentsHelper
 		@@file_class = Rjb::import('java.io.FileOutputStream')
 		@@file_in_class = Rjb::import('java.io.FileInputStream')
 		@@string_class = Rjb::import('java.lang.String')
+		@@double_class = Rjb::import('java.lang.Double')
 		@@workbook_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFWorkbook')
 		@@cell_style_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFCellStyle')
 		@@font_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFFont')
@@ -191,7 +192,7 @@ module ContentsHelper
 						end
 					end
 				else
-					value = cell.getNumericCellValue()
+					value = @@double_class.new(cell.getNumericCellValue()).longValue()
 				end
 			when cell_type == cell.CELL_TYPE_STRING
 				value = cell.getRichStringCellValue().getString()

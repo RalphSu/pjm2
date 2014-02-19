@@ -52,7 +52,7 @@
 				<% else %>
 				<td title=<%= weixin_fields[f.id].body %>>
 					<%if weixin_fields[f.id].file_path.blank?%>
-							<p><%= weixin_fields[f.id].body %></p>
+							<p><%= check_number weixin_fields[f.id].body %></p>
 							<%else%>
 							<%=tag_icon(true,weixin_fields[f.id].file_path)%><%= weixin_fields[f.id].body %>
 							<%end%>

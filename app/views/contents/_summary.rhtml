@@ -60,7 +60,7 @@
 				<% else %>
 					<td title=<%= summary_fields[f.id].body %>>
 							<%if summary_fields[f.id].file_path.blank?%>
-							<p><%= summary_fields[f.id].body %></p>
+							<p><%= check_number summary_fields[f.id].body %></p>
 							<%else%>
 							<%=tag_icon(true,summary_fields[f.id].file_path)%><%= summary_fields[f.id].body %>
 							<%end%>

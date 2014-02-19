@@ -54,7 +54,7 @@
 			<% else %>
 			<td title=<%= blog_fields[f.id].body %>>
 				<%if blog_fields[f.id].file_path.blank?%>
-					<p><%= blog_fields[f.id].body %></p>
+					<p><%= check_number blog_fields[f.id].body %></p>
 				<%else%>
 					<%=tag_icon(true,blog_fields[f.id].file_path)%><%= blog_fields[f.id].body %>
 				<%end%>
