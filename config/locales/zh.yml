@@ -832,6 +832,8 @@ zh:
   button_check_all: 全选
   button_uncheck_all: 清除
   button_delete: 删除
+  button_deleteselected: 删除选中
+  button_deleteall: 全部删除
   button_create: 创建
   button_create_and_continue: 创建并继续
   button_test: 测试

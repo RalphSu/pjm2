@@ -139,6 +139,37 @@ class NewsReleaseController < ApplicationController
 		end
 	end
 
+
+	def destory_allrelease
+		init(params)
+		#Rails.logger.info "delete nr id  #{ids}"
+		msg = l(:label_reocrd_delete_success)
+		fail_msg = nil
+		begin
+			NewsRelease.destroy_all({:classified =>@category, :project_id=>@project})
+			_save_news_event("批量删除新闻数据","批量删除新闻数据", "批量删除新闻数据")
+		rescue Exception => e 
+				Rails.logger.error "delete record failed : #{e.inspect}!!!"
+				fail_msg =  l(:label_reocrd_delete_fail)
+		end
+		if fail_msg.blank?
+			respond_to do |format|
+			  format.html {
+				flash[:notice] = msg
+				redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		else
+			respond_to do |format|
+			  format.html {
+				flash[:error] = fail_msg
+				redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		end
+		
+	end
+
 	def index
 		init(params)
 	end

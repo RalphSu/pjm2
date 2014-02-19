@@ -138,6 +138,39 @@ class ForumController < ApplicationController
 		
 	end
 
+
+
+	def destroy_allforum
+		init(params)
+		#Rails.logger.info "delete nr id  #{ids}"
+		msg = l(:label_reocrd_delete_success)
+		fail_msg = nil
+		begin
+			Forum.destroy_all({:classified =>@category, :project_id=>@project})
+			_save_news_event("批量删除论坛数据","批量删除论坛数据", "批量删除论坛数据")
+		rescue Exception => e 
+				Rails.logger.error "delete record failed : #{e.inspect}!!!"
+				fail_msg =  l(:label_reocrd_delete_fail)
+		end
+		if fail_msg.blank?
+			respond_to do |format|
+			  format.html {
+				flash[:notice] = msg
+				redirect_to({:controller => 'forum', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		else
+			respond_to do |format|
+			  format.html {
+				flash[:error] = fail_msg
+				redirect_to({:controller => 'forum', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		end
+		
+		
+	end
+
 	def index
 		init(params)
 	end
