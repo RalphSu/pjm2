@@ -48,7 +48,7 @@ class ReportTaskController < ApplicationController
       task.report_end_time=end_time
       _save_news_event("新增日报任务", "新增日报任务","新增日报任务")
     elsif type==ReportTask::TYPE_WEEKLY
-       task.report_start_time=Time.parse(start_time).beginning_of_week()
+       task.report_start_time=Time.parse(start_time)
        task.report_end_time=task.report_start_time+7.day
        _save_news_event("新增周报任务", "新增周报任务","新增周报任务")
     elsif type==ReportTask::TYPE_SUMMARY

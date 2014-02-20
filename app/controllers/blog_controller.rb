@@ -1,3 +1,4 @@
+#-- encoding: UTF-8
 class BlogController < ApplicationController	
 	include BlogHelper
 	include ContentsHelper
@@ -108,6 +109,7 @@ class BlogController < ApplicationController
 			end
 			begin
 				Blog.destroy(ids_int)
+				_save_news_event("删除博客数据","删除博客数据", "删除博客数据")
 			rescue Exception => e 
 				Rails.logger.error "delete record failed : #{e.inspect}!!!"
 				fail_msg =  l(:label_reocrd_delete_fail)
@@ -128,6 +130,37 @@ class BlogController < ApplicationController
 			  }
 			end
 		end
+	end
+
+
+	def destory_allblog
+		init(params)
+		#Rails.logger.info "delete nr id  #{ids}"
+		msg = l(:label_reocrd_delete_success)
+		fail_msg = nil
+		begin
+			Blog.destroy_all({:classified =>@category, :project_id=>@project})
+			_save_news_event("批量删除博客数据","批量删除博客数据", "批量删除博客数据")
+		rescue Exception => e 
+				Rails.logger.error "delete record failed : #{e.inspect}!!!"
+				fail_msg =  l(:label_reocrd_delete_fail)
+		end
+		if fail_msg.blank?
+			respond_to do |format|
+			  format.html {
+				flash[:notice] = msg
+				redirect_to({:controller => 'blog', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		else
+			respond_to do |format|
+			  format.html {
+				flash[:error] = fail_msg
+				redirect_to({:controller => 'blog', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		end
+		
 	end
 
 	def index

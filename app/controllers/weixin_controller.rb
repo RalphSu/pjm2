@@ -131,6 +131,37 @@ class WeixinController < ApplicationController
 		end
 	end
 
+
+	def destory_allweixin
+		init(params)
+		#Rails.logger.info "delete nr id  #{ids}"
+		msg = l(:label_reocrd_delete_success)
+		fail_msg = nil
+		begin
+			Weixin.destroy_all({:classified =>@category, :project_id=>@project})
+			_save_news_event("批量删除微信数据","批量删除微信数据", "批量删除微信数据")
+		rescue Exception => e 
+				Rails.logger.error "delete record failed : #{e.inspect}!!!"
+				fail_msg =  l(:label_reocrd_delete_fail)
+		end
+		if fail_msg.blank?
+			respond_to do |format|
+			  format.html {
+				flash[:notice] = msg
+				redirect_to({:controller => 'weixin', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		else
+			respond_to do |format|
+			  format.html {
+				flash[:error] = fail_msg
+				redirect_to({:controller => 'weixin', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		end
+		
+	end
+
 	def import_single_image
 		init(params)
 		weixin = Weixin.find(params[:weixin_id])

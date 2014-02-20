@@ -502,6 +502,7 @@ ActiveRecord::Schema.define(:version => 20140219142153) do
     t.string   "keywords_except"
     t.date     "end_time"
     t.date     "start_time"
+    t.string   "pj_keywords"
   end
 
   add_index "projects", ["lft"], :name => "index_projects_on_lft"
@@ -699,8 +700,8 @@ ActiveRecord::Schema.define(:version => 20140219142153) do
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
     t.string   "phone_number"
-    t.string   "user_type"
     t.boolean  "client"
+    t.string   "user_type"
   end
 
   add_index "users", ["auth_source_id"], :name => "index_users_on_auth_source_id"

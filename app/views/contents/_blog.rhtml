@@ -9,6 +9,14 @@
 	<% if User.current.employee?%>
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_blog_new)%></label></a>
 	<%end%>
+	<% if User.current.employee? and  not @category.blank? %>
+	    <%= link_to l(:button_deleteall), {:controller => 'blog', :action => 'destroy_allblog',:project_id=>@p.identifier,:category=> @category},
+                :confirm => l(:text_are_you_sure),
+                :method => :post,
+                :class => 'delete',
+                :title => l(:button_deleteall) %>
+	<%end%>
+
 	<% form_tag(url_for(controller: 'blog', action: 'destroy_blog',:project_id=>@p.identifier) , :method => :post ) do %>
 	<% if User.current.employee?%>
 	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_delete)%></button>
@@ -126,17 +134,28 @@ jQuery(document).ready(function($) {
 
     $('img').hover(function(e){
    		
+  	       		
   	    xOffset = 10;
     		yOffset = 30;
-    	   var imagepath=this.alt;
-    	  var  input ="/public";
-    	   if (imagepath.substring(0, input.length) === input){
-    	   	imagepath=imagepath.substring(input.length,this.alt.length);
+    	   var imagepaths=this.alt;
+    	   var imagepatharray = imagepaths.split(';');
+    	   if(imagepatharray.length==0) return;
+    	    var screenshotstring= "<p id='screenshot'>"
+    	   for(i=0;i<imagepatharray.length;i++){
+    	   	 var  input ="/public";
+    	   	 var imagepath=imagepatharray[i]; 
+    	   	 if (imagepath.substring(0, input.length) === input){
+    	   		imagepath=imagepath.substring(input.length,this.alt.length);
+    	   	}
+    	   	screenshotstring+="<img src='"+imagepath+"' />";
     	   }
+    	   screenshotstring+="</p>"
+    	 
+    	   
 
 
 
-        $("body").append("<p id='screenshot'><img src='" + imagepath + "'  />" + "</p>");
+        $("body").append(screenshotstring);
         $("#screenshot")
    			.css("top", (e.pageY - xOffset) + "px")
    			.css("left", (e.pageX + yOffset) + "px")
