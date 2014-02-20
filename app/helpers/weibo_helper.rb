@@ -126,7 +126,7 @@ module WeiboHelper
 				nr.url = url.body
 			end
 		end
-		Rails.logger.info "-------- check duplicate ------- date: #{date.body}, url:#{url.body}.\n"
+		Rails.logger.info "-------- check duplicate ------- date: #{date}, url:#{url}.\n"
 		# check has date and url, then procceed
 		if date.blank? or url.blank?
 			return nil
