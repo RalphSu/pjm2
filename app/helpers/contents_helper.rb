@@ -391,7 +391,7 @@ module ContentsHelper
 				end
 				img_meta.paths.concat(paths)
 			end
-
+			Rails.logger.info "Loaed image meta of : #{image_metas.size}"
 			image_metas
 		end
 
