@@ -377,17 +377,19 @@ module ContentsHelper
 
 				# collect with merged
 				date_hash = image_meta_merged_hash[url]
-				if date_hash.blank?
+				if date_hash.nil?
 					date_hash = {}
 					image_meta_merged_hash[url] = date_hash
 				end
 				img_meta = date_hash[date]
-				if img_meta.blank?
+				if img_meta.nil?
 					img_meta = ImageMeta.new()
 					img_meta.url = url
 					img_meta.date = date
 					img_meta.paths = []
+
 					image_metas << img_meta
+					date_hash[date] = img_meta
 				end
 				img_meta.paths.concat(paths)
 			end
