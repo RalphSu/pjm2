@@ -102,17 +102,22 @@ class WeixinController < ApplicationController
 		msg = l(:label_reocrd_delete_success)
 		fail_msg = nil
 		unless ids.blank?
-			ids_int = []
-			ids.each do | id |
-				ids_int << id.to_i
+			ids.each do |e|
+				begin
+					weixin = Weixin.find(:first, :conditions=>{:id=>e})
+					if not weixin.blank?
+						existed_image = Image.find(:first, :conditions=>{:url => weixin.url, :image_date => weixin.image_date})
+						if not existed_image.blank?
+							Image.destroy(existed_image.id)
+						end
+					Weixin.destroy(e)
+					end
+				rescue Exception => e 
+					Rails.logger.error "delete record failed : #{e.inspect}!!!"
+					fail_msg =  l(:label_reocrd_delete_fail)
+				end
 			end
-			begin
-				Weixin.destroy(ids_int)
-				_save_news_event("删除微信数据","删除微信数据", "删除微信数据")
-			rescue Exception => e 
-				Rails.logger.error "delete record failed : #{e.inspect}!!!"
-				fail_msg =  l(:label_reocrd_delete_fail)
-			end
+		_save_news_event("删除微信数据","删除微信数据", "删除微信数据")
 		end
 		if fail_msg.blank?
 			respond_to do |format|
@@ -137,9 +142,17 @@ class WeixinController < ApplicationController
 		#Rails.logger.info "delete nr id  #{ids}"
 		msg = l(:label_reocrd_delete_success)
 		fail_msg = nil
+		weixins=Weixin.find(:all, :conditions => {:classified =>@category, :projects_id=>@project})
 		begin
-			Weixin.destroy_all({:classified =>@category, :project_id=>@project})
-			_save_news_event("批量删除微信数据","批量删除微信数据", "批量删除微信数据")
+			weixins.each do |f|
+				existed_image = Image.find(:first, :conditions=>{:url => f.url, :image_date => f.image_date})
+				if not existed_image.blank?
+					Image.destroy(existed_image.id)
+				end
+				Weixin.destroy(f.id)
+
+			end
+		_save_news_event("批量删除微信数据","批量删除微信数据", "批量删除微信数据")
 		rescue Exception => e 
 				Rails.logger.error "delete record failed : #{e.inspect}!!!"
 				fail_msg =  l(:label_reocrd_delete_fail)

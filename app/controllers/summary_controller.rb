@@ -101,17 +101,24 @@ class SummaryController < ApplicationController
 		msg = l(:label_reocrd_delete_success)
 		fail_msg = nil
 		unless ids.blank?
-			ids_int = []
-			ids.each do | id |
-				ids_int << id.to_i
+	
+			ids.each do |e|
+				begin
+					summary = Summary.find(:first, :conditions=>{:id=>e})
+					if not summary.blank?
+						existed_image = Image.find(:first, :conditions=>{:url => summary.url, :image_date => summary.image_date})
+						if not existed_image.blank?
+							Image.destroy(existed_image.id)
+						end
+					Summary.destroy(e)
+					end
+				rescue Exception => e 
+					Rails.logger.error "delete record failed : #{e.inspect}!!!"
+					fail_msg =  l(:label_reocrd_delete_fail)
+				end
+			
 			end
-			begin
-				Summary.destroy(ids_int)
-				_save_news_event("删除汇总数据","删除汇总数据", "删除汇总数据")
-			rescue Exception => e 
-				Rails.logger.error "delete record failed : #{e.inspect}!!!"
-				fail_msg =  l(:label_reocrd_delete_fail)
-			end
+			_save_news_event("删除汇总数据","删除汇总数据", "删除汇总数据")
 		end
 		if fail_msg.blank?
 			respond_to do |format|
@@ -136,9 +143,17 @@ class SummaryController < ApplicationController
 		#Rails.logger.info "delete nr id  #{ids}"
 		msg = l(:label_reocrd_delete_success)
 		fail_msg = nil
+		summaries=Summary.find(:all, :conditions => {:classified =>@category, :projects_id=>@project})
 		begin
-			Summary.destroy_all({:classified =>@category, :project_id=>@project})
-			_save_news_event("批量删除汇总数据","批量删除汇总数据", "批量删除汇总数据")
+			summaries.each do |f|
+				existed_image = Image.find(:first, :conditions=>{:url => f.url, :image_date => f.image_date})
+				if not existed_image.blank?
+					Image.destroy(existed_image.id)
+				end
+				Summary.destroy(f.id)
+
+			end
+		_save_news_event("批量删除汇总数据","批量删除汇总数据", "批量删除汇总数据")
 		rescue Exception => e 
 				Rails.logger.error "delete record failed : #{e.inspect}!!!"
 				fail_msg =  l(:label_reocrd_delete_fail)

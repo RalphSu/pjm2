@@ -30,7 +30,7 @@ class WeiboController < ApplicationController
 
 		#save entity
 	     weibo= Weibo.create! :classified => "微访谈",
-                                 :project => @project
+                                 :project => @project,:image_date =>params[:wei_date].to_s,:url=>params[:hyperlink][:hyperlink]
            weibo.save!
 
            
@@ -95,7 +95,7 @@ class WeiboController < ApplicationController
 
 		#save entity
 	     weibo= Weibo.create! :classified => "微话题",
-                                 :project => @project
+                                 :project => @project,:image_date =>params[:wei_date].to_s,:url=>params[:hyperlink][:hyperlink]
            weibo.save!
 
            
@@ -177,7 +177,7 @@ class WeiboController < ApplicationController
 
 		#save entity
 	     weibo= Weibo.create! :classified => "微活动",
-                                 :project => @project
+                                 :project => @project,:image_date =>params[:wei_date].to_s,:url=>params[:hyperlink][:hyperlink]
            weibo.save!
 
            
@@ -313,17 +313,22 @@ class WeiboController < ApplicationController
 		msg = l(:label_reocrd_delete_success)
 		fail_msg = nil
 		unless ids.blank?
-			ids_int = []
-			ids.each do | id |
-				ids_int << id.to_i
+			ids.each do |e|
+				begin
+					weibo = Weibo.find(:first, :conditions=>{:id=>e})
+					if not weibo.blank?
+						existed_image = Image.find(:first, :conditions=>{:url => weibo.url, :image_date => weibo.image_date})
+						if not existed_image.blank?
+							Image.destroy(existed_image.id)
+						end
+					Weibo.destroy(e)
+					end
+				rescue Exception => e 
+					Rails.logger.error "delete record failed : #{e.inspect}!!!"
+					fail_msg =  l(:label_reocrd_delete_fail)
+				end
 			end
-			begin
-				Weibo.destroy(ids_int)
-				_save_news_event("删除微博数据","删除微博数据", "删除微博数据")
-			rescue Exception => e 
-				Rails.logger.error "delete record failed : #{e.inspect}!!!"
-				fail_msg =  l(:label_reocrd_delete_fail)
-			end
+			_save_news_event("删除微博数据","删除微博数据", "删除微博数据")
 		end
 		if fail_msg.blank?
 			respond_to do |format|
@@ -348,8 +353,17 @@ class WeiboController < ApplicationController
 		#Rails.logger.info "delete nr id  #{ids}"
 		msg = l(:label_reocrd_delete_success)
 		fail_msg = nil
+		weibos=Weibo.find(:all, :conditions => {:classified =>@category, :project_id=>@project})
 		begin
-			weibos=Weibo.destroy_all({:classified =>@category, :project_id=>@project})
+			weibos.each do |f|
+				existed_image = Image.find(:first, :conditions=>{:url => f.url, :image_date => f.image_date})
+				if not existed_image.blank?
+					Image.destroy(existed_image.id)
+				end
+				Weibo.destroy(f.id)
+
+			end
+			
 			_save_news_event("批量删除微博数据","批量删除微博数据", "批量删除微博数据")
 		rescue Exception => e 
 				Rails.logger.error "delete record failed : #{e.inspect}!!!"

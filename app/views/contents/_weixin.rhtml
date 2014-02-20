@@ -34,7 +34,10 @@
 			<th><%= f.template.column_name %></th> 
 		<% end %>
 		<% if User.current.employee?%>
-		<th class="checkboxforremove"></th> <!-- Place holder column for actions -->
+		<th class="checkboxforremove">
+			  <%= link_to_function(image_tag('toggle_check.png'), "toggleCheckboxesBySelector('input.nr')",
+                                                            :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}") %>
+		</th> <!-- Place holder column for actions -->
 		<%end%>
 	</thread>
 	<tbody>

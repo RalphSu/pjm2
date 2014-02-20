@@ -103,17 +103,22 @@ class BlogController < ApplicationController
 		end
 
 		unless ids.blank?
-			ids_int = []
-			ids.each do | id |
-				ids_int << id.to_i
+			ids.each do |e|
+				begin
+					blog = Blog.find(:first, :conditions=>{:id=>e})
+					if not blog.blank?
+						existed_image = Image.find(:first, :conditions=>{:url => blog.url, :image_date => blog.image_date})
+						if not existed_image.blank?
+							Image.destroy(existed_image.id)
+						end
+					Blog.destroy(e)
+					end
+				rescue Exception => e 
+					Rails.logger.error "delete record failed : #{e.inspect}!!!"
+					fail_msg =  l(:label_reocrd_delete_fail)
+				end
 			end
-			begin
-				Blog.destroy(ids_int)
-				_save_news_event("删除博客数据","删除博客数据", "删除博客数据")
-			rescue Exception => e 
-				Rails.logger.error "delete record failed : #{e.inspect}!!!"
-				fail_msg =  l(:label_reocrd_delete_fail)
-			end
+			_save_news_event("删除博客数据","删除博客数据", "删除博客数据")
 		end
 		if fail_msg.blank?
 			respond_to do |format|
@@ -133,18 +138,27 @@ class BlogController < ApplicationController
 	end
 
 
-	def destory_allblog
+	def destroy_allblog
 		init(params)
 		#Rails.logger.info "delete nr id  #{ids}"
 		msg = l(:label_reocrd_delete_success)
 		fail_msg = nil
+		blogs=Blog.find(:all, :conditions => {:classified =>@category, :project_id=>@project})
 		begin
-			Blog.destroy_all({:classified =>@category, :project_id=>@project})
-			_save_news_event("批量删除博客数据","批量删除博客数据", "批量删除博客数据")
+			blogs.each do |f|
+				existed_image = Image.find(:first, :conditions=>{:url => f.url, :image_date => f.image_date})
+				if not existed_image.blank?
+					Image.destroy(existed_image.id)
+				end
+				Blog.destroy(f.id)
+
+			end
+		_save_news_event("批量删除博客数据","批量删除博客数据", "批量删除博客数据")
 		rescue Exception => e 
 				Rails.logger.error "delete record failed : #{e.inspect}!!!"
 				fail_msg =  l(:label_reocrd_delete_fail)
 		end
+		
 		if fail_msg.blank?
 			respond_to do |format|
 			  format.html {

@@ -110,17 +110,24 @@ class NewsReleaseController < ApplicationController
 		msg = l(:label_reocrd_delete_success)
 		fail_msg = nil
 		unless ids.blank?
-			ids_int = []
-			ids.each do | id |
-				ids_int << id.to_i
+
+			ids.each do |e|
+				begin
+					release = NewsRelease.find(:first, :conditions=>{:id=>e})
+					if not release.blank?
+						existed_image = Image.find(:first, :conditions=>{:url => release.url, :image_date => release.image_date})
+						if not existed_image.blank?
+							Image.destroy(existed_image.id)
+						end
+					NewsRelease.destroy(e)
+					end
+				rescue Exception => e 
+					Rails.logger.error "delete record failed : #{e.inspect}!!!"
+					fail_msg =  l(:label_reocrd_delete_fail)
+				end
+			
 			end
-			begin
-				NewsRelease.destroy(ids_int)
-				_save_news_event("删除新闻数据","删除新闻数据", "删除新闻数据")
-			rescue Exception => e 
-				Rails.logger.error "delete record failed : #{e.inspect}!!!"
-				fail_msg =  l(:label_reocrd_delete_fail)
-			end
+			_save_news_event("删除新闻数据","删除新闻数据", "删除新闻数据")
 		end
 		if fail_msg.blank?
 			respond_to do |format|
@@ -145,9 +152,17 @@ class NewsReleaseController < ApplicationController
 		#Rails.logger.info "delete nr id  #{ids}"
 		msg = l(:label_reocrd_delete_success)
 		fail_msg = nil
+		releases=NewsRelease.find(:all, :conditions => {:classified =>@category, :project_id=>@project})
 		begin
-			NewsRelease.destroy_all({:classified =>@category, :project_id=>@project})
-			_save_news_event("批量删除新闻数据","批量删除新闻数据", "批量删除新闻数据")
+			releases.each do |f|
+				existed_image = Image.find(:first, :conditions=>{:url => f.url, :image_date => f.image_date})
+				if not existed_image.blank?
+					Image.destroy(existed_image.id)
+				end
+				NewsRelease.destroy(f.id)
+
+			end
+		_save_news_event("批量删除新闻数据","批量删除新闻数据", "批量删除新闻数据")
 		rescue Exception => e 
 				Rails.logger.error "delete record failed : #{e.inspect}!!!"
 				fail_msg =  l(:label_reocrd_delete_fail)
