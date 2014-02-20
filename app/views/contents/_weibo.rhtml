@@ -59,7 +59,7 @@
 				<% else %>
 				<td title=<%= weibo_fields[f.id].body %>>
 					<%if weibo_fields[f.id].file_path.blank?%>
-					<p><%= weibo_fields[f.id].body %></p>
+					<p><%= check_number weibo_fields[f.id].body %></p>
 					<%else%>
 					<%=tag_icon(true,weibo_fields[f.id].file_path)%><%= weibo_fields[f.id].body %>
 					<%end%>

@@ -111,7 +111,7 @@ module ForumHelper
 				nr.url = url.body
 			end
 		end
-		Rails.logger.info "-------- check duplicate ------- date: #{date.inspect}, url:#{url.inspect}.\n Given fields are: #{fields}"
+		Rails.logger.info "-------- check duplicate ------- date: #{date}, url:#{url}.\n Given fields are: #{fields}"
 		# check has date and url, then procceed
 		if date.nil? or url.nil?
 			return nil

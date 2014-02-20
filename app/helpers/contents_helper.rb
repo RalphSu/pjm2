@@ -29,6 +29,7 @@ module ContentsHelper
 		@@file_class = Rjb::import('java.io.FileOutputStream')
 		@@file_in_class = Rjb::import('java.io.FileInputStream')
 		@@string_class = Rjb::import('java.lang.String')
+		@@double_class = Rjb::import('java.lang.Double')
 		@@workbook_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFWorkbook')
 		@@cell_style_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFCellStyle')
 		@@font_class = Rjb::import('org.apache.poi.xssf.usermodel.XSSFFont')
@@ -191,7 +192,7 @@ module ContentsHelper
 						end
 					end
 				else
-					value = cell.getNumericCellValue()
+					value = @@double_class.new(cell.getNumericCellValue()).longValue()
 				end
 			when cell_type == cell.CELL_TYPE_STRING
 				value = cell.getRichStringCellValue().getString()
@@ -357,28 +358,43 @@ module ContentsHelper
 			url_col = head_array['文章链接'].to_i
 			date_col = head_array['日期'].to_i
 			Rails.logger.info "url_col : #{url_col}, date_col : #{date_col}"
+
+			# a hash to do merge between images of same url & date in current file
+			# url -> {date - > img_meta}
+			image_meta_merged_hash = {}
+
 			picture_path.each do |anchor, paths|
 
 				row = sheet.getRow(anchor.getRow())
 				if row.nil?
 					raise "在 : #{anchor.getRow()}, col: #{anchor.getCol()} 找不到对应的行，请注意图片的位置必须被单元格完全包含！"
 				end
-				# FIXME :: why enforce title column just one column before the image??
-				## title
+				# url
 				cell = row.getCell(url_col)
 				url = validate_get_cell_string(cell, anchor.getRow(), url_col)
-
 				## date
 				date_cell = row.getCell(date_col)
 				date = validate_get_cell_date(date_cell)
 
-				img_meta = ImageMeta.new()
-				img_meta.url = url
-				img_meta.paths = paths
-				img_meta.date = date
-				image_metas << img_meta
-			end
+				# collect with merged
+				date_hash = image_meta_merged_hash[url]
+				if date_hash.nil?
+					date_hash = {}
+					image_meta_merged_hash[url] = date_hash
+				end
+				img_meta = date_hash[date]
+				if img_meta.nil?
+					img_meta = ImageMeta.new()
+					img_meta.url = url
+					img_meta.date = date
+					img_meta.paths = []
 
+					image_metas << img_meta
+					date_hash[date] = img_meta
+				end
+				img_meta.paths.concat(paths)
+			end
+			Rails.logger.info "Loaed image meta of : #{image_metas.size}"
 			image_metas
 		end
 
@@ -554,6 +570,13 @@ module ContentsHelper
 		@date
 	end
 
+	class Anchor
+		attr_accessor :row, :col
+		@row
+		@col
+	end
+
+
 	def save_images(uploadImages)
 		uploadImages.each do |m|
 			existed_image = Image.find(:first, :conditions=>{:url => m.url, :image_date => m.date})
@@ -565,9 +588,11 @@ module ContentsHelper
 				img.image_date = m.date
 				img.save!
 			else
+				Rails.logger.info "Find existing image with url : #{m.url}, image_date : #{m.date}, ignore this image."
+				# ignore the one  with existing 
 				# find a existing, just appending the path
-				existed_image.file_path = [ existed_image.file_path, m.paths.join(';')].join(';')
-				existed_image.save!
+				#existed_image.file_path = [ existed_image.file_path, m.paths.join(';')].join(';')
+				#existed_image.save!
 			end
 		end
 	end

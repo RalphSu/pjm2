@@ -60,7 +60,7 @@
 			<td title=<%= release_fields[f.id].body %>>
 				
 				<%if release_fields[f.id].file_path.blank?%>
-					<p><%= release_fields[f.id].body %></p>
+					<p><%= check_number release_fields[f.id].body %></p>
 				<%else%>
 					<%=tag_icon(true,release_fields[f.id].file_path)%><%= release_fields[f.id].body %>
 				<%end%>

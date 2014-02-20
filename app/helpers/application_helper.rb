@@ -33,6 +33,16 @@ module ApplicationHelper
     User.current.allowed_to?({:controller => controller, :action => action}, @project)
   end
 
+  # check a string value, return a integer when it's a numeric
+  def check_number(value)
+    begin
+      f = Float(value)
+      return f.to_i
+    rescue
+      return value
+    end
+  end
+
   # Display a link if user is authorized
   #
   # @param [String] name Anchor text (passed to link_to)
