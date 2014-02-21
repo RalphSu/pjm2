@@ -57,14 +57,14 @@ class ReportNotifier < ActionMailer::Base
 		url = "#{baseurl}/report_task/tasks/#{task.project.identifier}/#{task.id}/download?filename=#{encode(task.report_path)}"
 		unless recips.blank?
 			# generate mail
-			subject task.project.name + ' 项目报告发布 : (' + task.report_start_time + ' ' + task.task_type + ')',
-			recipients [recips]
-			from 'no-reply@keyi.com'
-			sent_on Time.now
+			# subject task.project.name + ' 项目报告发布 : (' + task.report_start_time + ' ' + task.task_type + ')',
+			# recipients [recips]
+			# from 'no-reply@keyi.com'
+			# sent_on Time.now
 			
-			unless task.task_type == '结案报告'
-				attachment :content_type=>"application/xlsx", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" +file_name)
-			end
+			# unless task.task_type == '结案报告'
+			# 	attachment :content_type=>"application/xlsx", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" +file_name)
+			# end
 		end
 	end
 
