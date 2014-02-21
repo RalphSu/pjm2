@@ -58,7 +58,7 @@ class ReportNotifier < ActionMailer::Base
 		unless recips.blank?
 			# generate mail
 			subject task.project.name + ' 项目报告发布 : (' + task.report_start_time + ' ' + task.task_type + ')',
-			recipients recips
+			recipients [recips]
 			from 'no-reply@keyi.com'
 			sent_on Time.now
 			
