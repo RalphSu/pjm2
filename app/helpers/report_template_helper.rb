@@ -143,6 +143,69 @@ module ReportTemplateHelper
 		end
 
 
+		category = '微信类模板'
+		sub_classifieds = []
+		WeixinClassified.all(:select=> "DISTINCT(classified)").each do |n|
+			skip=false
+			if project_tree_map.has_key?(category)
+				project_tree_map[category].each do |f|
+				 	if f==n.classified
+						Rails.logger.info " project_tree_map category:#{category},classified:#{n.classified} f: #{f} !"
+				 		skip=true
+				 	end
+
+				end
+			end	
+
+			if not skip
+				item = {}
+				item[:title] = n.classified
+				value ={}
+				value[:category] = "#{category}"
+				value[:classified] = "#{n.classified}"
+				item[:value] = value
+				sub_classifieds << item
+			end
+		end
+		if sub_classifieds.length>0
+			tree = {
+				:title => category,
+				:children => sub_classifieds
+			}
+			tree_data << tree
+		end
+
+		category = '汇总数据类模板'
+		sub_classifieds = []
+		SummaryClassified.all(:select=> "DISTINCT(classified)").each do |n|
+			skip=false
+			if project_tree_map.has_key?(category)
+				project_tree_map[category].each do |f|
+				 	if f==n.classified
+						Rails.logger.info " project_tree_map category:#{category},classified:#{n.classified} f: #{f} !"
+				 		skip=true
+				 	end
+
+				end
+			end	
+
+			if not skip
+				item = {}
+				item[:title] = n.classified
+				value ={}
+				value[:category] = "#{category}"
+				value[:classified] = "#{n.classified}"
+				item[:value] = value
+				sub_classifieds << item
+			end
+		end
+		if sub_classifieds.length>0
+			tree = {
+				:title => category,
+				:children => sub_classifieds
+			}
+			tree_data << tree
+		end
 
 		return tree_data
 	end
