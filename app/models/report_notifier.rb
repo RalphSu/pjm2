@@ -61,7 +61,7 @@ class ReportNotifier < ActionMailer::Base
 			recipients recips
 			from 'no-reply@keyi.com'
 			sent_on Time.now
-			body  { :task => task, :url=> }
+			body  { :task => task, :url=> url}
 			unless task.task_type == '结案报告'
 				attachment :content_type=>"application/xlsx", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" +file_name)
 			end
