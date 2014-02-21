@@ -193,18 +193,25 @@ class WeixinController < ApplicationController
 			image_field.weixin_classifieds = classified
 		end
 
-		folder = File.join File.dirname(__FILE__), "../../upload/#{@project.identifier}/"
-		unless File.exists?(folder)
+			# prefix supposed to be the $PJM_HOME
+			prefix = File.join File.dirname(__FILE__), "../../"
+			# relative path is the file path related to the $PJM_HOME
+			relative_path = "/public/upload/#{@project.identifier}/"
+			# check foler existence
+			folder = File.join prefix, relative_path
+			unless File.exists?(folder)
 				Dir.mkdir(folder)
-		end
+			end
 		uuid = UUIDTools::UUID.timestamp_create.to_s.gsub('-','')
 		file_full_name = uuid + '.png'
 		full_name = File.join folder,file_full_name
+		relative_path = File.join relative_path,file_full_name
+
 		# write full
 		IO.binwrite(full_name, record_data)
 		
 		Rails.logger.info "============save image: #{full_name}!!"
-		image_field.body = full_name
+		image_field.body = relative_path
 		image_field.save!
 
 	    respond_to do |format|
