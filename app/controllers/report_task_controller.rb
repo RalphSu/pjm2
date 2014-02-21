@@ -38,6 +38,7 @@ class ReportTaskController < ApplicationController
 
   def create
     start_time = params[:report_start_time]
+    end_time=params[:report_end_time]
     type=params[:report_type]
     Rails.logger.info "task controller create type #{type}"
     task = ReportTask.new
@@ -49,7 +50,12 @@ class ReportTaskController < ApplicationController
       _save_news_event("新增日报任务", "新增日报任务","新增日报任务")
     elsif type==ReportTask::TYPE_WEEKLY
        task.report_start_time=Time.parse(start_time)
-       task.report_end_time=task.report_start_time+7.day
+        if end_time.blank?
+          task.report_end_time=task.report_start_time+7.day
+        elsif 
+          task.report_end_time=Time.parse(end_time)
+        end
+          
        _save_news_event("新增周报任务", "新增周报任务","新增周报任务")
     elsif type==ReportTask::TYPE_SUMMARY
       task.report_start_time = Time.parse(start_time)
