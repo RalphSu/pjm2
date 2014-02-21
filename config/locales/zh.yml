@@ -1132,6 +1132,7 @@ zh:
   notice_failed_unpublish: 还没发布不能取消
   notice_failed_republish: 还没取消不能重新发布
   button_upload_report: 上传报表
+  button_upload_picture: 增加截图
   label_weixin_number: 微信编号
   label_summary_number: 汇总数据编号
   label_reocrd_delete_success: 删除成功!
