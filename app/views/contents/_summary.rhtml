@@ -56,7 +56,7 @@
 					<% if summary_fields[f.id].blank %>
 					<td>
 					<%else%>
-					<td><%=tag_icon(true,summary_fields[f.id].body%><%= summary_fields[f.id].body %>
+					<td><%=tag_icon(true,summary_fields[f.id].body)%><%= summary_fields[f.id].body %>
 					<%end%>
 				<% if User.current.employee?%>
       <a data-toggle="modal" href="#myModal-single-image" onClick="set_id(<%=nr.id%>); return false"><label class="icon icon-add"><%=l(:button_upload)%></label></a>
