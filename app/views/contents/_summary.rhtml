@@ -53,7 +53,7 @@
 		<tr class="user <%= cycle("odd", "even") %>">
 			<%fields.each do |f|%>
 				<% if f.template.column_name=='截图' %>
-					<% if summary_fields[f.id].blank %>
+					<% if summary_fields[f.id].blank?%>
 					<td>
 					<%else%>
 					<td><%=tag_icon(true,summary_fields[f.id].body)%><%= summary_fields[f.id].body %>
