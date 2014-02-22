@@ -57,7 +57,7 @@
 					<td>
 					<%else%>
 					<td><%=tag_icon(true,summary_fields[f.id].body)%>
-						<p><a href="<%= summary_fields[f.id].body.partition('public').last %>" target="_blank">点击打开</a></p>
+						<a href="<%= summary_fields[f.id].body.partition('public').last %>" target="_blank">点击打开</a>
 						
 					<%end%>
 				<% if User.current.employee?%>
