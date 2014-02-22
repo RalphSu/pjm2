@@ -58,11 +58,21 @@
 				<td></td>
 			<% else %>
 			<td title=<%= release_fields[f.id].body %>>
-				
+
+
 				<%if release_fields[f.id].file_path.blank?%>
-					<p><%= check_number release_fields[f.id].body %></p>
+					<% if f.template.column_name=='链接' %>
+						<p><a href="<%= release_fields[f.id].body %>"><%= release_fields[f.id].body %></a></p>
+					<%else%>
+						<p><%= check_number release_fields[f.id].body %></p>
+					<%end%>
 				<%else%>
-					<%=tag_icon(true,release_fields[f.id].file_path)%><%= release_fields[f.id].body %>
+					<% if f.template.column_name=='链接' %>
+					<%=tag_icon(true,release_fields[f.id].file_path)%><a href="<%= release_fields[f.id].body %>"><%= release_fields[f.id].body %></a>
+					<%else%>
+						<%=tag_icon(true,release_fields[f.id].file_path)%><%= release_fields[f.id].body %>
+					<%end%>
+				
 				<%end%>
 			</td>
 			<% end %>

@@ -142,6 +142,12 @@ class WeiboController < ApplicationController
 		weibo_data7.body=params[:lastdays][:lastdays]
 		weibo_data7.save!
 
+		weibo_data8 = WeiboField.new()
+		weibo_data8.weibos=weibo
+		weibo_data8.weibo_classifieds=find_weibo_classified("微话题","日期")
+		weibo_data8.body=params[:wei_date].to_s
+		weibo_data8.save!
+
 		if params['record']
 			originalfilename=params['record'].original_filename
 			data = params['record'].read
@@ -160,7 +166,9 @@ class WeiboController < ApplicationController
 			img = Image.new()
 			img.url = params[:hyperlink][:hyperlink]
 			img.file_path = imagePath
+			img.image_date=params[:wei_date]
 			img.save!
+
 
 			remove_tmp_file(file_name)
 		end
@@ -394,6 +402,8 @@ class WeiboController < ApplicationController
 
 	def upload
     		 id = params[:task_id]
+    		 init(params)
+
     		 fail_msg = nil
     		 begin
     			unless id.blank?

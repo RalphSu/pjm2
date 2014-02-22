@@ -57,9 +57,17 @@
 			<% else %>
 			<td title=<%= forum_fields[f.id].body %>>
 				<%if forum_fields[f.id].file_path.blank?%>
-					<p><%= check_number forum_fields[f.id].body %></p>
+					<% if f.template.column_name=='链接' %>
+						<p><a href="<%= forum_fields[f.id].body %>"><%= forum_fields[f.id].body %></a></p>
+					<%else%>
+						<p><%= check_number forum_fields[f.id].body %></p>
+					<%end%>
 				<%else%>
-					<%=tag_icon(true,forum_fields[f.id].file_path)%><%= forum_fields[f.id].body %>
+					<% if f.template.column_name=='链接' %>
+						<%=tag_icon(true,forum_fields[f.id].file_path)%><a href="<%= forum_fields[f.id].body %>"><%= forum_fields[f.id].body %></a>
+					<%else%>
+						<%=tag_icon(true,forum_fields[f.id].file_path)%><%= forum_fields[f.id].body %>
+					<%end%>
 				<%end%>
 			<% end %>
 		<%end%>
