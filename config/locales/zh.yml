@@ -1145,3 +1145,4 @@ zh:
   label_mail_password: 邮件服务器密码： 
   label_mail_domain: 邮件服务器域：   
   label_mail_ssl: 安全链接(ssl或者不填)：
+  button_test_mail: 测试邮件设置

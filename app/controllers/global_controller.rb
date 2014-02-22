@@ -1,3 +1,4 @@
+#-- encoding: UTF-8
 class GlobalController < ApplicationController
 	layout 'admin'
 
@@ -31,6 +32,21 @@ class GlobalController < ApplicationController
 		_upsert_global_setting('mail.server.password', params['password'])
 
 		flash[:notice] = l(:notice_successful_update)
+		redirect_to({:controller => 'global', :action => 'index'})
+	end
+
+	def test_mail
+		# send out a test mail
+		msg = ""
+		username = _get_global_setting_value('mail.server.username')
+		begin
+			ReportNotifier.deliver_test()
+			msg = "邮件发送成功，请#{username}查收!"
+		rescue Exception => e
+			msg = "邮件发送失败。请注意正确设置邮件服务器信息，并确认保存。发送失败原因是 #{e.message}!"
+			Rails.logger.info msg
+		end
+		flash[:notice] = msg
 		redirect_to({:controller => 'global', :action => 'index'})
 	end
 
