@@ -213,6 +213,18 @@ class WeiboController < ApplicationController
 		weibo_data4.weibo_classifieds=find_weibo_classified("微活动","日期")
 		weibo_data4.body=params[:wei_date].to_s
 		weibo_data4.save!
+
+			weibo_data8 = WeiboField.new()
+		weibo_data8.weibos=weibo
+		weibo_data8.weibo_classifieds=find_weibo_classified("微活动","转发数")
+		weibo_data8.body=params[:tweets][:tweets]
+		weibo_data8.save!
+
+			weibo_data9 = WeiboField.new()
+		weibo_data9.weibos=weibo
+		weibo_data9.weibo_classifieds=find_weibo_classified("微活动","评论数")
+		weibo_data9.body=params[:comments][:comments]
+		weibo_data9.save!
 	  	
 		if params['record']
 			originalfilename=params['record'].original_filename
