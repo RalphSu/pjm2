@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140219142153) do
+ActiveRecord::Schema.define(:version => 20140223072643) do
 
   create_table "A", :id => false, :force => true do |t|
     t.integer "a"
@@ -265,6 +265,15 @@ ActiveRecord::Schema.define(:version => 20140219142153) do
 
   add_index "forums", ["classified", "image_date", "url"], :name => "index_forums_on_classified_and_image_date_and_url"
   add_index "forums", ["project_id", "classified"], :name => "index_forums_on_project_id_and_classified"
+
+  create_table "global_settings", :force => true do |t|
+    t.string   "name"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "global_settings", ["name"], :name => "index_global_settings_on_name", :unique => true
 
   create_table "groups_users", :id => false, :force => true do |t|
     t.integer "group_id", :null => false

@@ -1136,3 +1136,9 @@ zh:
   label_summary_number: 汇总数据编号
   label_reocrd_delete_success: 删除成功!
   label_reocrd_delete_fail: 删除失败，请刷新页面重试!
+  label_global_setting: 设置
+  label_mail_setting: 邮件服务器设置
+  label_mail_host: 邮件服务器地址： 
+  label_mail_port: 邮件服务器端口： 
+  label_mail_username: 邮件服务器用户： 
+  label_mail_password: 邮件服务器密码： 

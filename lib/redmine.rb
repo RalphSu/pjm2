@@ -232,7 +232,6 @@ Redmine::MenuManager.map :admin_menu do |menu|
   menu.push :projects, {:controller => 'admin', :action => 'projects'}, :caption => :label_project_plural
   menu.push :users, {:controller => 'users'}, :caption => :label_user_plural
   menu.push(:templates, { :controller => 'templates', :action => 'index' }, {
-            :last => true,
             :children => Proc.new { |p|
               #@project = p # @project used in the helper
               template_settings_tabs.collect do |tab|
@@ -246,7 +245,7 @@ Redmine::MenuManager.map :admin_menu do |menu|
             },
             :caption => :label_template_plural
           })
-
+  menu.push :global_settings, {:controller => 'global'}, :caption => :label_global_setting
 end
 
 Redmine::MenuManager.map :pjconfig_menu do |menu|

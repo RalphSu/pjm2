@@ -1,0 +1,13 @@
+<div>
+<% form_tag(url_for(controller: 'global', action: 'update_mail') , :method => :post ) do %>
+	<p> <%= l(:label_mail_host)%>
+		<%= text_field_tag :host, @host %></p>
+	<p> <%= l(:label_mail_port)%>
+		<%= text_field_tag :port, @port %></p>
+	<p> <%= l(:label_mail_username)%>
+		<%= text_field_tag :username, @username %></p>
+	<p> <%= l(:label_mail_password)%>
+		<%= password_field_tag :password, @password %></p>
+		<%= submit_tag l(:button_submit) %></p>
+<%end%>
+</div>
