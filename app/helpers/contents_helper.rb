@@ -347,11 +347,11 @@ module ContentsHelper
 		end
 
 		def read_images(wb, sheet, head_array)
-			puts "read images from sheet"
+			Rails.logger.info "read images from sheet"
 			picture_path = {}
 			# first find all images; save them, and record the information
 			pic_num = find_save_images(sheet, picture_path)
-			puts "Total picture number : #{pic_num}"
+			Rails.logger.info "Total picture number : #{pic_num}"
 
 			# construct image metadata
 			image_metas = []
@@ -394,7 +394,7 @@ module ContentsHelper
 				end
 				img_meta.paths.concat(paths)
 			end
-			Rails.logger.info "Loaed image meta of : #{image_metas.size}"
+			Rails.logger.info "Load image meta of : #{image_metas.size}"
 			image_metas
 		end
 
@@ -430,7 +430,7 @@ module ContentsHelper
 					Rails.logger.info "Invalid date value : cell type not numeric #{cell_type}"
 				end
 			end
-			puts "----------------Image --- date --- :#{date}"
+			Rails.logger.info "----------------Image --- date --- :#{date}"
 			return date
 		end
 
@@ -438,12 +438,17 @@ module ContentsHelper
 			pic_num = 0
 			it = sheet.getRelations().iterator()
 			while it.hasNext()
+				Rails.logger.info 'image relation iteration'
 				doc_part = it.next()
+				Rails.logger.info "#{doc_part.getClass().getName()}"
 				if doc_part.getClass().equals(@@xssf_drawing_class)
 					shape_it = doc_part.getShapes().iterator()
+					Rails.logger.info 'XSSFDrawing class'
 					while shape_it.hasNext()
 						shape = shape_it.next()
+						Rails.logger.info 'shapes relation iteration'
 						if shape.getClass().equals(@@xssf_picture_class)
+							Rails.logger.info 'XSSFPicture class'
 							anchor = shape.getPreferredSize().getFrom()
 							row = anchor.getRow()
 							col = anchor.getCol()
@@ -459,11 +464,16 @@ module ContentsHelper
 							end
 							picture_path[anchor] << paths
 
-							puts "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s + ", paths: " + paths.to_s
+							Rails.logger.info "Found picture at --->row:" + row.to_s + ", column:"  + col.to_s + ", paths: " + paths.to_s
 
 							pic_num = pic_num + 1
 						end
 					end # end of shapes loop
+				else
+					newIt = doc_part.getRelations().iterator()
+					while newIt.hasNext()
+						Rails.logger.info newIt.next().getClass().getName()
+					end
 				end
 			end # end of relations loop
 		end
@@ -533,7 +543,7 @@ module ContentsHelper
 		end
 
 		def read_excel_image(data)
-			puts "Read images from excel start...."
+			Rails.logger.info "Read images from excel start...."
 			byte_stream = @@byte_stream_class.new(data)
 			wb = @@workbook_class.new(byte_stream)
 			sheet = wb.getSheetAt(0)
@@ -546,7 +556,7 @@ module ContentsHelper
 			end
 			# read header row
 			head_array = validate_image_header(headrow)
-			puts "Image header rows : #{head_array} !!!"
+			Rails.logger.info "Image header rows : #{head_array} !!!"
 
 			# read/store images and return the image metadata
 			result = read_images(wb, sheet, head_array)
@@ -554,9 +564,9 @@ module ContentsHelper
 			begin
 				byte_stream.close()
 			rescue 
-				puts "ImageReader :: Close stream failed, ignore and return"
+				Rails.logger.info "ImageReader :: Close stream failed, ignore and return"
 			end
-			puts "Read images from excel end...."
+			Rails.logger.info "Read images from excel end...."
 			result
 		end
 	end # end of POIExcelImageReader

@@ -8,6 +8,11 @@ class Crawler
 	include NewsReleaseHelper
 
 	def do_crawl
+		nr = NewsRelease.new()
+		nr.url = 'abc'
+		nr.image_date = 'def'
+		nr.classified = 'def'
+
 		Project.find(:all, :conditions=> {:status => Project::STATUS_ACTIVE}).each do |p|
 			puts "Start crawler for project :#{p.name}, time : #{Time.now.to_s} "
 			crawl_project(p)
@@ -126,6 +131,7 @@ class Crawler
 		saved_count = 0
 		item_count = 0
 		next_page = nil
+		#Rails.logger.info doc
 		doc.search('//div/ul/li').each do |item|
 			# create news_release line
 			# puts item.content
@@ -142,6 +148,7 @@ class Crawler
 					# puts "Url: " + link['href']
 					f = NewsReleaseField.new
 					f.body = link['href']
+					nr.url = f.body
 					f.news_classified = news_classifieds_hash['链接']
 					fields << f
 
@@ -166,25 +173,38 @@ class Crawler
 						site = content[0, (content.length - date_len)]
 					end
 
-					#puts "Site: " + site
+					Rails.logger.info "Site: " + site
 					f = NewsReleaseField.new
 					f.body = site
 					f.news_classified = news_classifieds_hash['发布平台']
 					fields << f
-					#puts "Time: " + time
-					f = NewsReleaseField.new
-					f.body = time
-					f.news_classified = news_classifieds_hash['日期']
-					fields << f
+					Rails.logger.info "Time: " + time
+					
+					begin
+						# validate time before save. If time parse failed, then don't save this time.
+						d = Date.strptime(time, "%Y-%m-%d")
+						if not d.nil?
+							f = NewsReleaseField.new
+							f.body = d.to_s
+							nr.image_date = f.body
+							f.news_classified = news_classifieds_hash['日期']
+							fields << f
+						else
+							raise "Invalid date string."
+						end
+					rescue Exception => e
+						Rails.logger.info " BaiduCrawler :: Parse time error, ignore the date save of illegal time string #{time}, exception is #{e.inspect}!!"
+					end
 				end
 
 				# now save
 				if _save(nr, fields)
 					saved_count = saved_count + 1
 				end
-				item_count = item_count + 1
 			rescue Exception => e
-				puts "Ignore failure when hande project #{project.name} for page at #{page_num}, item index : #{item_count}. The item content is #{item.content}! Exception : #{e.inspect}"
+				Rails.logger.info "Ignore failure when hande project #{project.name} for page at #{page_num}, item index : #{item_count}. The item content is #{item.content}! Exception : #{e.inspect}"
+			ensure
+				item_count = item_count + 1
 			end # end of try catch
 		end # end of each result
 
@@ -198,7 +218,7 @@ class Crawler
 	end
 
 	def _save(nr, fields)
-		# puts "	Saved #{nr} and #{fields} for one news_release line!"
+		Rails.logger.info "	Saved #{nr.inspect} and #{fields.inspect} for one news_release line!"
 		unless fields.blank?
 			# check duplicated.
 			duplicated = find_duplicate(nr, fields)
@@ -248,9 +268,8 @@ end
 scheduler = Rufus::Scheduler.new
 sys_crawler = Crawler.new
 
-scheduler.cron '5 0 * * *' do
-#scheduler.every("2m") do
-# scheduler.every("5m") do
-	sys_crawler.do_crawl()
+# scheduler.cron '5 0 * * *' do
+scheduler.every("2h") do
+ 	sys_crawler.do_crawl()
 end
 #sys_crawler.do_crawl()
