@@ -15,7 +15,7 @@ module ForumHelper
 	end
 
 	def find_forum_for_project(project, category)
-		Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>{:project_id => project, :classified => category})
+		Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end
 
 	def forum_option_for_select(selected)

@@ -16,7 +16,7 @@ module BlogHelper
 	end
 
 	def find_blog_for_project(project, category)
-		Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>{:project_id => project, :classified => category})
+		Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end
 
 	def blog_option_for_select(selected)

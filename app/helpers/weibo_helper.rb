@@ -15,7 +15,7 @@ module WeiboHelper
 	end
 
 	def find_weibo_for_project(project, category)
-		Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>{:project_id => project, :classified => category})
+		Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end
 
 	def invisible_column()

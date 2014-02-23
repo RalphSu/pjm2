@@ -32,7 +32,7 @@ module NewsReleaseHelper
 	end
 
 	def find_news_release_for_project(project, category)
-		NewsRelease.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>{:project_id => project, :classified => category})
+		NewsRelease.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end
 
 	def distinct_news_templates

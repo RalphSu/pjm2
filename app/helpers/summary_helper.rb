@@ -19,7 +19,7 @@ module SummaryHelper
 	end
 
 	def find_summary_for_project(project, category)
-		Summary.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>{:projects_id => project, :classified => category})
+		Summary.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:projects_id => project, :classified => category})
 	end
 
 	def summary_option_for_select(selected)

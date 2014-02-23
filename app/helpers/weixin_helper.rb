@@ -17,7 +17,7 @@ module WeixinHelper
 	end
 
 	def find_weixin_for_project(project, category)
-		Weixin.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>{:projects_id => project, :classified => category})
+		Weixin.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:projects_id => project, :classified => category})
 	end
 
 	def weixin_option_for_select(selected)
