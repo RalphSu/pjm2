@@ -279,4 +279,53 @@ class TemplatesController < ApplicationController
 
     	
 	end
+
+
+	def new_weixin
+		name = params[:classified_name][:classified_name].strip()
+    		columns = params[:columns]
+    		Rails.logger.info "name: #{name}, columns #{columns}"
+    		if columns
+    		     news_classifieds = distinct_weixin_classifieds();
+			news_classifieds.each do |classified|
+				if(classified.classified==name)
+					respond_to do |format|
+					format.html {
+						flash[:error] = "Name #{name} already exists"
+						redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/weixin'})
+					}
+					end
+	      			return
+	      		end
+			end
+			news_templates= distinct_weixin_templates();
+			columns.each do |column|
+				news_templates.each do |template|
+					if(column==template.column_name)
+						 newone = WeixinClassified.create! :classified => name,
+                                 :template => template
+     						newone.save!
+
+					end
+
+				end
+    			end
+			
+    			respond_to do |format|
+			format.html {
+				flash[:notice] = l(:notice_successful_update)
+				redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/weixin'})
+			}
+	      	end
+    		else
+    			respond_to do |format|
+			format.html {
+				flash[:notice] = "No Column selected"
+				redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/weixin'})
+			}
+	      	end
+    		end
+
+    	
+	end
 end

@@ -391,6 +391,64 @@ class WeiboController < ApplicationController
 		init(params)
 	end
 
+
+	def upload
+    		 id = params[:task_id]
+    		 fail_msg = nil
+    		 begin
+    			unless id.blank?
+	     	 		weibo = Weibo.find(id)
+	     			 unless weibo.blank?
+				     originalfilename=params[:task_file].original_filename
+					data = params[:task_file].read
+					file_name = save_tmp_file(data)
+					data =  IO.binread(file_name)
+
+					Rails.logger.info "upload picture read record size: #{data.size}."
+					poiReader = PoiExcelImageReader.new(@project)
+					imagePath = poiReader.save_pic(data, File.extname(originalfilename),0)
+					
+					existed_image = Image.find(:first, :conditions=>{:url => weibo.url, :image_date => weibo.image_date})
+					if existed_image.blank?
+						# no duplication, update
+						img = Image.new()
+						img.url = weibo.url
+						img.file_path = imagePath
+						img.image_date = weibo.image_date
+						img.save!
+					else
+						Rails.logger.info "Find existing image with url : #{weibo.url}, image_date : #{weibo.image_date}, append this image."
+						
+						existed_image.file_path = [ existed_image.file_path, imagePath].join(';')
+						existed_image.save!
+					end
+
+					
+				remove_tmp_file(file_name)
+			      _save_news_event("上传截图", "上传截图","上传截图")
+	     			end
+    			end
+    		rescue Exception => e 
+				Rails.logger.error "upload  failed : #{e.inspect}!!!"
+				fail_msg =  "upload failed"
+		end
+		if fail_msg.blank?
+			respond_to do |format|
+			  format.html {
+				flash[:notice] = "upload successfully"
+				redirect_to({:controller => 'weibo', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		else
+			respond_to do |format|
+			  format.html {
+				flash[:error] = fail_msg
+				redirect_to({:controller => 'weibo', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+			  }
+			end
+		end
+   	end
+
 	def init(params)
 		@category=params[:category]
 		@import_type = params[:import]

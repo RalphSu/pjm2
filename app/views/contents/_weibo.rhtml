@@ -39,6 +39,11 @@
 			<th><%= f.template.column_name %></th> 
 		<% end %>
 		<% if User.current.employee?%>
+			<% if not @category.blank?%>
+				<% if  @category=="微话题" or  @category=="微访谈" or  @category=="微活动"%>
+					<th class="checkboxforremove"></th> <!-- upload button-->
+				<%end%>
+			<%end%>
 		<th class="checkboxforremove">
 		  <%= link_to_function(image_tag('toggle_check.png'), "toggleCheckboxesBySelector('input.nr')",
                                                             :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}") %></th> <!-- Place holder column for actions -->
@@ -51,30 +56,34 @@
 	<% unless weibos.blank? %>
 		<% weibos.each do | nr| %>
 			<% if nr.classified == @category %>
-			<% weibo_fields = find_field_by_weiboId(nr.id) %>
-		<tr class="user <%= cycle("odd", "even") %>">
-			<%fields.each do |f|%>
-				<% if weibo_fields[f.id].blank? %>
-					<td></td>
-				<% else %>
-				<td title=<%= weibo_fields[f.id].body %>>
-					<%if weibo_fields[f.id].file_path.blank?%>
-					<p><%= check_number weibo_fields[f.id].body %></p>
-					<%else%>
-					<%=tag_icon(true,weibo_fields[f.id].file_path)%><%= weibo_fields[f.id].body %>
+				<% weibo_fields = find_field_by_weiboId(nr.id) %>
+				<tr class="user <%= cycle("odd", "even") %>">
+				<%fields.each do |f|%>
+					<% if weibo_fields[f.id].blank? %>
+						<td></td>
+					<% else %>
+					<td title=<%= weibo_fields[f.id].body %>>
+						<%if weibo_fields[f.id].file_path.blank?%>
+							<p><%= check_number weibo_fields[f.id].body %></p>
+						<%else%>
+							<%=tag_icon(true,weibo_fields[f.id].file_path)%><%= weibo_fields[f.id].body %>
+						<%end%>
+					</td>
+					<% end %>
+				<%end%>
+				<% if User.current.employee?%>
+					<% if  @category=="微话题" or  @category=="微访谈" or  @category=="微活动"%>
+						<td class="checkboxforremove">
+							 <a data-toggle="modal" href="#myModal-upload" onClick="set_weibo_id(<%=nr.id%>); return true"><span class="icon icon-add">  </span></a>
+						</td> <!-- upload button-->
 					<%end%>
-					
-				</td>
-				<% end %>
-			<%end%>
-			<% if User.current.employee?%>
-		<td class="checkboxforremove">
-			<span><%= check_box_tag("ids[]", nr.id, false, :id => nil, :class => "nr")%></span>
+					<td class="checkboxforremove">
+						<span><%= check_box_tag("ids[]", nr.id, false, :id => nil, :class => "nr")%></span>
 
-		</td>
-		<%end%>
-		</tr>
-		<% end %>
+					</td>
+				<%end%>
+				</tr>
+			<% end %>
 		<% end %>
 	<%end%>
 <% end %>
@@ -230,6 +239,30 @@
 		    </div><!-- /.modal-content -->
 		</div><!-- /.modal-dalog -->
 		</div><!-- /.modal -->
+	    <div id="myModal-upload" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                    <h4 class="modal-title" id="myModalLabel"><%= l(:button_upload_picture) %></h4>
+                </div>
+                <div class="modal-body">
+                    <% form_tag(url_for(controller: 'weibo', action: 'upload') , :method => :post, :multipart => true ) do %>
+                      <%= hidden_field_tag :project_id , @project.identifier %>
+                      <%= hidden_field_tag :category , @category %>
+                    	<input style="display:none" id="task_id" name="task_id"></input>
+                      <%= file_field_tag :task_file %>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+                    <button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
+                  </div>
+                </div>
+                    <% end %>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dalog -->
+    </div><!-- /.modal -->
 	</div>
 </div>
 
@@ -237,7 +270,9 @@
 <script type="text/javascript">
 
   	
-
+  function set_weibo_id(id) {
+    jQuery("#task_id").val(id);
+  }
 
 
 jQuery(document).ready(function($) {
