@@ -114,11 +114,13 @@ class Crawler
 		ct = 1
 		q1 = ""
 		unless project.keywords.blank?
-			q1 = URI.encode(project.keywords)
+			keywords = project.keyword.split(';')
+			q1 = URI.encode(keywords.join(' '))
 		end 
 		q4 = ""
 		unless project.keywords_except.blank?
-			q4 = URI.encode(project.keywords_except)
+			keywords = project.keywords_except.split(';')
+			q4 = URI.encode(keywords.join(' '))
 		end
 		tn = 'newsdy'
 		rn = 20
@@ -159,7 +161,8 @@ class Crawler
 					fields << f
 				end
 
-				# regular expression??
+				# use regular expression??
+				hasDate = false
 				item.css('span').each do |author_time|
 					content = author_time.content.strip;
 					#puts "Author and time : " + content
@@ -184,6 +187,7 @@ class Crawler
 						# validate time before save. If time parse failed, then don't save this time.
 						d = Date.strptime(time, "%Y-%m-%d")
 						if not d.nil?
+							hasDate = true
 							f = NewsReleaseField.new
 							f.body = d.to_s
 							nr.image_date = f.body
@@ -196,6 +200,12 @@ class Crawler
 						Rails.logger.info " BaiduCrawler :: Parse time error, ignore the date save of illegal time string #{time}, exception is #{e.inspect}!!"
 					end
 				end
+
+				# ingore no date items, they might be baidu links that is not search results, like search suggestions
+				unless hasDate
+					Rails.logger.info "Ignore no date parser output when hande project #{project.name} for page at #{page_num}, item index : #{item_count}. The item content is #{item.content}!"
+				end
+
 
 				# now save
 				if _save(nr, fields)
