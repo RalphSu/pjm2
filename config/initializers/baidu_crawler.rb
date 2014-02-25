@@ -114,18 +114,27 @@ class Crawler
 		ct = 1
 		q1 = ""
 		unless project.keywords.blank?
-			keywords = project.keyword.split(';')
-			q1 = URI.encode(keywords.join(' '))
+			words = _get_query_words(project.keywords)
+			q1 = URI.encode(words.join(' '))
 		end 
 		q4 = ""
 		unless project.keywords_except.blank?
-			keywords = project.keywords_except.split(';')
-			q4 = URI.encode(keywords.join(' '))
+			words = _get_query_words(project.keywords_except)
+			q4 = URI.encode(words.join(' '))
 		end
 		tn = 'newsdy'
 		rn = 20
 		url = "http://news.baidu.com/ns?from=#{news}&bt=#{bt}&y0=#{y0}&m0=#{m0}&d0=#{d0}&y1=#{y1}&m1=#{m1}&d1=#{d1}&cl=#{cl}&et=#{et}&ct1=#{ct1}&ct=#{ct}&q1=#{q1}&q4=#{q4}&tn=#{tn}&rn=#{rn}&begin_date=#{begin_date}&end_date=#{end_date}"
 		[url, start_time, end_time]
+	end
+
+	def _get_query_words(word_split_with_comma)
+		keywords = word_split_with_comma.split(';')
+		words = []
+		keywords.each do |k|
+			words.concat(k.split('；'))
+		end
+		return words
 	end
 
 	# return [next_page, saved_count]
@@ -203,7 +212,8 @@ class Crawler
 
 				# ingore no date items, they might be baidu links that is not search results, like search suggestions
 				unless hasDate
-					Rails.logger.info "Ignore no date parser output when hande project #{project.name} for page at #{page_num}, item index : #{item_count}. The item content is #{item.content}!"
+					Rails.logger.info "Ignore no date in parsed output when hande project #{project.name} for page at #{page_num}, item index : #{item_count}. The item content is #{item.content}!"
+					next
 				end
 
 
@@ -279,7 +289,8 @@ scheduler = Rufus::Scheduler.new
 sys_crawler = Crawler.new
 
 # scheduler.cron '5 0 * * *' do
-scheduler.every("2h") do
+#scheduler.every("2h") do
+scheduler.every("2m") do
  	sys_crawler.do_crawl()
 end
 #sys_crawler.do_crawl()
