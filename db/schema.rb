@@ -9,7 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140223072643) do
+ActiveRecord::Schema.define(:version => 20140225113435) do
+
+  create_table "A", :id => false, :force => true do |t|
+    t.integer "a"
+  end
+
+  create_table "B", :id => false, :force => true do |t|
+    t.integer "b"
+  end
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -507,11 +515,11 @@ ActiveRecord::Schema.define(:version => 20140223072643) do
     t.integer  "status",          :default => 1,    :null => false
     t.integer  "lft"
     t.integer  "rgt"
+    t.string   "key"
     t.string   "keywords"
     t.string   "keywords_except"
     t.date     "end_time"
     t.date     "start_time"
-    t.string   "pj_keywords"
   end
 
   add_index "projects", ["lft"], :name => "index_projects_on_lft"

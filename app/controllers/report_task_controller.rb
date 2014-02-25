@@ -124,9 +124,20 @@ class ReportTaskController < ApplicationController
           task.status=ReportTask::STATUS_PUBLISHED
           task.save!
           _save_news_event("发布报表", "发布报表","发布报表")
+
+          notification_msg = ''
+          begin
+            ReportNotifier.deliver_report_notification(task, "#{request.protocol}#{request.host}")
+            _save_news_event("报表发布邮件通知", "报表发布邮件通知","报表发布邮件通知")
+            notification_msg = '报表发布邮件通知已发送!'
+          rescue Exception => e
+            Rails.logger.info " sending publish notification failed. Exception is #{e.inspect}"
+            notification_msg = '报表发布邮件通知未发送成功'
+          end
+
           respond_to do |format|
             format.html {
-              flash[:notice] = l(:notice_successful_publish)
+              flash[:notice] = l(:notice_successful_publish) + notification_msg
               redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
             }
           end

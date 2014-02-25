@@ -7,7 +7,7 @@ class GlobalController < ApplicationController
 		@host = _get_global_setting_value('mail.server.host')
 		@port = _get_global_setting_value('mail.server.port')
 		@username = _get_global_setting_value('mail.server.username')
-		@passowrd = _get_global_setting_value('mail.server.password')
+		@password = _get_global_setting_value('mail.server.password')
 	end
 
 	def update_mail

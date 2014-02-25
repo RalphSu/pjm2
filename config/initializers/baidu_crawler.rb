@@ -289,8 +289,8 @@ scheduler = Rufus::Scheduler.new
 sys_crawler = Crawler.new
 
 # scheduler.cron '5 0 * * *' do
-#scheduler.every("2h") do
-scheduler.every("2m") do
+scheduler.every("2h") do
+# scheduler.every("2m") do
  	sys_crawler.do_crawl()
 end
 #sys_crawler.do_crawl()
