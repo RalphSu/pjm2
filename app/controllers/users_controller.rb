@@ -104,8 +104,6 @@ class UsersController < ApplicationController
       @user.pref.save
       @user.notified_project_ids = (@user.mail_notification == 'selected' ? params[:notified_project_ids] : [])
 
-      Mailer.deliver_account_information(@user, params[:user][:password]) if params[:send_information]
-
       notification_msg = '发送邮件'
       begin
         ReportNotifier.deliver_user_create(@user, "#{request.protocol}#{request.host}:#{request.port}")

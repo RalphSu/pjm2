@@ -19,19 +19,22 @@ class ReportNotifier < ActionMailer::Base
 		host = _get_global_setting_value('mail.server.host')
 		port = _get_global_setting_value('mail.server.port')
 		username = _get_global_setting_value('mail.server.username')
+		domain = _get_global_setting_value('mail.server.domain')
+		ssl = _get_global_setting_value('mail.server.ssl')
 		password = _get_global_setting_value('mail.server.password')
 		if (host.blank? or port.blank? or username.blank? or password.blank?)
 			return
 		end
 
+		ssl = ssl == 'ssl'
 		ActionMailer::Base.smtp_settings = {
 		    :address              => host,
 		    :port                 => port,
-		    :domain               => 'keyi.com',
+		    :domain               => domain,
 		    :user_name            => username,
 		    :password             => password,
 		    :authentication       => :login, ## or plain
-		    #:enable_starttls_auto => false
+		    :enable_starttls_auto => ssl
 		}
 		Rails.logger.info "  mail server setting are #{ActionMailer::Base.smtp_settings} !"
 	end

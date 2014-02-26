@@ -1,13 +1,57 @@
 <div>
 <% form_tag(url_for(controller: 'global', action: 'update_mail') , :method => :post ) do %>
-	<p> <%= l(:label_mail_host)%>
-		<%= text_field_tag :host, @host %></p>
-	<p> <%= l(:label_mail_port)%>
-		<%= text_field_tag :port, @port %></p>
-	<p> <%= l(:label_mail_username)%>
-		<%= text_field_tag :username, @username %></p>
-	<p> <%= l(:label_mail_password)%>
-		<%= password_field_tag :password, @password %></p>
-		<%= submit_tag l(:button_submit) %></p>
+<table>
+	<tbody>
+		<tr>
+			<td>
+			<%= l(:label_mail_host)%>
+			</td>
+			<td>
+			<%= text_field_tag :host, @host %>
+			</td>
+	</tr>
+	<tr>
+		<td>
+		<%= l(:label_mail_port)%>
+		</td>
+		<td>
+		<%= text_field_tag :port, @port %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<%= l(:label_mail_domain)%>
+		</td>
+		<td>
+		<%= text_field_tag :domain, @domain %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<%= l(:label_mail_ssl)%>
+		</td>
+		<td>
+		<%= text_field_tag :ssl, @ssl %></td>
+	</tr>
+			<tr>
+				<td>
+				<%= l(:label_mail_username)%>
+		</td>
+		<td>
+		<%= text_field_tag :username, @username %></td>
+	</tr>
+	<tr>
+		<td>
+		<%= l(:label_mail_password)%>
+		</td>
+		<td>
+		<%= password_field_tag :password, @password %></td>
+	</tr>
+
+
+	<tbody>
+</table>
+<%= submit_tag l(:button_submit) %></p>
+		
 <%end%>
 </div>

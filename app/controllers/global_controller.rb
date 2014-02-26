@@ -7,6 +7,8 @@ class GlobalController < ApplicationController
 		@host = _get_global_setting_value('mail.server.host')
 		@port = _get_global_setting_value('mail.server.port')
 		@username = _get_global_setting_value('mail.server.username')
+		@domain = _get_global_setting_value('mail.server.domain')
+		@ssl = _get_global_setting_value('mail.server.ssl')
 		@password = _get_global_setting_value('mail.server.password')
 	end
 
@@ -16,6 +18,10 @@ class GlobalController < ApplicationController
 
 		# mail server port
 		_upsert_global_setting('mail.server.port', params['port'])
+
+		_upsert_global_setting('mail.server.domain', params['domain'])
+
+		_upsert_global_setting('mail.server.ssl', params['ssl'])
 
 		# mail server username
 		_upsert_global_setting('mail.server.username', params['username'])
