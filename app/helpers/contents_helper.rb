@@ -240,7 +240,7 @@ module ContentsHelper
 			cell = row.getCell(i)
 			value = cell.getRichStringCellValue().getString()
 			unless is_category_col( value )
-				raise "第一列必须是类别!"
+				raise "第一列必须是分类!"
 			end
 			head << value
 			i = i + 1
