@@ -45,6 +45,8 @@ class ReportNotifier < ActionMailer::Base
 		username = _get_global_setting_value('mail.server.username')
 		_setup()
 
+		Rails.logger.info "send mail to #{user.mail}"
+
 		# must have report_path
 		path = task.report_path
 		if path.nil?
@@ -69,6 +71,8 @@ class ReportNotifier < ActionMailer::Base
 		username = _get_global_setting_value('mail.server.username')
 		_setup()
 
+		Rails.logger.info "send mail to #{user.mail}"
+
 		path = task.report_path
 		if path.nil?
 			path = task.reviewed_path.nil? ? task.gen_path : task.reviewed_path
@@ -90,6 +94,8 @@ class ReportNotifier < ActionMailer::Base
 	def user_create(user, baseurl)
 		username = _get_global_setting_value('mail.server.username')
 		_setup()
+
+		Rails.logger.info "send mail to #{user.mail}"
 
 		# generate mail
 		subject '科翼舆情管理平台帐号创建通知'
