@@ -1,6 +1,7 @@
 #-- encoding: UTF-8
+require "uri"
 class ReportNotifier < ActionMailer::Base
-  
+
 	def _setup()
 		ActionMailer::Base.delivery_method = :smtp
 		ActionMailer::Base.perform_deliveries = true
@@ -19,7 +20,7 @@ class ReportNotifier < ActionMailer::Base
 		port = _get_global_setting_value('mail.server.port')
 		username = _get_global_setting_value('mail.server.username')
 		password = _get_global_setting_value('mail.server.password')
-		if (host.blank? or port.blank? or username.blank? or passowrd.blank?)
+		if (host.blank? or port.blank? or username.blank? or password.blank?)
 			return
 		end
 
@@ -40,7 +41,7 @@ class ReportNotifier < ActionMailer::Base
 
 		# find out all recievers
 		recips = []
-		members = @project.member_principals.find(:all, :include => [:roles, :principal]).sort
+		members = task.project.member_principals.find(:all, :include => [:roles, :principal]).sort
 		members.each do |m|
 			m.roles.each do |r|
 				if (r.name == "项目管理员" or r.name == '项目审核员')
@@ -50,20 +51,28 @@ class ReportNotifier < ActionMailer::Base
 			end
 		end
 		# add project client
-		unless task.project.client.nil?
-			recips << task.project.client.mail unless task.project.client.mail.blank?
+		unless task.project.client.blank?
+			task.project.client.each do |c|
+				recips << c.mail unless c.mail.blank?
+			end
 		end
 
-		url = "#{baseurl}/report_task/tasks/#{task.project.identifier}/#{task.id}/download?filename=#{encode(task.report_path)}"
+		# must have report_path
+		path = task.report_path
+		if path.nil?
+			path = task.reviewed_path.nil? ? task.gen_path : task.reviewed_path
+		end
+
+		url = "#{baseurl}/report_task/tasks/#{task.project.identifier}/#{task.id}/download?filename=#{URI::encode(path)}"
 		unless recips.blank?
 			# generate mail
-			subject task.project.name + ' 项目报告发布 : (' + task.report_start_time + ' ' + task.task_type + ')',
+			subject task.project.name + ' 项目报告发布 : (' + task.report_start_time.to_s + ' ' + task.task_type.to_s + ')'
 			recipients recips
 			from 'no-reply@keyi.com'
 			sent_on Time.now
-			body  { :task => task, :url=> }
+			body  :task => task, :url=> url
 			unless task.task_type == '结案报告'
-				attachment :content_type=>"application/xlsx", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" +file_name)
+				attachment :content_type=>"application/xlsx", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" + path)
 			end
 		end
 	end
