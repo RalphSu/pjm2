@@ -67,7 +67,7 @@ class ReportNotifier < ActionMailer::Base
 			date = Time.now
 			date = date.strftime('%Y年%m月%d日')
 			body  :task => task, :url=> url, :user=>user, :date=>date, :type=>type
-			attachment :content_type=>"application/xlsx", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" + path)
+			attachment :filename=> 'report.docx', :content_type=>"application/msword", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" + path)
 		end
 	end
 
