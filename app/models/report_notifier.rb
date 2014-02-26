@@ -57,7 +57,7 @@ class ReportNotifier < ActionMailer::Base
 		unless user.mail.blank?
 			type = ''
 			unless task.task_type.blank?
-				type = ReportTask.TYPE_LABEL[task.task_type]
+				type = ReportTask::TYPE_LABEL[task.task_type]
 			end
 			# generate mail
 			subject task.project.name + ' 项目报表发布 : (' + task.report_start_time.to_s + ' )'
