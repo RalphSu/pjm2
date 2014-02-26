@@ -171,7 +171,7 @@ class ReportTaskController < ApplicationController
       end
     end
 
-    notification_msg = ''
+    notification_msg = '发送邮件'
     begin
       users.each do |u|
         if (task.task_type == '结案报告')
@@ -186,6 +186,8 @@ class ReportTaskController < ApplicationController
       Rails.logger.info " sending publish notification failed. Exception is #{e.inspect}"
       notification_msg = '报表发布邮件通知未发送成功，请注意设置正确的邮件服务器！'
     end
+    Rails.logger.info "===============#{notification_msg}"
+
     return notification_msg
   end
 

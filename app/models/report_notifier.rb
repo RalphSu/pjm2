@@ -33,6 +33,7 @@ class ReportNotifier < ActionMailer::Base
 		    :authentication       => :login, ## or plain
 		    #:enable_starttls_auto => false
 		}
+		Rails.logger.info "  mail server setting are #{ActionMailer::Base.smtp_settings} !"
 	end
 
 	# normal report notification, with attachment.

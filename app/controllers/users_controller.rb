@@ -106,7 +106,7 @@ class UsersController < ApplicationController
 
       Mailer.deliver_account_information(@user, params[:user][:password]) if params[:send_information]
 
-      notification_msg = ''
+      notification_msg = '发送邮件'
       begin
         ReportNotifier.deliver_user_create(@user, "#{request.protocol}#{request.host}:#{request.port}")
         _save_news_event("用户创建通知", "用户创建通知","用户创建通知")
@@ -115,6 +115,7 @@ class UsersController < ApplicationController
         Rails.logger.info " sending publish notification failed. Exception is #{e.inspect}"
         notification_msg = '用户创建通知未发送成功，请注意设置正确的邮件服务器！'
       end
+      Rails.logger.info "===============#{notification_msg}"
 
       respond_to do |format|
         format.html {
