@@ -152,9 +152,34 @@ class ReportTaskController < ApplicationController
   end
 
   def _send_mail_notification(task, request)
+
+    # find out all recievers
+    users = []
+    members = task.project.member_principals.find(:all, :include => [:roles, :principal]).sort
+    members.each do |m|
+      m.roles.each do |r|
+        if (r.name == "项目管理员" or r.name == '项目审核员')
+          users << m.user unless m.user.mail.blank?
+          break
+        end
+      end
+    end
+    # add project client
+    unless task.project.client.blank?
+      task.project.client.each do |c|
+        users << c unless c.mail.blank?
+      end
+    end
+
     notification_msg = ''
     begin
-      ReportNotifier.deliver_report_notification(task, "#{request.protocol}#{request.host}:#{request.port}")
+      users.each do |u|
+        if (task.task_type == '结案报告')
+          ReportNotifier.deliver_report_notification(task, u, "#{request.protocol}#{request.host}:#{request.port}")
+        else
+          ReportNotifier.deliver_summary_report(task, u, "#{request.protocol}#{request.host}:#{request.port}")
+        end
+      end
       _save_news_event("报表发布邮件通知", "报表发布邮件通知","报表发布邮件通知")
       notification_msg = '报表发布邮件通知已发送!'
     rescue Exception => e
