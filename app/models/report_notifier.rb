@@ -7,15 +7,15 @@ class ReportNotifier < ActionMailer::Base
 		ActionMailer::Base.perform_deliveries = true
 		ActionMailer::Base.raise_delivery_errors = true
 		ActionMailer::Base.default_content_type = "text/html"
-		ActionMailer::Base.smtp_settings = {
-			:address => 'smtp.163.com',
-			:port => '25',
-			:authentication => :login,
-			:domain => 'keyi.com',
-			:user_name => "ralphsu@163.com",
-			:password=>"3002204184",
-			:openssl_verify_mode => 'none'
-		}
+		# ActionMailer::Base.smtp_settings = {
+		# 	:address => 'smtp.163.com',
+		# 	:port => '25',
+		# 	:authentication => :login,
+		# 	:domain => 'keyi.com',
+		# 	:user_name => "ralphsu@163.com",
+		# 	:password=>"3002204184",
+		# 	:openssl_verify_mode => 'none'
+		# }
 		host = _get_global_setting_value('mail.server.host')
 		port = _get_global_setting_value('mail.server.port')
 		username = _get_global_setting_value('mail.server.username')
@@ -24,20 +24,21 @@ class ReportNotifier < ActionMailer::Base
 			return
 		end
 
-		# ActionMailer::Base.smtp_settings = {
-		#     :address              => host,
-		#     :port                 => port,
-		#     :domain               => 'keyi.com',
-		#     :user_name            => username,
-		#     :password             => password,
-		#     :authentication       => :login, ## or plain
-		#     #:enable_starttls_auto => false
-		# }
+		ActionMailer::Base.smtp_settings = {
+		    :address              => host,
+		    :port                 => port,
+		    :domain               => 'keyi.com',
+		    :user_name            => username,
+		    :password             => password,
+		    :authentication       => :login, ## or plain
+		    #:enable_starttls_auto => false
+		}
 	end
 
 	# normal report notification, with attachment.
 	def report_notification(task,user, baseurl)
 		# setup mailer
+		username = _get_global_setting_value('mail.server.username')
 		_setup()
 
 		# must have report_path
@@ -51,7 +52,7 @@ class ReportNotifier < ActionMailer::Base
 			# generate mail
 			subject task.project.name + ' 项目报表发布 : (' + task.report_start_time.to_s + ' ' + task.task_type.to_s + ')'
 			recipients user.mail
-			from 'ralphsu@163.com'
+			from 'username'
 			sent_on Time.now
 			date = Time.now
 			date = date.strftime('%Y年%m月%d日')
@@ -61,6 +62,7 @@ class ReportNotifier < ActionMailer::Base
 	end
 
 	def summary_report(task, user, baseurl)
+		username = _get_global_setting_value('mail.server.username')
 		_setup()
 
 		path = task.report_path
@@ -73,7 +75,7 @@ class ReportNotifier < ActionMailer::Base
 			# generate mail
 			subject task.project.name + ' 项目报表发布 : (' + task.report_start_time.to_s + ' ' + task.task_type.to_s + ')'
 			recipients user.mail
-			from 'ralphsu@163.com'
+			from 'username'
 			sent_on Time.now
 			date = Time.now
 			date = date.strftime('%Y年%m月%d日')
@@ -82,12 +84,13 @@ class ReportNotifier < ActionMailer::Base
 	end
 
 	def user_create(user, baseurl)
+		username = _get_global_setting_value('mail.server.username')
 		_setup()
 
 		# generate mail
 		subject '科翼舆情管理平台帐号创建通知'
 		recipients user.mail
-		from 'ralphsu@163.com' # 
+		from 'username' # 
 		sent_on Time.now
 		date = Time.now
 		date = date.strftime('%Y年%m月%d日')
