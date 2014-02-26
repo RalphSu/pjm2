@@ -59,6 +59,7 @@ class ReportNotifier < ActionMailer::Base
 			unless task.task_type.blank?
 				type = ReportTask::TYPE_LABEL[task.task_type]
 			end
+			content_type "multipart/alternative"
 			# generate mail
 			subject task.project.name + ' 项目报表发布 : (' + task.report_start_time.to_s + ' )'
 			recipients user.mail
@@ -66,7 +67,7 @@ class ReportNotifier < ActionMailer::Base
 			sent_on Time.now
 			date = Time.now
 			date = date.strftime('%Y年%m月%d日')
-			body  :task => task, :url=> url, :user=>user, :date=>date, :type=>type
+			part  :content_type => 'text/html', :body => render_message('report_notification', {:task => task, :url=> url, :user=>user, :date=>date, :type=>type})
 			attachment :filename=> 'report.docx', :content_type=>"application/msword", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" + path)
 		end
 	end
