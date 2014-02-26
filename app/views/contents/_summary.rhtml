@@ -53,13 +53,11 @@
 		<tr class="user <%= cycle("odd", "even") %>">
 			<%fields.each do |f|%>
 				<% if f.template.column_name=='截图' %>
-					<td title=<%= summary_fields[f.id].body %>>
-							<%if summary_fields[f.id].file_path.blank?%>
-							<p><%= check_number summary_fields[f.id].body %></p>
-							<%else%>
-							<%=tag_icon(true,summary_fields[f.id].file_path)%><%= summary_fields[f.id].body %>
-							<%end%>
-					</td>
+					<% if summary_fields[f.id].blank?%>
+					<td>
+					<%else%>
+					<td><%=tag_icon(true,summary_fields[f.id].body)%><%= summary_fields[f.id].body %>
+					<%end%>
 				<% if User.current.employee?%>
       <a data-toggle="modal" href="#myModal-single-image" onClick="set_id(<%=nr.id%>); return false"><label class="icon icon-add"><%=l(:button_upload)%></label></a>
       			<%end%>
@@ -67,7 +65,13 @@
 				<% elsif summary_fields[f.id].blank? %>
 					<td></td>
 				<% else %>
-					
+					<td title=<%= summary_fields[f.id].body %>>
+							<%if summary_fields[f.id].file_path.blank?%>
+							<p><%= check_number summary_fields[f.id].body %></p>
+							<%else%>
+							<%=tag_icon(true,summary_fields[f.id].file_path)%><%= summary_fields[f.id].body %>
+							<%end%>
+					</td>
 				<% end %>
 			<%end%>
 			<% if User.current.employee?%>

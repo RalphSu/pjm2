@@ -22,6 +22,7 @@
                         <%= hidden_field_tag :project_id , @project.identifier %>
                         <p><label for="subject">类型:</label><%= select_tag 'report_type', report_types(@report_type)%></p>
                         <p><label for="ff"><%=l(:label_report_task_start_time)%>:</label><%= date_field_tag :report_start_time %></p>
+                        <p><label for="ff"><%=l(:label_report_task_end_time)%>:</label><%= date_field_tag :report_end_time %></p>
                     </div>
                         
                 </div>

@@ -46,7 +46,7 @@ class ReportNotifier < ActionMailer::Base
 			m.roles.each do |r|
 				if (r.name == "项目管理员" or r.name == '项目审核员')
 					recips << m.user.mail unless m.user.mail.blank?
-					break;
+					break
 				end
 			end
 		end
