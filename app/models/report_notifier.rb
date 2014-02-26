@@ -55,14 +55,18 @@ class ReportNotifier < ActionMailer::Base
 
 		url = "#{baseurl}/report_task/tasks/#{task.project.identifier}/#{task.id}/download?filename=#{URI::encode(path)}"
 		unless user.mail.blank?
+			type = ''
+			unless task.task_type.blank?
+				type = ReportTask.TYPE_LABEL[task.task_type]
+			end
 			# generate mail
-			subject task.project.name + ' 项目报表发布 : (' + task.report_start_time.to_s + ' ' + task.task_type.to_s + ')'
+			subject task.project.name + ' 项目报表发布 : (' + task.report_start_time.to_s + ' )'
 			recipients user.mail
 			from username
 			sent_on Time.now
 			date = Time.now
 			date = date.strftime('%Y年%m月%d日')
-			body  :task => task, :url=> url, :user=>user, :date=>date
+			body  :task => task, :url=> url, :user=>user, :date=>date, :type=>type
 			attachment :content_type=>"application/xlsx", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" + path)
 		end
 	end
@@ -81,7 +85,7 @@ class ReportNotifier < ActionMailer::Base
 		url = "#{baseurl}/report_task/tasks/#{task.project.identifier}/#{task.id}/download?filename=#{URI::encode(path)}"
 		unless user.mail.blank?
 			# generate mail
-			subject task.project.name + ' 项目报表发布 : (' + task.report_start_time.to_s + ' ' + task.task_type.to_s + ')'
+			subject task.project.name + ' 项目报表发布 : (' + task.report_start_time.to_s + ' ' + ')'
 			recipients user.mail
 			from username
 			sent_on Time.now
