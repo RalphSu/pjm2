@@ -12,6 +12,8 @@ class ContentsController < ApplicationController
     end
     @p = @projects.first unless not @project.nil?
     @category=params['category']
+
+    Rails.logger.info "===========================================================#{request.protocol}#{request.host}:#{request.port}"
   end
 
   def project_content(project =nil)

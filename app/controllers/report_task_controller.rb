@@ -131,15 +131,7 @@ class ReportTaskController < ApplicationController
           task.save!
           _save_news_event("发布报表", "发布报表","发布报表")
 
-          notification_msg = ''
-          begin
-            ReportNotifier.deliver_report_notification(task, "#{request.protocol}#{request.host}")
-            _save_news_event("报表发布邮件通知", "报表发布邮件通知","报表发布邮件通知")
-            notification_msg = '报表发布邮件通知已发送!'
-          rescue Exception => e
-            Rails.logger.info " sending publish notification failed. Exception is #{e.inspect}"
-            notification_msg = '报表发布邮件通知未发送成功'
-          end
+          notification_msg = _send_mail_notification(task, request)
 
           respond_to do |format|
             format.html {
@@ -157,6 +149,19 @@ class ReportTaskController < ApplicationController
         end
       end
     end
+  end
+
+  def _send_mail_notification(task, request)
+    notification_msg = ''
+    begin
+      ReportNotifier.deliver_report_notification(task, "#{request.protocol}#{request.host}:#{request.port}")
+      _save_news_event("报表发布邮件通知", "报表发布邮件通知","报表发布邮件通知")
+      notification_msg = '报表发布邮件通知已发送!'
+    rescue Exception => e
+      Rails.logger.info " sending publish notification failed. Exception is #{e.inspect}"
+      notification_msg = '报表发布邮件通知未发送成功，请注意设置正确的邮件服务器！'
+    end
+    return notification_msg
   end
 
 
@@ -201,6 +206,7 @@ class ReportTaskController < ApplicationController
           task.status=ReportTask::STATUS_PUBLISHED
           task.save!
           _save_news_event("重新发布报表", "重新发布报表","重新发布报表")
+          notification_msg = _send_mail_notification(task, request)
           respond_to do |format|
             format.html {
               flash[:notice] = l(:notice_successful_republish)

@@ -66,7 +66,7 @@ class ReportNotifier < ActionMailer::Base
 		url = "#{baseurl}/report_task/tasks/#{task.project.identifier}/#{task.id}/download?filename=#{URI::encode(path)}"
 		unless recips.blank?
 			# generate mail
-			subject task.project.name + ' 项目报告发布 : (' + task.report_start_time.to_s + ' ' + task.task_type.to_s + ')'
+			subject task.project.name + ' 项目报表发布 : (' + task.report_start_time.to_s + ' ' + task.task_type.to_s + ')'
 			recipients recips
 			from 'no-reply@keyi.com'
 			sent_on Time.now
@@ -75,6 +75,17 @@ class ReportNotifier < ActionMailer::Base
 				attachment :content_type=>"application/xlsx", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" + path)
 			end
 		end
+	end
+
+	def user_create(user, baseurl)
+		_setup()
+
+		# generate mail
+		subject '科翼舆情管理平台帐号创建通知'
+		recipients user.mail
+		from 'no-reply@keyi.com' # 
+		sent_on Time.now
+		body  :user=>user, :baseurl=>baseurl
 	end
 
 	def _get_global_setting_value(name)
