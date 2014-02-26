@@ -58,7 +58,7 @@ class ReportNotifier < ActionMailer::Base
 			# generate mail
 			subject task.project.name + ' 项目报表发布 : (' + task.report_start_time.to_s + ' ' + task.task_type.to_s + ')'
 			recipients user.mail
-			from 'username'
+			from username
 			sent_on Time.now
 			date = Time.now
 			date = date.strftime('%Y年%m月%d日')
@@ -83,7 +83,7 @@ class ReportNotifier < ActionMailer::Base
 			# generate mail
 			subject task.project.name + ' 项目报表发布 : (' + task.report_start_time.to_s + ' ' + task.task_type.to_s + ')'
 			recipients user.mail
-			from 'username'
+			from username
 			sent_on Time.now
 			date = Time.now
 			date = date.strftime('%Y年%m月%d日')
@@ -100,7 +100,7 @@ class ReportNotifier < ActionMailer::Base
 		# generate mail
 		subject '科翼舆情管理平台帐号创建通知'
 		recipients user.mail
-		from 'username' # 
+		from username # 
 		sent_on Time.now
 		date = Time.now
 		date = date.strftime('%Y年%m月%d日')

@@ -236,14 +236,14 @@ class ReportTaskController < ApplicationController
           notification_msg = _send_mail_notification(task, request)
           respond_to do |format|
             format.html {
-              flash[:notice] = l(:notice_successful_republish)
+              flash[:notice] = l(:notice_successful_republish)  + notification_msg
               redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
             }
           end
         else
           respond_to do |format|
             format.html {
-              flash[:error] = l(:notice_failed_republish)
+              flash[:error] = l(:notice_failed_republish) + notification_msg
               redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
             }
           end
