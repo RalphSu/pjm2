@@ -175,9 +175,9 @@ class ReportTaskController < ApplicationController
     begin
       users.each do |u|
         if (task.task_type == '结案报告')
-          ReportNotifier.deliver_report_notification(task, u, "#{request.protocol}#{request.host}:#{request.port}")
-        else
           ReportNotifier.deliver_summary_report(task, u, "#{request.protocol}#{request.host}:#{request.port}")
+        else
+          ReportNotifier.deliver_report_notification(task, u, "#{request.protocol}#{request.host}:#{request.port}")
         end
       end
       _save_news_event("报表发布邮件通知", "报表发布邮件通知","报表发布邮件通知")
