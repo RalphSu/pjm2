@@ -122,4 +122,18 @@ class ReportNotifier < ActionMailer::Base
 		end
 	end
 
+	def test()
+		username = _get_global_setting_value('mail.server.username')
+		_setup()
+
+		# generate mail
+		subject '科翼舆情管理平台测试邮件'
+		recipients username
+		from username # 
+		sent_on Time.now
+		date = Time.now
+		date = date.strftime('%Y年%m月%d日')
+		body  :username => username
+	end
+
 end

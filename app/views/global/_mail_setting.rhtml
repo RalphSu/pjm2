@@ -52,6 +52,11 @@
 	<tbody>
 </table>
 <%= submit_tag l(:button_submit) %></p>
-		
 <%end%>
+
+
+<% form_tag(url_for(controller: 'global', action: 'test_mail') , :method => :post ) do %>
+<%= submit_tag l(:button_test_mail) %></p>
+<%end%>
+
 </div>
