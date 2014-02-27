@@ -183,7 +183,7 @@ class ReportTaskController < ApplicationController
       _save_news_event("报表发布邮件通知", "报表发布邮件通知","报表发布邮件通知")
       notification_msg = '报表发布邮件通知已发送!'
     rescue Exception => e
-      Rails.logger.info " sending publish notification failed. Exception is #{e.inspect}"
+      Rails.logger.info " sending publish notification failed. Exception is #{e.message}"
       notification_msg = '报表发布邮件通知未发送成功，请注意设置正确的邮件服务器！'
     end
     Rails.logger.info "===============#{notification_msg}"
