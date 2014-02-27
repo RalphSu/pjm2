@@ -44,6 +44,7 @@ class GlobalController < ApplicationController
 			msg = "邮件发送成功，请#{username}查收!"
 		rescue Exception => e
 			msg = "邮件发送失败。请注意正确设置邮件服务器信息，并确认保存。发送失败原因是 #{e.inspect}!"
+			Rails.logger.info msg
 		end
 		flash[:notice] = msg
 		redirect_to({:controller => 'global', :action => 'index'})

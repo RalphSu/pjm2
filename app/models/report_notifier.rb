@@ -34,7 +34,8 @@ class ReportNotifier < ActionMailer::Base
 		    :user_name            => username,
 		    :password             => password,
 		    :authentication       => :login, ## or plain
-		    :enable_starttls_auto => ssl
+		    :enable_starttls_auto => ssl,
+		    :ssl				  => ssl
 		}
 		Rails.logger.info "  mail server setting are #{ActionMailer::Base.smtp_settings} !"
 	end
