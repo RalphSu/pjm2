@@ -474,6 +474,7 @@ module ContentsHelper
 					while newIt.hasNext()
 						Rails.logger.info newIt.next().getClass().getName()
 					end
+					raise "不是office2007/2010兼容格式！"
 				end
 			end # end of relations loop
 		end
