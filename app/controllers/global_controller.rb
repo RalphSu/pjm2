@@ -1,3 +1,4 @@
+#-- encoding: UTF-8
 class GlobalController < ApplicationController
 	layout 'admin'
 

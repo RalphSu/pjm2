@@ -43,8 +43,12 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'projects/:id/wiki/destroy', :controller => 'wikis', :action => 'destroy', :conditions => {:method => :get}
   map.connect 'projects/:id/wiki/destroy', :controller => 'wikis', :action => 'destroy', :conditions => {:method => :post}
 
-  map.connect 'global/update_mail', :controller => 'global', :action => 'update_mail', :conditions => {:method => :post}
-  map.connect 'global/test_mail', :controller => 'global', :action => 'test_mail', :conditions => {:method => :post}
+  map.with_options :controller => 'global' do |messages_routes|
+    messages_routes.with_options :conditions => {:method => :post} do |messages_actions|
+      messages_actions.connect 'global/update_mail', :action => 'update_mail'
+      messages_actions.connect 'global/test_mail', :action => 'test_mail'
+    end
+  end
 
   map.with_options :controller => 'messages' do |messages_routes|
     messages_routes.with_options :conditions => {:method => :get} do |messages_views|
