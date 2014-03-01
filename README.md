@@ -13,7 +13,8 @@ sudo ln -s /opt/Sublime\ Text\ 2/sublime_text /usr/bin/subl
 set up rvm&ruby
 ``` shell
 \curl -L https://get.rvm.io | bash stable
-source /home/jiangh/.rvm/scripts/rvm 
+source /home/jiangh/.rvm/scripts/rvm
+#for mac, may need a new shell window
 rvm install 1.9.3 
 rvm use 1.9.3@rails3 --create --default
 ```
@@ -21,11 +22,14 @@ rvm use 1.9.3@rails3 --create --default
 setup gems
 ``` shell
 wget http://rubyforge.org/frs/download.php/76729/rubygems-1.8.25.tgz 
-ruby setup.rb
+#for mac curl -L http://rubyforge.org/frs/download.php/76729/rubygems-1.8.25.tgz -o ./rubygems-1.8.25.tgz 
+tar -xvf rubygems-1.8.25.tgz
+ruby rubygems-1.8.25/setup.rb
 ``` 
 setup gems source
 ``` shell
 gem sources --remove https://rubygems.org/
+gem sources --remove http://rubygems.org/
 gem sources -a http://ruby.taobao.org/
 
 ``` 
@@ -43,8 +47,15 @@ gem update --system 1.8.25
 setup mysql
 ``` shell 
 sudo yum install mysql-server, mysql
+#sudo apt-get inlstall mysql-server
 sudo service mysqld start
-sudo chkconfig mysqld on 
+#for ubuntu
+#sudo service mysql restart
+
+sudo chkconfig mysqld on
+#for ubuntu
+sudo sysv-rc-conf mysql on
+
 ``` 
 
 setup JDK
@@ -84,10 +95,36 @@ RAILS_ENV=production bundle exec rake redmine:load_default_data
 # choose en
 
 #Re-Run schema-migration to rename role
-# enter mysql, 
+# enter mysql,  
 delete from schema_migrations where version="20131203062739";
 exit;
 
 > RAILS_ENV=production rake db:migrate
 
-``` 
+#update mysql encoding
+#edit /etc/mysql/my.cnf 
+#add below to [client] section 
+ default-character-set=utf8
+#add below to [mysqld] section
+ character-set-server=utf8
+#add below to [mysql] section
+ default-character-set=utf8
+#restart mysql service and check encoding show variables like 'character%'; 
+
+
+#data migration
+#migrate mysql data
+#From
+tar -cvf chiliproject.tar ./chiliproject/
+tar -cvf mysql.tar ./mysql
+scp chiliproject.tar keyi@180.153.154.43:/home/keyi/
+scp mysql.tar keyi@180.153.154.43:/home/keyi/
+ scp ibdata1 keyi@180.153.154.43:/home/keyi/
+ scp ib_logfile0 keyi@180.153.154.43:/home/keyi/
+ scp ib_logfile1 keyi@180.153.154.43:/home/keyi/
+#To
+/var/lib/mysql# chown mysql:mysql ib*
+ 
+```
+
+
