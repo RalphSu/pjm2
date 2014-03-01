@@ -124,6 +124,14 @@ scp mysql.tar keyi@180.153.154.43:/home/keyi/
  scp ib_logfile1 keyi@180.153.154.43:/home/keyi/
 #To
 /var/lib/mysql# chown mysql:mysql ib*
+
+#migrate images and reports
+#From
+tar -cvf reports.tar ./report
+tar -cvf upload.tar ./public/upload
+scp them
+#To
+tar -xvf
  
 ```
 
