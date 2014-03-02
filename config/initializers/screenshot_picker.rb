@@ -58,9 +58,11 @@ class ScreenshotPicker
 				puts "remove current screen job!"
 				ScreenshotJob.destroy(job.id)
 			rescue Exception => e
-				Rails.logger.info "Screenshot failed. url: #{url} !! Exception is #{e.inspect}"
+				puts "Screenshot failed. url: #{url} !! Exception is #{e.inspect}"
 			end
 		end
+
+		puts "Screenshot running round completed. The end_date is #{end_date}, current time is #{Time.now}"
 	end
 
 	def get_screen_js
@@ -89,7 +91,7 @@ end
 
 
 sys_picker = ScreenshotPicker.new
-sys_picker.screenshot_job(Time.now + (60))
+sys_picker.screenshot_job(Time.now + (10))
 # just new a thread and run it??
 # i'm not sure what would happend to thread like interruptted in java
 # Thread.new do
