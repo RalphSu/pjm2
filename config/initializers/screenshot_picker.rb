@@ -1,0 +1,107 @@
+#-- encoding: UTF-8
+require 'rubygems'
+require 'rufus/scheduler'
+require 'nokogiri'
+require 'open-uri'
+
+class ScreenshotPicker
+	include NewsReleaseHelper
+
+	# call by given a date
+	# TODO: should we batch to reduce the phantom js start overhead??
+	def screenshot_job(end_date)
+		while true
+			now = Time.now()
+			if now > end_date
+				break
+			end
+			begin 
+				js = get_screen_js
+				phantom = get_phantom
+				puts " js file location: #{js}, phantom runtime location:#{phantom}"
+
+				job = ScreenshotJob.find(:first)
+				if job.blank? or job.news_release.blank? or job.news_release.project.blank? or job.news_release.url.blank?
+					next
+				end
+				url = job.news_release.url
+
+				img = Image.find(:first, :conditions=>{:url => job.news_release.url, :image_date=> job.news_release.image_date})
+				unless img.blank?
+					puts "image for url: #{url}, date : #{job.news_release.image_date}, already exists, ignore this capture!"
+					ScreenshotJob.destroy(job.id)
+					sleep(10.seconds)
+					next
+				end
+
+				# generate file_path
+				# full_name : the full path that the image to be saved
+				# relative_path : the relative_path that would be saved to image file_path
+				paths=get_and_check_file_path(job.news_release.project)
+				full_name=paths[0]
+				relative_path = paths[1]
+
+				puts "url is #{url}, file full name is #{full_name} !, relative_path to be stored is #{relative_path} !"
+
+				puts "#{phantom} #{js} #{url} #{full_name}"
+				capture_status = `#{phantom} #{js} #{url} #{full_name}`
+				puts "capture_status is #{capture_status}"
+
+				# save image
+				img = Image.find(:first, :conditions=>{:url => job.news_release.url, :image_date=> job.news_release.image_date})
+				img = Image.new
+				img.url= job.news_release.url
+				img.image_date = job.news_release.image_date
+				img.file_path = relative_path
+				img.save!
+
+				puts "remove current screen job!"
+				ScreenshotJob.destroy(job.id)
+			rescue Exception => e
+				Rails.logger.info "Screenshot failed. url: #{url} !! Exception is #{e.inspect}"
+			end
+		end
+	end
+
+	def get_screen_js
+		File.join File.dirname(__FILE__), "../../screenshots/screen_capture.js"
+	end
+
+	def get_phantom
+		phantom = ENV['PHANTOM_HOME'] + "/bin/phantomjs"
+	end
+
+	def get_and_check_file_path(project)
+		prefix = File.join File.dirname(__FILE__), "../../"
+		relative_path = "/public/upload/#{project.identifier}/"
+		folder = File.join prefix, relative_path
+		unless File.exists?(folder)
+			Dir.mkdir(folder)
+		end
+		uuid = UUIDTools::UUID.timestamp_create.to_s.gsub('-','')
+		file_full_name = "screenshot--" + uuid + '.png'
+		# append the file name to the relative path
+		relative_path = File.join relative_path,file_full_name
+		full_name = File.join prefix, relative_path
+		return [full_name, relative_path]
+	end
+end
+
+
+sys_picker = ScreenshotPicker.new
+sys_picker.screenshot_job(Time.now + (60))
+# just new a thread and run it??
+# i'm not sure what would happend to thread like interruptted in java
+# Thread.new do
+# 	sys_picker.screenshot_job(Time.new)
+# end
+
+# use scheduler to periodically call the screenshot method. This method should
+# not exit until time slide way. This way, we make sure if something unexpected happens,
+# the schedule will call the picker again. Overhead is that there might small time windows
+# that differnt round of screenshot_job working on the one image screen shot. We treat this case
+# as minor case, and it won't hurt anything:)
+scheduler = Rufus::Scheduler.new
+scheduler.every("1d") do
+ 	sys_picker.screenshot_job(Time.now + (60 * 60 * 24))
+end

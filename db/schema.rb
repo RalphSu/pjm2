@@ -9,15 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140225113435) do
-
-  create_table "A", :id => false, :force => true do |t|
-    t.integer "a"
-  end
-
-  create_table "B", :id => false, :force => true do |t|
-    t.integer "b"
-  end
+ActiveRecord::Schema.define(:version => 20140302120725) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",                 :default => 0,  :null => false
@@ -515,7 +507,6 @@ ActiveRecord::Schema.define(:version => 20140225113435) do
     t.integer  "status",          :default => 1,    :null => false
     t.integer  "lft"
     t.integer  "rgt"
-    t.string   "key"
     t.string   "keywords"
     t.string   "keywords_except"
     t.date     "end_time"
@@ -593,6 +584,12 @@ ActiveRecord::Schema.define(:version => 20140225113435) do
     t.boolean "assignable",                :default => true
     t.integer "builtin",                   :default => 0,    :null => false
     t.text    "permissions"
+  end
+
+  create_table "screenshot_jobs", :force => true do |t|
+    t.integer  "news_release_id", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "settings", :force => true do |t|
@@ -717,8 +714,8 @@ ActiveRecord::Schema.define(:version => 20140225113435) do
     t.string   "mail_notification",               :default => "",    :null => false
     t.string   "salt",              :limit => 64
     t.string   "phone_number"
-    t.boolean  "client"
     t.string   "user_type"
+    t.boolean  "client"
   end
 
   add_index "users", ["auth_source_id"], :name => "index_users_on_auth_source_id"
