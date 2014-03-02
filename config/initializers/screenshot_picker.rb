@@ -22,6 +22,7 @@ class ScreenshotPicker
 
 				job = ScreenshotJob.find(:first)
 				if job.blank? or job.news_release.blank? or job.news_release.project.blank? or job.news_release.url.blank?
+					sleep(10.seconds)
 					next
 				end
 				url = job.news_release.url
@@ -30,7 +31,7 @@ class ScreenshotPicker
 				unless img.blank?
 					puts "image for url: #{url}, date : #{job.news_release.image_date}, already exists, ignore this capture!"
 					ScreenshotJob.destroy(job.id)
-					sleep(10.seconds)
+					sleep(3.seconds)
 					next
 				end
 
