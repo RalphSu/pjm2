@@ -51,8 +51,12 @@ module ContentsHelper
 		end
 
 		def read_excel_text(file_name, headers)
-			opc = @@opc_package_class.open(@@string_class.new(file_name))
-			wb = @@workbook_class.new(opc)
+			data =  IO.binread(file_name)
+			byte_stream = @@byte_stream_class.new(data)
+			wb = @@workbook_class.new(byte_stream)
+
+			#opc = @@opc_package_class.open(@@string_class.new(file_name))
+			#wb = @@workbook_class.new(opc)
 
 			sheet = wb.getSheetAt(0)
 			if sheet.nil?
@@ -69,7 +73,7 @@ module ContentsHelper
 			result = read_texts(sheet, head_array)
 
 			begin
-				opc.close()
+				byte_stream.close()
 			rescue
 				Rails.logger.info "TextReader:: close opc package failed, ignore and return"
 			end
