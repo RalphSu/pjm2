@@ -58,9 +58,18 @@
 			<% else %>
 			<td title=<%= blog_fields[f.id].body %>>
 				<%if blog_fields[f.id].file_path.blank?%>
-					<p><%= check_number blog_fields[f.id].body %></p>
+					<% if f.template.column_name=='链接' %>
+						<p><a href="<%= blog_fields[f.id].body %>"><%= blog_fields[f.id].body %></a></p>
+					<%else%>
+						<p><%= check_number blog_fields[f.id].body %></p>
+					<%end%>
 				<%else%>
-					<%=tag_icon(true,blog_fields[f.id].file_path)%><%= blog_fields[f.id].body %>
+					<% if f.template.column_name=='链接' %>
+						<%=tag_icon(true,blog_fields[f.id].file_path)%><a href="<%= blog_fields[f.id].body %>"><%= blog_fields[f.id].body %></a>
+					<%else%>
+						<%=tag_icon(true,blog_fields[f.id].file_path)%><%= blog_fields[f.id].body %>
+					<%end%>
+					
 				<%end%>
 				
 			</td>

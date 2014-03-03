@@ -63,10 +63,19 @@
 						<td></td>
 					<% else %>
 					<td title=<%= weibo_fields[f.id].body %>>
+						
 						<%if weibo_fields[f.id].file_path.blank?%>
-							<p><%= check_number weibo_fields[f.id].body %></p>
+							<% if f.template.column_name=='链接' %>
+								<p><a href="<%= weibo_fields[f.id].body %>"><%= weibo_fields[f.id].body %></a></p>
+							<%else%>
+								<p><%= check_number weibo_fields[f.id].body %></p>
+							<%end%>
 						<%else%>
+							<% if f.template.column_name=='链接' %>
+							<%=tag_icon(true,weibo_fields[f.id].file_path)%><a href="<%= weibo_fields[f.id].body %>"><%= weibo_fields[f.id].body %></a>
+							<%else%>
 							<%=tag_icon(true,weibo_fields[f.id].file_path)%><%= weibo_fields[f.id].body %>
+							<%end%>
 						<%end%>
 					</td>
 					<% end %>
@@ -136,6 +145,7 @@
 								<%= text_field 'place', 'place', :size => 25 %></p>
 							<p><label for="hottopic">热门话题榜 </label>
 								<%= text_field 'hottopic', 'hottopic', :size => 25 %></p>
+								<p> <label for="date">日期 </label><%= date_field_tag :wei_date %></p>
 							<p><label for="lastdays">持续天数 </label>
 								<%= text_field 'lastdays', 'lastdays', :size => 25 %></p>
 
@@ -308,7 +318,7 @@ jQuery(document).ready(function($) {
   		function(){
  		 $("#screenshot").remove();
  		});
-	screenshotPreview();
+	
 
 
 }); //document.ready

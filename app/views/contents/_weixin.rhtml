@@ -55,10 +55,18 @@
 				<% else %>
 				<td title=<%= weixin_fields[f.id].body %>>
 					<%if weixin_fields[f.id].file_path.blank?%>
-							<p><%= check_number weixin_fields[f.id].body %></p>
+							<% if f.template.column_name=='链接' %>
+								<p><a href="<%= weixin_fields[f.id].body %>"><%= weixin_fields[f.id].body %></a></p>
 							<%else%>
-							<%=tag_icon(true,weixin_fields[f.id].file_path)%><%= weixin_fields[f.id].body %>
+								<p><%= check_number weixin_fields[f.id].body %></p>
 							<%end%>
+					<%else%>
+						<% if f.template.column_name=='链接' %>
+							<%=tag_icon(true,weixin_fields[f.id].file_path)%><a href="<%= weixin_fields[f.id].body %>"><%= weixin_fields[f.id].body %></a>
+						<%else%>
+							<%=tag_icon(true,weixin_fields[f.id].file_path)%><%= weixin_fields[f.id].body %>
+						<%end%>
+					<%end%>
 				</td>
 				<% end %>
 			<%end%>
