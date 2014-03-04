@@ -17,11 +17,14 @@ class ScreenshotPicker
 			end
 			begin 
 				js = get_screen_js
+				Rails.logger.info " get _screen _js #{js}"
 				phantom = get_phantom
-				puts " js file location: #{js}, phantom runtime location:#{phantom}"
+				Rails.logger.info " js file location: #{js}, phantom runtime location:#{phantom}"
 
 				job = ScreenshotJob.find(:first)
+				Rails.logger.info "job is #{job.inspect}"
 				if job.blank? or job.news_release.blank? or job.news_release.project.blank? or job.news_release.url.blank?
+					puts 'find not screenshot jobs, wait and next'
 					sleep(10.seconds)
 					next
 				end
@@ -29,7 +32,7 @@ class ScreenshotPicker
 
 				img = Image.find(:first, :conditions=>{:url => job.news_release.url, :image_date=> job.news_release.image_date})
 				unless img.blank?
-					puts "image for url: #{url}, date : #{job.news_release.image_date}, already exists, ignore this capture!"
+					Rails.logger.info "image for url: #{url}, date : #{job.news_release.image_date}, already exists, ignore this capture!"
 					ScreenshotJob.destroy(job.id)
 					sleep(3.seconds)
 					next
@@ -42,11 +45,11 @@ class ScreenshotPicker
 				full_name=paths[0]
 				relative_path = paths[1]
 
-				puts "url is #{url}, file full name is #{full_name} !, relative_path to be stored is #{relative_path} !"
+				Rails.logger.info "url is #{url}, file full name is #{full_name} !, relative_path to be stored is #{relative_path} !"
 
-				puts "#{phantom} #{js} #{url} #{full_name}"
+				Rails.logger.info "#{phantom} #{js} #{url} #{full_name}"
 				capture_status = `#{phantom} #{js} #{url} #{full_name}`
-				puts "capture_status is #{capture_status}"
+				Rails.logger.info "capture_status is #{capture_status}"
 
 				# save image
 				img = Image.find(:first, :conditions=>{:url => job.news_release.url, :image_date=> job.news_release.image_date})
@@ -56,10 +59,11 @@ class ScreenshotPicker
 				img.file_path = relative_path
 				img.save!
 
-				puts "remove current screen job!"
+				Rails.logger.info "remove current screen job!"
 				ScreenshotJob.destroy(job.id)
 			rescue Exception => e
 				puts "Screenshot failed. url: #{url} !! Exception is #{e.inspect}"
+				sleep(10)
 			end
 		end
 
