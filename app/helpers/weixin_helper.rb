@@ -16,6 +16,10 @@ module WeixinHelper
 		Template.find(:all, :conditions => {:template_type =>"微信类模板" })
 	end
 
+	def count_weixins(project, category)
+		Weixin.count_by_sql "SELECT COUNT(*) FROM weixins n WHERE n.projects_id = #{project.id} and classified = '#{category}' "
+	end
+
 	def find_weixin_for_project(project, category)
 		Weixin.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:projects_id => project, :classified => category})
 	end

@@ -15,6 +15,10 @@ module BlogHelper
 		Template.find(:all, :conditions => {:template_type =>"博客类模板" })
 	end
 
+	def count_blogs(project, category)
+		Blog.count_by_sql "SELECT COUNT(*) FROM blogs n WHERE n.project_id = #{project.id} and classified = '#{category}' "
+	end
+
 	def find_blog_for_project(project, category)
 		Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end

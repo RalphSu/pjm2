@@ -18,6 +18,10 @@ module SummaryHelper
 		end
 	end
 
+	def count_summaries(project, category)
+		Summary.count_by_sql "SELECT COUNT(*) FROM summaries n WHERE n.projects_id = #{project.id} and classified = '#{category}' "
+	end
+
 	def find_summary_for_project(project, category)
 		Summary.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:projects_id => project, :classified => category})
 	end

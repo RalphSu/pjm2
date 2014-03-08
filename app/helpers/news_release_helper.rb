@@ -31,6 +31,10 @@ module NewsReleaseHelper
 		map
 	end
 
+	def count_news_releases(project, category)
+		NewsRelease.count_by_sql "SELECT COUNT(*) FROM news_releases n WHERE n.project_id = #{project.id} and classified = '#{category}' "
+	end
+
 	def find_news_release_for_project(project, category)
 		NewsRelease.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end

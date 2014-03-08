@@ -6,6 +6,10 @@
 <% end %>
 
 <div class="contextual">
+	<% if User.current.employee? and not @category.blank? %>
+		<label ><%=l(:label_records_total)%><b><%= count_summaries(@p, @category)%></b></label></a>
+	<%end%>
+
 	<% if User.current.employee?%>
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_summary_new)%></label></a>
 	<%end%>

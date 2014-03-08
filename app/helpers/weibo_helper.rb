@@ -14,6 +14,10 @@ module WeiboHelper
 		Template.find(:all, :conditions => {:template_type =>"微博类模板" })
 	end
 
+	def count_weibos(project, category)
+		Weibo.count_by_sql "SELECT COUNT(*) FROM weibos n WHERE n.project_id = #{project.id} and classified = '#{category}' "
+	end
+
 	def find_weibo_for_project(project, category)
 		Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end

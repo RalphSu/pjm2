@@ -14,6 +14,10 @@ module ForumHelper
 		Template.find(:all, :conditions => {:template_type =>"论坛类模板" })
 	end
 
+	def count_forums(project, category)
+		Forum.count_by_sql "SELECT COUNT(*) FROM forums n WHERE n.project_id = #{project.id} and classified = '#{category}' "
+	end
+
 	def find_forum_for_project(project, category)
 		Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end
