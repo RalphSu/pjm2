@@ -173,6 +173,7 @@ class Crawler
 				# use regular expression??
 				hasDate = false
 				hasPlatform = false
+				site = ""
 				item.css('span').each do |author_time|
 					content = author_time.content.strip;
 					#puts "Author and time : " + content
@@ -216,15 +217,14 @@ class Crawler
 
 				# ignore no date items, they might be baidu links that is not search results, like search suggestions
 				# ignore for platform
-				unless (hasDate and hasPlatform)
+				if (hasDate and hasPlatform and (site.strip.size > 0) )
+					# now save
+					if _save(nr, fields)
+						saved_count = saved_count + 1
+					end
+				else
 					Rails.logger.info "Ignore no date in parsed output when hande project #{project.name} for page at #{page_num}, item index : #{item_count}. The item content is #{item.content}!"
-					next
-				end
-
-
-				# now save
-				if _save(nr, fields)
-					saved_count = saved_count + 1
+					next 
 				end
 			rescue Exception => e
 				Rails.logger.info "Ignore failure when hande project #{project.name} for page at #{page_num}, item index : #{item_count}. The item content is #{item.content}! Exception : #{e.inspect}"
