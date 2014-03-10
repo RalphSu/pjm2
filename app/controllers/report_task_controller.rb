@@ -59,7 +59,11 @@ class ReportTaskController < ApplicationController
        _save_news_event("新增周报任务", "新增周报任务","新增周报任务")
     elsif type==ReportTask::TYPE_SUMMARY
       task.report_start_time = Time.parse(start_time)
-      task.report_end_time = Time.parse(start_time)+1.year
+      if @project.end_time.blank?
+        task.report_end_time = Time.parse(start_time)+1.year
+      else
+        task.report_end_time=@project.end_time
+      end
       _save_news_event("新增结案报告任务", "新增结案报告任务","新增结案报告任务")
       
     end
