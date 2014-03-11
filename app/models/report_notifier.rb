@@ -3,6 +3,7 @@ require "uri"
 class ReportNotifier < ActionMailer::Base
 
 	def _setup()
+		ActionMailer::Base.default_charset = "UTF-8"
 		ActionMailer::Base.delivery_method = :smtp
 		ActionMailer::Base.perform_deliveries = true
 		ActionMailer::Base.raise_delivery_errors = true
