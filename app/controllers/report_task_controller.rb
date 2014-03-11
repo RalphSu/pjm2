@@ -178,9 +178,11 @@ class ReportTaskController < ApplicationController
     notification_msg = '发送邮件通知: '
     users.each do |u|
       begin
-        if (task.task_type == '结案报告')
+        if (task.task_type == 'summary')
+          Rails.logger.info "sending summary report"
           ReportNotifier.deliver_summary_report(task, u, "#{request.protocol}#{request.host}:#{request.port}")
         else
+          Rails.logger.info "sending normal report"
           ReportNotifier.deliver_report_notification(task, u, "#{request.protocol}#{request.host}:#{request.port}")
         end
         _save_news_event("报表发布邮件通知", "报表发布邮件通知","报表发布邮件通知")

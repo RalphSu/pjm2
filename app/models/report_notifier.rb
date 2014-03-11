@@ -61,19 +61,20 @@ class ReportNotifier < ActionMailer::Base
 			unless task.task_type.blank?
 				type = ReportTask::TYPE_LABEL[task.task_type]
 			end
-			content_type "multipart/alternative"
+			# content_type "multipart/alternative"
+			content_type "text/html"
 			# generate mail
 			report_date = task.report_start_time.strftime('%Y年%m月%d日')
-			subject task.project.name + ' 项目报表发布 : ( ' + report_date.to_s + ' ' + type + ' )'
+			subject task.project.name  + ' 项目报表发布 : ( ' + report_date.to_s + ' ' + type + ' )'
 			recipients user.mail
 			from username
 			sent_on Time.now
 			date = Time.now
 			date = date.strftime('%Y年%m月%d日')
-			part  :content_type => 'text/html', :body => render_message('report_notification', {:task => task, :url=> url, :user=>user, :date=>date, :type=>type})
-
-			filename = task.project.name + report_date.to_s + ' ' + type + ".docx"
-			attachment :filename=> filename, :content_type=>"application/msword", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" + path)
+			# part  :content_type => 'text/html', :body => render_message('report_notification', {:task => task, :url=> url, :user=>user, :date=>date, :type=>type})
+			body  :task => task, :url=> url, :user=>user, :date=>date, :type=>type
+			# filename = task.project.name + report_date.to_s + ' ' + type + ".docx"
+			# attachment :filename=> filename, :content_type=>"application/msword", :body=> IO.binread(File.join File.dirname(__FILE__), "../../" + path)
 		end
 	end
 
