@@ -89,6 +89,7 @@ class ReportNotifier < ActionMailer::Base
 		end
 
 		url = "#{baseurl}/report_task/tasks/#{task.project.identifier}/#{task.id}/download?filename=#{URI::encode(path)}"
+		Rails.logger.info " url encoding: #{url.encoding}"
 		unless user.mail.blank?
 			# generate mail
 			subject task.project.name + ' 项目报表发布 : ( 结案报告 )'
@@ -98,6 +99,7 @@ class ReportNotifier < ActionMailer::Base
 			sent_on Time.now
 			date = Time.now
 			date = date.strftime('%Y年%m月%d日')
+			Rails.logger.info " date encoding: #{date.encoding}"
 			body  :task => task, :url=> url, :user=>user, :date=>date
 		end
 	end

@@ -1,4 +1,4 @@
-#-- encoding: UTF-8
+# -*- encoding : utf-8 -*-
 class ReportTaskController < ApplicationController
   layout 'report'
   include ContentsHelper

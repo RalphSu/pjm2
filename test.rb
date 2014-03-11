@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 require 'ruby-units'
 s = '2013-12-24'

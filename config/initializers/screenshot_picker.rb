@@ -96,7 +96,7 @@ end
 
 
 sys_picker = ScreenshotPicker.new
-sys_picker.screenshot_job(Time.now + (10))
+#sys_picker.screenshot_job(Time.now + (10))
 # just new a thread and run it??
 # i'm not sure what would happend to thread like interruptted in java
 # Thread.new do

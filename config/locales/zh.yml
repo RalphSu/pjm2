@@ -1124,8 +1124,8 @@ zh:
   TYPE_SUMMARY: 结案报告
   label_new_report: 新建报表
   notice_successful_publish: 发布成功
-  notice_successful_unpublish: 取消发布成功
-  notice_successful_republish: 重新发布成功
+  notice_successful_unpublish: 取消发布成功! 
+  notice_successful_republish: 重新发布成功! 
   notice_successful_create: 新建成功
   notice_successful_upload: 上传成功
   notice_failed_publish: 还没审核不能发布
