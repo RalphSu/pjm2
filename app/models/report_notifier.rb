@@ -94,6 +94,7 @@ class ReportNotifier < ActionMailer::Base
 			subject task.project.name + ' 项目报表发布 : ( 结案报告 )'
 			recipients user.mail
 			from username
+			content_type 'text/html'
 			sent_on Time.now
 			date = Time.now
 			date = date.strftime('%Y年%m月%d日')
@@ -110,6 +111,7 @@ class ReportNotifier < ActionMailer::Base
 		# generate mail
 		subject '科翼舆情管理平台帐号创建通知'
 		recipients user.mail
+		content_type 'text/html'
 		from username # 
 		sent_on Time.now
 		date = Time.now
