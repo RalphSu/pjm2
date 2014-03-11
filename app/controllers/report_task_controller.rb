@@ -175,20 +175,20 @@ class ReportTaskController < ApplicationController
       end
     end
 
-    notification_msg = '发送邮件'
-    begin
-      users.each do |u|
+    notification_msg = '发送邮件通知: '
+    users.each do |u|
+      begin
         if (task.task_type == '结案报告')
           ReportNotifier.deliver_summary_report(task, u, "#{request.protocol}#{request.host}:#{request.port}")
         else
           ReportNotifier.deliver_report_notification(task, u, "#{request.protocol}#{request.host}:#{request.port}")
         end
+        _save_news_event("报表发布邮件通知", "报表发布邮件通知","报表发布邮件通知")
+        notification_msg += "#{u.mail}发送成功 "
+      rescue Exception => e
+        Rails.logger.info " sending publish notification failed. Exception is #{e.inspect}"
+        notification_msg += "#{u.mail}未发送成功 "
       end
-      _save_news_event("报表发布邮件通知", "报表发布邮件通知","报表发布邮件通知")
-      notification_msg = '报表发布邮件通知已发送!'
-    rescue Exception => e
-      Rails.logger.info " sending publish notification failed. Exception is #{e.inspect}"
-      notification_msg = '报表发布邮件通知未发送成功，请注意设置正确的邮件服务器！'
     end
     Rails.logger.info "===============#{notification_msg}"
 
