@@ -78,8 +78,8 @@ class ProjectsController < ApplicationController
         if params[:project][:reviewer] == params[:project][:project_manager]
           @project.members << Member.new(:role_ids => [get_project_manager_role_id, get_project_reviewer_role_id], :user_id => params[:project][:reviewer])
         else 
-          @project.members << Member.new(:role_ids => [get_project_manager_role_id], :user_id => params[:project][:reviewer])
-          @project.members << Member.new(:role_ids => [get_project_reviewer_role_id], :user_id =>params[:project][:project_manager])
+          @project.members << Member.new(:role_ids => [get_project_manager_role_id], :user_id => params[:project][:project_manager])
+          @project.members << Member.new(:role_ids => [get_project_reviewer_role_id], :user_id =>params[:project][:reviewer])
         end
         #Rails.logger.info '=================================================save project members end!'
       rescue => error
