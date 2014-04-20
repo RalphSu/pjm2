@@ -23,13 +23,16 @@ class ReportTaskController < ApplicationController
         @projects=User.current.active_projects
          # fill the selected flag
           if User.current.admin?
-            @reporttasks = ReportTask.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc', :conditions=> {:project_id => @project.id})
+            @reporttasks = ReportTask.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc', 
+              :conditions=> {:project_id => @project.id})
           else
-            @reporttasks = ReportTask.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc', :conditions=> ["project_id = ? AND status<> ? ", @project.id, ReportTask::STATUS_CANCELPUBLISH])
+            @reporttasks = ReportTask.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc', 
+              :conditions=> ["project_id = ? AND status<> ? ", @project.id, ReportTask::STATUS_CANCELPUBLISH])
           end
       else 
       @projects=User.current.active_client_projects
-      @reporttasks = ReportTask.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc', :conditions=> {:project_id => @project.id,:status=>ReportTask::STATUS_PUBLISHED})
+      @reporttasks = ReportTask.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc', 
+        :conditions=> {:project_id => @project.id,:status=>ReportTask::STATUS_PUBLISHED})
     end
 
     render :action => "tasks",:layout => false if request.xhr?
