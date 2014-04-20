@@ -46,7 +46,7 @@
     <th><%=l(:label_report_task_create_time)%></th>
     <th><%=l(:label_report_task_type)%></th>
 	<th><%=l(:label_report_task_start_time)%></th>
-	
+	<th><%=l(:label_report_task_end_time)%></th>
     <th><%=l(:label_report_task_status)%></th>
     <th><%=l(:label_report_gen_path)%></th>
     <th><%=l(:label_report_correct_path)%></th>
@@ -59,7 +59,7 @@
     <td><%=   format_date(f.created_at)%></td>
     <td ><%=  f.label_type %></td>
 	<td ><%= format_date(f.report_start_time) %></td>
-    
+    <td ><%= format_date(f.report_end_time) %></td>
     <td ><%=  f.label_status %></td>
     <td >
       <% unless f.gen_path.blank? %>
