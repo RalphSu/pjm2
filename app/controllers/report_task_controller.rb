@@ -34,8 +34,10 @@ class ReportTaskController < ApplicationController
       sql = sql + " AND gen_end_time > ? "
     end
     unless @end_time.blank?
-      sql_params << @end_time
-      sql = sql + " AND gen_end_time <= ? "
+      shift_end_time = Time.parse(@end_time) + (60 * 60 * 24)
+      shift_end_time.strftime("YYYY-MM-DD")
+      sql_params << shift_end_time
+      sql = sql + " AND gen_end_time < ? "
     end
 
      if User.current.employee?
