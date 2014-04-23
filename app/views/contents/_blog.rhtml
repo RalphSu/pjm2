@@ -8,7 +8,7 @@
 <label for=""><%=l(:label_date)%>:</label><%= date_field_tag :link_date, @link_date %>
 <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
 <%= link_to l(:button_clear), {:controller => 'blog', :action => 'index', :category=> @category,
-		:project_id=>@project.identifier}, :class => 'icon icon-reload' %>
+		:project_id=>@project.blank? ? nil : @project.identifier}, :class => 'icon icon-reload' %>
 </fieldset>
 <% end %>
 

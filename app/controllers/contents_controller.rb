@@ -11,6 +11,7 @@ class ContentsController < ApplicationController
       @projects=User.current.active_client_projects
     end
     @p = @projects.first unless not @project.nil?
+    @project = @p
     @category=params['category']
 
     Rails.logger.info "===========================================================#{request.protocol}#{request.host}:#{request.port}"
@@ -28,6 +29,7 @@ class ContentsController < ApplicationController
     @link_date = params[:link_date]
     @tab = params['tab'].nil? ? 'news' : params['tab']
     @p = Project.find(params[:project_id])
+    @project = @p
     @projects=[]
     @projects << @p unless @p.nil?
   end
