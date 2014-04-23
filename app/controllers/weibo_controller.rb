@@ -473,7 +473,10 @@ class WeiboController < ApplicationController
 
 	def init(params)
 		@category=params[:category]
+		@link = params[:link]
+		@link_date = params[:link_date]
 		@import_type = params[:import]
+
 		@p = @project
 		@projects =[]
 		@projects << @p unless @p.nil?

@@ -18,8 +18,20 @@ module WeiboHelper
 		Weibo.count_by_sql "SELECT COUNT(*) FROM weibos n WHERE n.project_id = #{project.id} and classified = '#{category}' "
 	end
 
-	def find_weibo_for_project(project, category)
-		Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
+	def find_weibo_for_project(project, category, link, link_date)
+		conditions = {}
+		conditions[:project_id] = project.id
+		conditions[:classified] = category
+		unless link.blank?
+			conditions[:url] = link
+		end
+		unless link_date.blank?
+			conditions[:image_date] = link_date
+		end
+		Rails.logger.info " conditions for query is #{conditions.inspect}"
+		Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>conditions)
+
+		#Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end
 
 	def invisible_column()

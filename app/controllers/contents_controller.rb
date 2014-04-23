@@ -24,6 +24,8 @@ class ContentsController < ApplicationController
   def show
     @category = params['category']
     @category = "" if @category.nil?
+    @link = params[:link]
+    @link_date = params[:link_date]
     @tab = params['tab'].nil? ? 'news' : params['tab']
     @p = Project.find(params[:project_id])
     @projects=[]

@@ -18,8 +18,20 @@ module ForumHelper
 		Forum.count_by_sql "SELECT COUNT(*) FROM forums n WHERE n.project_id = #{project.id} and classified = '#{category}' "
 	end
 
-	def find_forum_for_project(project, category)
-		Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
+	def find_forum_for_project(project, category, link, link_date)
+		conditions = {}
+		conditions[:project_id] = project.id
+		conditions[:classified] = category
+		unless link.blank?
+			conditions[:url] = link
+		end
+		unless link_date.blank?
+			conditions[:image_date] = link_date
+		end
+		Rails.logger.info " conditions for query is #{conditions.inspect}"
+		Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>conditions)
+
+		#Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end
 
 	def forum_option_for_select(selected)

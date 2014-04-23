@@ -1147,3 +1147,4 @@ zh:
   label_mail_ssl: 安全链接(ssl或者不填)：
   button_test_mail: 测试邮件设置
   label_records_total:  全部记录数：
+  label_link: 链接

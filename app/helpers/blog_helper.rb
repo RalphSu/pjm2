@@ -19,8 +19,20 @@ module BlogHelper
 		Blog.count_by_sql "SELECT COUNT(*) FROM blogs n WHERE n.project_id = #{project.id} and classified = '#{category}' "
 	end
 
-	def find_blog_for_project(project, category)
-		Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
+	def find_blog_for_project(project, category, link, link_date)
+		conditions = {}
+		conditions[:project_id] = project.id
+		conditions[:classified] = category
+		unless link.blank?
+			conditions[:url] = link
+		end
+		unless link_date.blank?
+			conditions[:image_date] = link_date
+		end
+		Rails.logger.info " conditions for query is #{conditions.inspect}"
+		Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>conditions)
+
+		#Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end
 
 	def blog_option_for_select(selected)

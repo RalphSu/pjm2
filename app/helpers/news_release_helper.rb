@@ -35,8 +35,18 @@ module NewsReleaseHelper
 		NewsRelease.count_by_sql "SELECT COUNT(*) FROM news_releases n WHERE n.project_id = #{project.id} and classified = '#{category}' "
 	end
 
-	def find_news_release_for_project(project, category)
-		NewsRelease.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
+	def find_news_release_for_project(project, category, link, link_date)
+		conditions = {}
+		conditions[:project_id] = project.id
+		conditions[:classified] = category
+		unless link.blank?
+			conditions[:url] = link
+		end
+		unless link_date.blank?
+			conditions[:image_date] = link_date
+		end
+		Rails.logger.info " conditions for query is #{conditions.inspect}"
+		NewsRelease.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>conditions)
 	end
 
 	def distinct_news_templates

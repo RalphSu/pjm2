@@ -4,6 +4,13 @@
 <label for='category'><%= l(:label_category) %> :</label>
 <% form_tag({}, :method => :get) do %>
 <%= select_tag 'category', weibo_option_for_select(@category), :class => "large", :onchange => "this.form.submit(); return false;"  %>
+<label for="link"><%=l(:label_link)%> : </label>
+<%= text_field_tag :link , @link %>
+<label for=""><%=l(:label_date)%>:</label><%= date_field_tag :link_date, @link_date %>
+<%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+<%= link_to l(:button_clear), {:controller => 'weibo', :action => 'index', :category=> @category,
+		:project_id=>@project.identifier}, :class => 'icon icon-reload' %>
+</fieldset>
 <% end %>
 
 <div class="contextual">
@@ -56,7 +63,7 @@
 	<tbody>
 <% weibos = nil # init %>
 <% unless (@p.blank? or @category.blank?)%>
-	<% weibos = find_weibo_for_project(@p, @category) %>
+	<% weibos = find_weibo_for_project(@p, @category, @link, @link_date) %>
 	<% unless weibos.blank? %>
 		<% weibos.each do | nr| %>
 			<% if nr.classified == @category %>

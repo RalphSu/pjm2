@@ -192,6 +192,8 @@ class ForumController < ApplicationController
 	def init(params)
 		@category=params[:category]
 		@import_type = params[:import]
+		@link = params[:link]
+		@link_date = params[:link_date]
 		@p = @project
 		@projects =[]
 		@projects << @p unless @p.nil?
