@@ -13,6 +13,8 @@ class ContentsController < ApplicationController
     @p = @projects.first unless not @project.nil?
     @project = @p
     @category=params['category']
+    @link = params[:link]
+    @link_date = params[:link_date]
 
     Rails.logger.info "===========================================================#{request.protocol}#{request.host}:#{request.port}"
   end
