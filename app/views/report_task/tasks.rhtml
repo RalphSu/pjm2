@@ -4,7 +4,15 @@
 <div class="contextual">
   <a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_new_report)%></label></a>
 </div>
+
+<% form_tag({}, :method => :get) do %>
+<label for="subject"><%=l(:label_report_task_type)%> : </label>
+<%= select_tag 'type', report_types_with_empty(@type), :class => "small", :onchange => "this.form.submit(); return false;"  %>
+<label for=""><%=l(:label_report_task_start_time)%>:</label><%= date_field_tag :start_time, @start_time %>
+<label for="ff"><%=l(:label_report_task_end_time)%>:</label><%= date_field_tag :end_time, @end_time  %>
+<%= submit_tag l(:button_apply), :class => "small", :name => nil %>
 </fieldset>
+<% end %>
 
 <!-- Modal dialog for upload -->
 <div class="container">

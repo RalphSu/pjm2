@@ -17,23 +17,51 @@ class ReportTaskController < ApplicationController
     end
   end
 
-
    def tasks
+    @type = params[:type]
+    @start_time = params[:start_time]
+    @end_time = params[:end_time]
+    conditions=[]
+    sql = "project_id=? "
+    sql_params = []
+    sql_params << @project.id
+    unless @type.blank?
+      sql_params << @type
+      sql = sql + " AND task_type = ? "
+    end
+    unless @start_time.blank?
+      sql_params << @start_time
+      sql = sql + " AND gen_end_time > ? "
+    end
+    unless @end_time.blank?
+      sql_params << @end_time
+      sql = sql + " AND gen_end_time <= ? "
+    end
+
      if User.current.employee?
         @projects=User.current.active_projects
          # fill the selected flag
           if User.current.admin?
-            @reporttasks = ReportTask.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc', 
-              :conditions=> {:project_id => @project.id})
+            
           else
-            @reporttasks = ReportTask.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc', 
-              :conditions=> ["project_id = ? AND status<> ? ", @project.id, ReportTask::STATUS_CANCELPUBLISH])
+            sql = sql + " AND status<> ? "
+            # non-admin could not view cancelled projects
+            sql_params << ReportTask::STATUS_CANCELPUBLISH
           end
       else 
-      @projects=User.current.active_client_projects
-      @reporttasks = ReportTask.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc', 
-        :conditions=> {:project_id => @project.id,:status=>ReportTask::STATUS_PUBLISHED})
+        @projects=User.current.active_client_projects
+        # could only view published project for client user
+        sql = sql + " AND status = ? "
+        sql_params << ReportTask::STATUS_PUBLISHED
     end
+
+    conditions << sql
+    conditions.concat sql_params
+
+    Rails.logger.info "conditions are #{conditions.inspect}"
+
+    @reporttasks = ReportTask.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'updated_at desc', 
+         :conditions=> conditions)
 
     render :action => "tasks",:layout => false if request.xhr?
 
