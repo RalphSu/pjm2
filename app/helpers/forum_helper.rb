@@ -33,7 +33,7 @@ module ForumHelper
 			sql_param << link_date
 		end
 		conditions << sql
-		conditions.contact sql_param
+		conditions.concat sql_param
 		Rails.logger.info " conditions for query is #{conditions.inspect}"
 		Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>conditions)
 
