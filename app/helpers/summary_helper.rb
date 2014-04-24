@@ -24,7 +24,7 @@ module SummaryHelper
 
 	def find_summary_for_project(project, category, link, link_date)
 		conditions = {}
-		conditions[:project_id] = project.id
+		conditions[:projects_id] = project.id
 		conditions[:classified] = category
 		unless link.blank?
 			conditions[:url] = link
