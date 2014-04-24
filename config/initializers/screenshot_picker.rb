@@ -15,6 +15,7 @@ class ScreenshotPicker
 			if now > end_date
 				break
 			end
+			job = nil
 			begin 
 				js = get_screen_js
 				Rails.logger.info " get _screen _js #{js}"
@@ -62,6 +63,9 @@ class ScreenshotPicker
 				Rails.logger.info "remove current screen job!"
 				ScreenshotJob.destroy(job.id)
 			rescue Exception => e
+				unless job.nil?
+					ScreenshotJob.destroy(job.id)
+				end
 				Rails.logger.info "Screenshot failed. url: #{url} !! Exception is #{e.inspect}"
 				sleep(10.seconds)
 			end
@@ -109,6 +113,7 @@ sys_picker = ScreenshotPicker.new
 # that differnt round of screenshot_job working on the one image screen shot. We treat this case
 # as minor case, and it won't hurt anything:)
 scheduler = Rufus::Scheduler.new
-scheduler.every("1d") do
- 	sys_picker.screenshot_job(Time.now + (60 * 60 * 24))
+scheduler.every("1h") do
+	Rails.logger.info " Start screenshot job at #{Time.now}"
+ 	sys_picker.screenshot_job(Time.now + (60 * 60))
 end
