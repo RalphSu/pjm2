@@ -23,15 +23,21 @@ module SummaryHelper
 	end
 
 	def find_summary_for_project(project, category, link, link_date)
-		conditions = {}
-		conditions[:projects_id] = project.id
-		conditions[:classified] = category
+		conditions = []
+		sql = "projects_id = ? AND classified = ? "
+		sql_param = []
+		sql_param << project.id
+		sql_param << category
 		unless link.blank?
-			conditions[:url] = link
+			sql = sql + " AND url REGEXP ? "
+			sql_param << link
 		end
 		unless link_date.blank?
-			conditions[:image_date] = link_date
+			sql = sql + " AND image_date = ? "
+			sql_param << link_date
 		end
+		conditions << sql
+		conditions.contact sql_param
 		Rails.logger.info " conditions for query is #{conditions.inspect}"
 		Summary.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>conditions)
 

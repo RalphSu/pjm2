@@ -19,15 +19,21 @@ module ForumHelper
 	end
 
 	def find_forum_for_project(project, category, link, link_date)
-		conditions = {}
-		conditions[:project_id] = project.id
-		conditions[:classified] = category
+		conditions = []
+		sql = "project_id = ? AND classified = ? "
+		sql_param = []
+		sql_param << project.id
+		sql_param << category
 		unless link.blank?
-			conditions[:url] = link
+			sql = sql + " AND url REGEXP ? "
+			sql_param << link
 		end
 		unless link_date.blank?
-			conditions[:image_date] = link_date
+			sql = sql + " AND image_date = ? "
+			sql_param << link_date
 		end
+		conditions << sql
+		conditions.contact sql_param
 		Rails.logger.info " conditions for query is #{conditions.inspect}"
 		Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>conditions)
 
