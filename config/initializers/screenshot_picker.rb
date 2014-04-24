@@ -24,7 +24,7 @@ class ScreenshotPicker
 				job = ScreenshotJob.find(:first)
 				Rails.logger.info "job is #{job.inspect}"
 				if job.blank? or job.news_release.blank? or job.news_release.project.blank? or job.news_release.url.blank?
-					puts 'find not screenshot jobs, wait and next'
+					Rails.logger.info 'find not screenshot jobs, wait and next'
 					sleep(10.seconds)
 					next
 				end
@@ -40,7 +40,7 @@ class ScreenshotPicker
 
 				# generate file_path
 				# full_name : the full path that the image to be saved
-				# relative_path : the relative_path that would be saved to image file_path
+				# relative_path : the relative_path that 
 				paths=get_and_check_file_path(job.news_release.project)
 				full_name=paths[0]
 				relative_path = paths[1]
@@ -62,12 +62,12 @@ class ScreenshotPicker
 				Rails.logger.info "remove current screen job!"
 				ScreenshotJob.destroy(job.id)
 			rescue Exception => e
-				puts "Screenshot failed. url: #{url} !! Exception is #{e.inspect}"
-				sleep(10)
+				Rails.logger.info "Screenshot failed. url: #{url} !! Exception is #{e.inspect}"
+				sleep(10.seconds)
 			end
 		end
 
-		puts "Screenshot running round completed. The end_date is #{end_date}, current time is #{Time.now}"
+		Rails.logger.info "Screenshot running round completed. The end_date is #{end_date}, current time is #{Time.now}"
 	end
 
 	def get_screen_js

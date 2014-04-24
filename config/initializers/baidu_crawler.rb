@@ -46,7 +46,7 @@ class Crawler
 			begin 
 				puts "	handling page #{num_of_pages_read} with url: #{page_url}	"
 				doc = Nokogiri::HTML(open(page_url))
-				stat = _handle_one_page(job, doc, project, news_classifieds_hash, num_of_pages_read+1)
+				stat = _handle_one_page(job, doc, project, news_classifieds_hash, num_of_pages_read+1, saved_count)
 				page_url = stat[0]
 				saved_count = saved_count + stat[1]
 				num_of_pages_read = num_of_pages_read + 1
@@ -138,7 +138,7 @@ class Crawler
 	end
 
 	# return [next_page, saved_count]
-	def _handle_one_page(job, doc, project, news_classifieds_hash, page_num)
+	def _handle_one_page(job, doc, project, news_classifieds_hash, page_num, g_saved_count)
 		saved_count = 0
 		item_count = 0
 		next_page = nil
@@ -219,7 +219,7 @@ class Crawler
 				# ignore for platform
 				if (hasDate and hasPlatform and (site.strip.size > 0) )
 					# now save
-					if _save(nr, fields)
+					if _save(nr, fields, g_saved_count)
 						saved_count = saved_count + 1
 					end
 				else
@@ -242,7 +242,7 @@ class Crawler
 		[next_page, saved_count]
 	end
 
-	def _save(nr, fields)
+	def _save(nr, fields, saved_count)
 		Rails.logger.info "	Saved #{nr.inspect} and #{fields.inspect} for one news_release line!"
 		unless fields.blank?
 			# check duplicated.
@@ -259,10 +259,12 @@ class Crawler
 						f.news_release=nr
 						f.save!
 					end
-					# save screenshot jobs
-					screenjob = ScreenshotJob.new
-					screenjob.news_release = nr
-					screenjob.save!
+					if saved_count < 20
+						# save screenshot jobs
+						screenjob = ScreenshotJob.new
+						screenjob.news_release = nr
+						screenjob.save!
+					end
 				end  # end of transaction
 				saved = true
 			rescue Exception => e
