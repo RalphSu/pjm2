@@ -11,7 +11,10 @@ module WeiboHelper
 	end
 
 	def distinct_weibo_templates()
-		Template.find(:all, :conditions => {:template_type =>"微博类模板" })
+		templates = Template.find(:all, :conditions => {:template_type =>"微博类模板" })
+		templates.select do |t|
+			t.column_name != '图片'
+		end
 	end
 
 	def count_weibos(project, category)
