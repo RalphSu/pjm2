@@ -56,7 +56,7 @@
 	<th><%=l(:label_report_task_start_time)%></th>
 	<th><%=l(:label_report_task_end_time)%></th>
     <th><%=l(:label_report_task_status)%></th>
-    <th><%=l(:label_report_gen_path)%></th>
+    <th width="20%"><%=l(:label_report_gen_path)%></th>
     <th><%=l(:label_report_correct_path)%></th>
   <th></th>
   </tr></thead>
@@ -71,7 +71,13 @@
     <td ><%=  f.label_status %></td>
     <td >
       <% unless f.gen_path.blank? %>
-      <%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>f.gen_path  }, :method => :get) %></a>
+      <%= link_to(l(:button_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>f.gen_path  }, :method => :get) %>
+      <% unless find_weibo_direct_file(f).blank? %>
+      <%= link_to(l(:button_weibo_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>find_weibo_direct_file(f)  }, :method => :get) %>
+      <%  end%>
+      <% unless find_daren_direct_file(f).blank? %>
+      <%= link_to(l(:button_daren_download), { :controller => 'report_task', :action => 'download', :project_id => @project, :task_id=>f.id, :filename=>find_daren_direct_file(f)  }, :method => :get) %>
+      <%  end%>
      <% end %></td>
     <td >
       <% unless f.reviewed_path.blank?%>

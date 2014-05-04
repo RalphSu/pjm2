@@ -125,16 +125,46 @@ class ReportTaskController < ApplicationController
   end
 
   def upload
+    origin_name = params[:task_file].original_filename.force_encoding("UTF-8")
+    Rails.logger.error origin_name
+    if not origin_name.end_with?(".docx")
+          respond_to do |format|
+            format.html {
+              flash[:error] = l(:error_upload_file_error)
+              redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
+            }
+          end
+          return
+    end
+
     id = params[:task_id]
     unless id.blank?
       task = ReportTask.find(id)
       unless task.blank?
-        data = params[:task_file].read
-        file_name = save_reviewed_file(task, data)
-        task.reviewed_path = file_name
+        upload_file_name = File.basename origin_name, ".docx"
+
+        Rails.logger.info " upload file name " + upload_file_name
+        Rails.logger.info " file directory: " + File.dirname(task.gen_path)
+
+        prefix = File.join File.dirname(__FILE__), "../../"
+        if  upload_file_name.end_with?("_微博直发")
+          file_name =  File.dirname(task.gen_path) +"/"+ task.id.to_s + "_微博直发.docx"
+        elsif upload_file_name.end_with?("_达人直发")
+          file_name =  File.dirname(task.gen_path) +"/"+ task.id.to_s + "_达人直发.docx"
+        else
+          file_name =  File.dirname(task.gen_path) +"/"+ task.id.to_s + "_审核.docx"
+          task.reviewed_path = file_name
+        end
+
+        # write to file through binary mode.
+        Rails.logger.info " upload file saved with name : #{prefix}, #{file_name}"
+        File.open(prefix + file_name, 'wb') do |file|
+          file.write(params[:task_file].read)
+        end
+
         task.status=ReportTask::STATUS_REVIEWED
-        _save_news_event("上传审核报表文件", "上传审核报表文件","上传审核报表文件")
         task.save!
+        _save_news_event("上传审核报表文件", "上传审核报表文件","上传审核报表文件")
       end
     end
     respond_to do |format|
@@ -143,14 +173,6 @@ class ReportTaskController < ApplicationController
         redirect_to({:controller => 'report_task', :action => 'tasks', :project_id=>@project.identifier})
       }
     end
-  end
-
-  def save_reviewed_file(task, data)
-    prefix = File.join File.dirname(__FILE__), "../../"
-    file_name =  task.gen_path + "_reviewed.docx"
-    Rails.logger.info "Save file with name #{file_name}"
-    IO.binwrite(prefix + file_name, data)
-    file_name
   end
 
   def publish

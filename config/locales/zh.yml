@@ -1148,3 +1148,6 @@ zh:
   button_test_mail: 测试邮件设置
   label_records_total:  全部记录数：
   label_link: 链接
+  error_upload_file_error: 只能上传word文档!
+  button_weibo_download: 微博直发
+  button_daren_download: 达人直发
