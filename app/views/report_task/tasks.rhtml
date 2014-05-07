@@ -57,8 +57,7 @@
 	<th><%=l(:label_report_task_end_time)%></th>
     <th><%=l(:label_report_task_status)%></th>
     <th width="20%"><%=l(:label_report_gen_path)%></th>
-    <th><%=l(:label_report_correct_path)%></th>
-    <th width="1"></th>
+    <th width="15%"><%=l(:label_report_correct_path)%></th>
   <th></th>
   </tr></thead>
   <tbody>
@@ -106,7 +105,6 @@
       <% end %>
 
     <% elsif f.status == ReportTask::STATUS_CANCELPUBLISH %>
-      
       <% if User.current.admin?%>
           <%= link_to(l(:button_republish), { :controller => 'report_task', :action => 'republish', :project_id => @project, :task_id=>f.id}, :method => :post, :class => 'icon icon-republish') %>
       <%else%>
@@ -116,7 +114,7 @@
    </td>
 
 
-  <td width="1"></td>
+
   </tr>
 <% end %>
   </tbody>
