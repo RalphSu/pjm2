@@ -125,7 +125,7 @@ class ReportTaskController < ApplicationController
       file_name = file_name+".docx"
       user_agent = request.user_agent.downcase 
       file_name = user_agent.include?("msie") ? CGI::escape(file_name) : file_name
-      send_file(prefix + params[:filename], :type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=utf-8", :filename=>file_name)
+      send_file(prefix + params[:filename], :filename=>file_name)
       _save_news_event("下载文件"+params[:filename], "下载文件"+params[:filename],"下载文件"+params[:filename])
     end
   end
