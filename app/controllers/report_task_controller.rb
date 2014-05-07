@@ -119,9 +119,15 @@ class ReportTaskController < ApplicationController
 
   def download
     ## Download
-    prefix = File.join File.dirname(__FILE__), "../../"
-    send_file(prefix + params[:filename]) unless params[:filename].blank?  
-    _save_news_event("下载文件"+params[:filename], "下载文件"+params[:filename],"下载文件"+params[:filename])
+    unless params[:filename].blank?  
+      prefix = File.join File.dirname(__FILE__), "../../"
+      file_name = File.basename params[:filename], ".docx"
+      file_name = file_name+".docx"
+      user_agent = request.user_agent.downcase 
+      file_name = user_agent.include?("msie") ? CGI::escape(file_name) : file_name
+      send_file(prefix + params[:filename], :type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=utf-8", :filename=>file_name)
+      _save_news_event("下载文件"+params[:filename], "下载文件"+params[:filename],"下载文件"+params[:filename])
+    end
   end
 
   def upload
