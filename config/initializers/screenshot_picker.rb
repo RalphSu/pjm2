@@ -49,11 +49,10 @@ class ScreenshotPicker
 				Rails.logger.info "url is #{url}, file full name is #{full_name} !, relative_path to be stored is #{relative_path} !"
 
 				Rails.logger.info "#{phantom} #{js} #{url} #{full_name}"
-				capture_status = `#{phantom} #{js} #{url} #{full_name}`
+				capture_status = `#{phantom} #{js} #{url} #{full_name} --load-images=false`
 				Rails.logger.info "capture_status is #{capture_status}"
 
 				# save image
-				img = Image.find(:first, :conditions=>{:url => job.news_release.url, :image_date=> job.news_release.image_date})
 				img = Image.new
 				img.url= job.news_release.url
 				img.image_date = job.news_release.image_date
