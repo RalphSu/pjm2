@@ -259,7 +259,7 @@ class Crawler
 						f.news_release=nr
 						f.save!
 					end
-					if saved_count < 20
+					if saved_count < 100
 						# save screenshot jobs
 						screenjob = ScreenshotJob.new
 						screenjob.news_release = nr
