@@ -22,7 +22,7 @@ class ScreenshotPicker
 				phantom = get_phantom
 				Rails.logger.info " js file location: #{js}, phantom runtime location:#{phantom}"
 
-				job = ScreenshotJob.find(:first)
+				job = ScreenshotJob.find(:first, :order=>"created_at desc")
 				Rails.logger.info "job is #{job.inspect}"
 				if job.blank? or job.news_release.blank? or job.news_release.project.blank? or job.news_release.url.blank?
 					Rails.logger.info 'find not screenshot jobs, wait and next'
@@ -95,6 +95,17 @@ class ScreenshotPicker
 		full_name = File.join prefix, relative_path
 		return [full_name, relative_path]
 	end
+
+	# def keepLatestJobs(keep_num)
+	# 	top_jobs = ScreenshotJob.find(:all, :order => "created_at desc", :limit=> keep_num)
+	# 	last_id = nil
+	# 	if top_jobs.size >= keep_num
+	# 		last_id = top_jobs[keep_num - 1].id
+	# 	end
+	# 	unless last_id.nil?
+	# 		# delete the jobs
+	# 	end
+	# end
 end
 
 
@@ -116,3 +127,8 @@ scheduler.every("1h") do
 	Rails.logger.info " Start screenshot job at #{Time.now}"
  	sys_picker.screenshot_job(Time.now + (60 * 60))
 end
+
+# scheduler.every("1d") do
+# 	Rails.logger.info " Delete un-complete screenshot jobs at #{Time.now}"
+#  	sys_picker.screenshot_job(100)
+# end
