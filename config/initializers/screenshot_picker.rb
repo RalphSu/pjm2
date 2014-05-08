@@ -125,7 +125,7 @@ sys_picker = ScreenshotPicker.new
 scheduler = Rufus::Scheduler.new
 scheduler.every("1h") do
 	Rails.logger.info " Start screenshot job at #{Time.now}"
- 	sys_picker.screenshot_job(Time.now + (60 * 60))
+ 	sys_picker.screenshot_job(Time.now + (60 * 60 * 24))
 end
 
 # scheduler.every("1d") do
