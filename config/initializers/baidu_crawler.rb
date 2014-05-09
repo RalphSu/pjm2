@@ -259,12 +259,12 @@ class Crawler
 						f.news_release=nr
 						f.save!
 					end
-					if saved_count < 100
+					#if saved_count < 100
 						# save screenshot jobs
 						screenjob = ScreenshotJob.new
 						screenjob.news_release = nr
 						screenjob.save!
-					end
+					#end
 				end  # end of transaction
 				saved = true
 			rescue Exception => e
