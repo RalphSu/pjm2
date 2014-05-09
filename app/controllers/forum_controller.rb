@@ -130,14 +130,14 @@ class ForumController < ApplicationController
 			respond_to do |format|
 			  format.html {
 				flash[:notice] = msg
-				redirect_to({:controller => 'forum', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+				redirect_to({:controller => 'forum', :action => 'index', :category=>@category, :project_id=>@project.identifier, :page=>params[:page]})
 			  }
 			end
 		else
 			respond_to do |format|
 			  format.html {
 				flash[:error] = fail_msg
-				redirect_to({:controller => 'forum', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+				redirect_to({:controller => 'forum', :action => 'index', :category=>@category, :project_id=>@project.identifier, :page=>params[:page]})
 			  }
 			end
 		end

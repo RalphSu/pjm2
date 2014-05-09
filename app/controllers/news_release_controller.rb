@@ -106,6 +106,7 @@ class NewsReleaseController < ApplicationController
 	def delete_release
 		init(params)
 		ids = params['ids']
+		page = params['page']
 		#Rails.logger.info "delete nr id  #{ids}"
 		msg = l(:label_reocrd_delete_success)
 		fail_msg = nil
@@ -133,14 +134,14 @@ class NewsReleaseController < ApplicationController
 			respond_to do |format|
 			  format.html {
 				flash[:notice] = msg
-				redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+				redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier, :page=>page})
 			  }
 			end
 		else
 			respond_to do |format|
 			  format.html {
 				flash[:error] = fail_msg
-				redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+				redirect_to({:controller => 'news_release', :action => 'index', :category=>@category, :project_id=>@project.identifier, :page=>page})
 			  }
 			end
 		end
