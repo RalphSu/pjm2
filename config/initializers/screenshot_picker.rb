@@ -49,7 +49,7 @@ class ScreenshotPicker
 				Rails.logger.info "url is #{url}, file full name is #{full_name} !, relative_path to be stored is #{relative_path} !"
 
 				Rails.logger.info "#{phantom} #{js} #{url} #{full_name}"
-				capture_status = `#{phantom} #{js} #{url} #{full_name} --load-images=false`
+				capture_status = `#{phantom} --load-images=false #{js} #{url} #{full_name}`
 				Rails.logger.info "capture_status is #{capture_status}"
 
 				# save image
