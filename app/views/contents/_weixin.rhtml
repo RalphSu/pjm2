@@ -31,6 +31,7 @@
 	<% if User.current.employee?%>
 	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_deleteselected)%></button>
 		<%= hidden_field_tag :category , @category %>
+		<%= hidden_field_tag :page, @page %>
 	<%end%>
 </div>
 </fieldset>

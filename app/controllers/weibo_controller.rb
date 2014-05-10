@@ -330,6 +330,7 @@ class WeiboController < ApplicationController
 		init(params)
 		ids = params['ids']
 		page = params['page']
+		Rails.logger.info " page number for fetched #{page}"
 		#Rails.logger.info "delete nr id  #{ids}"
 		msg = l(:label_reocrd_delete_success)
 		fail_msg = nil
@@ -477,7 +478,7 @@ class WeiboController < ApplicationController
 		@link = params[:link]
 		@link_date = params[:link_date]
 		@import_type = params[:import]
-
+		@page = params[:page]
 		@p = @project
 		@projects =[]
 		@projects << @p unless @p.nil?

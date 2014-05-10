@@ -195,6 +195,7 @@ class NewsReleaseController < ApplicationController
 		@link = params[:link]
 		@link_date = params[:link_date]
 		@import_type = params[:import]
+		@page = params[:page]
 		@p = @project
 		@projects =[]
 		@projects << @p unless @p.nil?
