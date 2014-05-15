@@ -20,7 +20,12 @@ class WeiboController < ApplicationController
 		_import(file_name, data)
 
 	  	remove_tmp_file(file_name)
-	  	redirect_to({:controller => 'weibo', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+
+  		respond_to do |format|
+		  format.html {
+			redirect_to({:controller => 'weibo', :action => 'index', :category=>@category, :project_id=>@project.identifier})
+		  }
+		end
 	end
 
 	def create_weifantan
@@ -255,25 +260,57 @@ class WeiboController < ApplicationController
 	end
 
 	def _import(file_name, data)
+		msg = l(:notice_successful_upload)
+		last = Time.now
 		if  @import_type.blank? || (@import_type == '0')
 			# read text
 			headers = _get_header()
+
 			poiReader = PoiExcelReader.new(_get_classified_hash, _get_factory)
 		  	uploadItems = poiReader.read_excel_text(file_name, headers)
-		  	save(uploadItems)
+		  	Rails.logger.info " parse excel file used time: #{Time.now() - last}"
+
+		  	if uploadItems.size() <= 2
+			  	last = Time.now
+			  	save(uploadItems)
+			  	Rails.logger.info " save into database used time: #{Time.now() - last}"
+		  	else
+		  		msg = msg + "!上传内容包含#{uploadItems.size()}行的数据，在后台进行数据保存!请耐心等待，刷新报表页面查看已保存的数据。"
+		  		scheduler().in '3s' do 
+		  			last = Time.now
+		  			save(uploadItems)
+		  			Rails.logger.info " save #{uploadItems.size()} text data into database used time: #{Time.now() - last}"
+		  		end
+		  	end
+
 		  	_save_news_event(l(:label_manually_import), l(:label_import_data_file), l(:label_import_data_file))
+		  	flash[:notice] =  msg
 	  	else 
 			# read image
 	  		poiReader = PoiExcelImageReader.new(@project)
 	  		uploadImages = poiReader.read_excel_image(data)
-	  		save_images(uploadImages)
+	  		Rails.logger.info " parse excel file used time: #{Time.now() - last}"
+
+	  		if uploadImages.size > 2000
+			  	last = Time.now
+		  		save_images(uploadImages)
+		  		Rails.logger.info " save into database used time: #{Time.now() - last}"
+		  	else
+		  		msg = msg + "!上传内容包含#{uploadItems.size()}行的数据，在后台进行数据保存!请耐心等待，刷新报表页面查看已保存的数据。"
+		  		scheduler().in '3s' do 
+		  			last = Time.now
+		  			save(uploadItems)
+		  			Rails.logger.info " save #{uploadItems.size()} image data into database used time: #{Time.now() - last}"
+		  		end
+		  	end
+
 	  		_save_news_event(l(:label_manually_import), l(:label_import_image_file), l(:label_import_image_file))
+	  		flash[:notice] =  msg
 	  	end
 
 	  rescue Exception => e
 	  	Rails.logger.info e.backtrace.join("\n")
              flash[:error] =  e.message
-             
 	end
 
 	def _get_factory
@@ -411,6 +448,11 @@ class WeiboController < ApplicationController
 
 	def index
 		init(params)
+
+		# while true
+		# 	sleep(10.seconds)
+		# 	Rails.logger.info "  sleeping in weibo controller........"
+		# end
 	end
 
 
@@ -428,7 +470,6 @@ class WeiboController < ApplicationController
 					file_name = save_tmp_file(data)
 					data =  IO.binread(file_name)
 
-					Rails.logger.info "upload picture read record size: #{data.size}."
 					poiReader = PoiExcelImageReader.new(@project)
 					imagePath = poiReader.save_pic(data, File.extname(originalfilename),0)
 					

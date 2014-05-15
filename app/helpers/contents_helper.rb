@@ -1,5 +1,7 @@
 #-- encoding: UTF-8
 require 'rjb'
+require 'rubygems'
+require 'rufus/scheduler'
 
 module ContentsHelper
 
@@ -22,6 +24,14 @@ module ContentsHelper
 			[l(:label_image), "1"]
 		]
 		options_for_select(types, selected)
+	end
+
+	class SchedulerHolder
+		@@scheduler = Rufus::Scheduler.new
+	end
+
+	def scheduler()
+		Rufus::Scheduler.singleton
 	end
 
 	class PoiExcelReader
