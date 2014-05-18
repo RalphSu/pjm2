@@ -262,6 +262,7 @@ class WeiboController < ApplicationController
 	def _import(file_name, data)
 		msg = l(:notice_successful_upload)
 		last = Time.now
+		p = @project
 		if  @import_type.blank? || (@import_type == '0')
 			# read text
 			headers = _get_header()
@@ -270,18 +271,18 @@ class WeiboController < ApplicationController
 		  	uploadItems = poiReader.read_excel_text(file_name, headers)
 		  	Rails.logger.info " parse excel file used time: #{Time.now() - last}"
 
-		  	if uploadItems.size() <= 2
+		  	# if uploadItems.size() <= 2000
 			  	last = Time.now
-			  	save(uploadItems)
+			  	save(uploadItems, p)
 			  	Rails.logger.info " save into database used time: #{Time.now() - last}"
-		  	else
-		  		msg = msg + "!上传内容包含#{uploadItems.size()}行的数据，在后台进行数据保存!请耐心等待，刷新报表页面查看已保存的数据。"
-		  		scheduler().in '3s' do 
-		  			last = Time.now
-		  			save(uploadItems)
-		  			Rails.logger.info " save #{uploadItems.size()} text data into database used time: #{Time.now() - last}"
-		  		end
-		  	end
+		  	# else
+		  	# 	msg = msg + "!上传内容包含#{uploadItems.size()}行的数据，在后台进行数据保存!请耐心等待，刷新报表页面查看已保存的数据。"
+		  		# Rufus::Scheduler.singleton.in '3s' do 
+		  		# 	last = Time.now
+		  		# 	save(uploadItems, p)
+		  		# 	Rails.logger.info " save #{uploadItems.size()} text data into database used time: #{Time.now() - last}"
+		  		# end
+		  	# end
 
 		  	_save_news_event(l(:label_manually_import), l(:label_import_data_file), l(:label_import_data_file))
 		  	flash[:notice] =  msg
@@ -291,18 +292,18 @@ class WeiboController < ApplicationController
 	  		uploadImages = poiReader.read_excel_image(data)
 	  		Rails.logger.info " parse excel file used time: #{Time.now() - last}"
 
-	  		if uploadImages.size > 2000
+	  		# if uploadImages.size < 2000
 			  	last = Time.now
 		  		save_images(uploadImages)
 		  		Rails.logger.info " save into database used time: #{Time.now() - last}"
-		  	else
-		  		msg = msg + "!上传内容包含#{uploadItems.size()}行的数据，在后台进行数据保存!请耐心等待，刷新报表页面查看已保存的数据。"
-		  		scheduler().in '3s' do 
-		  			last = Time.now
-		  			save(uploadItems)
-		  			Rails.logger.info " save #{uploadItems.size()} image data into database used time: #{Time.now() - last}"
-		  		end
-		  	end
+		  	# else
+		  	# 	msg = msg + "!上传内容包含#{uploadItems.size()}行的数据，在后台进行数据保存!请耐心等待，刷新报表页面查看已保存的数据。"
+		  	# 	Rufus::Scheduler.singleton.in '3s' do 
+		  	# 		last = Time.now
+		  	# 		save_images(uploadItems)
+		  	# 		Rails.logger.info " save #{uploadItems.size()} image data into database used time: #{Time.now() - last}"
+		  	# 	end
+		  	# end
 
 	  		_save_news_event(l(:label_manually_import), l(:label_import_image_file), l(:label_import_image_file))
 	  		flash[:notice] =  msg
@@ -324,12 +325,13 @@ class WeiboController < ApplicationController
 		distinct_weibo_templates()
 	end
 
-	def save(activeItems)
+	def save(activeItems, project)
 		Rails.logger.info "Save file to databases #{activeItems}"
 		activeItems.each do |ai|
-			ai.entity.project = @project
+			Rails.logger.info " Save one item to database: #{ai.inspect}"
+			ai.entity.project_id = project.id
 			ai.items.each do |item|
-				item.weibos = ai.entity
+				item.weibos_id = ai.entity.id
 			end
 
 			duplicates = find_weibo_duplicate(ai.entity, ai.items)
@@ -339,7 +341,7 @@ class WeiboController < ApplicationController
 				# Rails.logger.info "a activity line is saved: #{ai.entity}"
 				ai.items.each do |item|
 					#Rails.logger.info item.weibo_classifieds.id
-					item.weibos = ai.entity
+					item.weibos_id = ai.entity.id
 					#Rails.logger.info item.weibos.id
 					item.save!
 				end
@@ -356,6 +358,9 @@ class WeiboController < ApplicationController
 				end
 			end
 		end
+
+		rescue Exception => e
+			Rails.logger.info " save to database error #{e.inspect}"
 	end
 
 	def edit_weibo
