@@ -25,6 +25,7 @@
 	<% end %>
     <li><%=l(:field_keywords)%>:<%=@project.keywords%></li>
 	 <li><%=l(:field_keywords_except)%>:<%=@project.keywords_except%></li>
+   <li><%=l(:field_keywords_any)%>:<%=@project.keywords_any%></li>
    <span class="author"><li><%=l(:field_start_time)%>:<%= format_date(@project.start_time)%></span></p>
     <span class="author"><li><%=l(:field_end_time)%>:<%= format_date(@project.end_time)%></span></p>
   </ul>

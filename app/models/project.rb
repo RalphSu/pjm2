@@ -621,6 +621,7 @@ class Project < ActiveRecord::Base
     'tracker_ids',
     'issue_custom_field_ids',
     'keywords',
+    'keywords_any',
     'keywords_except',
     'start_time',
     'end_time'

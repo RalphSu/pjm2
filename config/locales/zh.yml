@@ -309,13 +309,14 @@ zh:
   field_content: 内容
   field_group_by: 根据此条件分组
   field_sharing: 共享
-  field_keywords: 项目关键字
+  field_keywords: 项目必选关键字
   field_keywords_except: 项目排除关键字
+  field_keywords_any: 项目任选关键字
   field_start_time: 开始时间
   field_end_time: 结束时间
   field_project_keyword_desc: (用;分隔多个关键词)
   field_project_keyword_except_desc: (用;分隔多个排除关键词)
-  
+  field_project_keyword_any_desc: (用;分隔多个排除关键词)
   setting_app_title: 应用程序标题
   setting_app_subtitle: 应用程序子标题
   setting_welcome_text: 欢迎文字

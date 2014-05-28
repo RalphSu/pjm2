@@ -26,6 +26,7 @@
 <p><%= f.select :client,  User.allClients.collect {|u| [u.firstname,  u.id] },  :selected=>@project.get_project_client_id %></p>
 <p><%= f.text_field :keywords, :required => true, :size => 60 %><%= l(:field_project_keyword_desc) %></p>
 <p><%= f.text_field :keywords_except, :required => false, :size => 60 %><%= l(:field_project_keyword_except_desc) %></p>
+<p><%= f.text_field :keywords_any, :required => false, :size => 60 %><%= l(:field_project_keyword_any_desc) %></p>
 <p><%= label(:project, :start_time, l(:field_start_time)) %><%= f.date_field :start_time %></p>
 <p><%= label(:project, :end_time, l(:field_end_time)) %><%= f.date_field :end_time %></p>
 
