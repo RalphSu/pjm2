@@ -63,7 +63,7 @@ poi_jars = [
   "#{POI_LIB_HOME}/ooxml-lib/xmlbeans-2.3.0.jar"
 ]
 # loading
-Rjb::load(poi_jars.join(":"),  ['-Xms256M', '-Xmx2048M'])
+Rjb::load(poi_jars.join(":"),  ['-Xms256M', '-Xmx1024M'])
 
 
 Rails::Initializer.run do |config|
