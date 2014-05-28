@@ -8,6 +8,8 @@ class UploadJob < ActiveRecord::Base
 	"template", # weibo/news/...
 	'total_count', 
 	'succeed_count', 
-	'status' #
+	'status',
+	"message",
+	"submitter"
 
 end

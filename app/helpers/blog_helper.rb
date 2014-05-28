@@ -36,7 +36,7 @@ module BlogHelper
 		conditions << sql
 		conditions.concat sql_param
 		Rails.logger.info " conditions for query is #{conditions.inspect}"
-		Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>conditions)
+		Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>conditions)
 
 		#Blog.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end

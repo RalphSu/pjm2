@@ -19,13 +19,6 @@
 	<% if User.current.employee?%>
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_blog_new)%></label></a>
 	<%end%>
-	<% if User.current.employee? and  not @category.blank? %>
-	    <%= link_to l(:button_deleteall), {:controller => 'blog', :action => 'destroy_allblog',:project_id=>@p.identifier,:category=> @category},
-                :confirm => l(:text_are_you_sure),
-                :method => :post,
-                :class => 'delete',
-                :title => l(:button_deleteall) %>
-	<%end%>
 
 	<% form_tag(url_for(controller: 'blog', action: 'destroy_blog',:project_id=>@p.identifier) , :method => :post ) do %>
 	<% if User.current.employee?%>
