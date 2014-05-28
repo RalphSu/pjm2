@@ -35,7 +35,7 @@ class ScreenshotPicker
 				unless img.blank?
 					Rails.logger.info "image for url: #{url}, date : #{job.news_release.image_date}, already exists, ignore this capture!"
 					ScreenshotJob.destroy(job.id)
-					sleep(3.seconds)
+					#sleep(3.seconds)
 					next
 				end
 
@@ -123,9 +123,9 @@ sys_picker = ScreenshotPicker.new
 # that differnt round of screenshot_job working on the one image screen shot. We treat this case
 # as minor case, and it won't hurt anything:)
 scheduler = Rufus::Scheduler.new
-scheduler.every("1h") do
+scheduler.every("6h") do
 	Rails.logger.info " Start screenshot job at #{Time.now}"
- 	sys_picker.screenshot_job(Time.now + (60 * 60 * 24))
+ 	sys_picker.screenshot_job(Time.now + (6 * 60 * 60 * 24))
 end
 
 # scheduler.every("1d") do
