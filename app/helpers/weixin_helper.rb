@@ -37,7 +37,7 @@ module WeixinHelper
 		conditions << sql
 		conditions.concat sql_param
 		Rails.logger.info " conditions for query is #{conditions.inspect}"
-		Weixin.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>conditions)
+		Weixin.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>conditions)
 
 		#Weixin.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:projects_id => project, :classified => category})
 	end

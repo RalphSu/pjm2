@@ -16,7 +16,7 @@ gem "rubytree", "~> 0.5.2", :require => 'tree'
 gem "nokogiri"
 gem "rufus-scheduler", "3.0.3"
 gem "will_paginate", "2.3.16"
-gem "rdoc", ">= 2.4.2"
+#gem "rdoc", ">= 2.4.2"
 gem "uuidtools", "2.1.4"
 gem "liquid", "~> 2.3.0"
 gem "acts-as-taggable-on", "= 2.1.0"

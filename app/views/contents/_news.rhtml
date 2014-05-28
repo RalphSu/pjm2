@@ -22,13 +22,6 @@
 	<% if User.current.employee?%>
 	<a data-toggle="modal" href="#myModal"><label class="icon icon-add"><%=l(:label_news_new)%></label></a>
 	<%end%>
-	<% if User.current.employee? and  not @category.blank? %>
-	    <%= link_to l(:button_deleteall), {:controller => 'news_release', :action => 'destory_allrelease',:project_id=>@p.identifier,:category=> @category},
-                :confirm => l(:text_are_you_sure),
-                :method => :post,
-                :class => 'delete',
-                :title => l(:button_deleteall) %>
-	<%end%>
 	  <% form_tag(url_for(controller: 'news_release', action: 'delete_release') , :method => :post ) do %>
 	  <% if User.current.employee?%>
 	  <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_deleteselected)%></button>

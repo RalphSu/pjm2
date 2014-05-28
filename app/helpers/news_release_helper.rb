@@ -52,7 +52,11 @@ module NewsReleaseHelper
 		conditions << sql
 		conditions.concat sql_param
 		Rails.logger.info " conditions for query is #{conditions.inspect}"
-		NewsRelease.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>conditions)
+		if category == "新闻稿推广"
+			NewsRelease.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>conditions)
+		else
+			NewsRelease.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>conditions)
+		end
 	end
 
 	def distinct_news_templates

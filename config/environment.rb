@@ -23,6 +23,9 @@ require 'rjb'
 # use RACK_ENV if we are running as a simple rack app
 ENV['RAILS_ENV'] ||= ENV['RACK_ENV'] if ENV['RACK_ENV']
 
+ENV['JAVA_HOME'] = "/usr/lib/jvm/jdk1.7.0_55"
+ENV['LD_LIBRARY_PATH'] = "/usr/lib/jvm/jdk1.7.0_55/jre/lib/amd64:/usr/lib/jvm/jdk1.7.0_55/jre/lib/amd64/server"
+
 # this is replaced by config.encoding = "utf-8" in rails3
 if RUBY_VERSION >= '1.9'
   Encoding.default_external = 'UTF-8'
@@ -42,7 +45,8 @@ rescue LoadError
 end
 
 # JVM loading
-POI_LIB_HOME=File.join(File.dirname(__FILE__), '../lib/poi-3.9/')
+#POI_LIB_HOME=File.join(File.dirname(__FILE__), '../lib/poi-3.9/')
+POI_LIB_HOME="/home/ralph/workspace/pjm2/lib/poi-3.9/"
 poi_jars = [
   "#{POI_LIB_HOME}/poi-3.9-20121203.jar",
   "#{POI_LIB_HOME}/poi-excelant-3.9-20121203.jar",

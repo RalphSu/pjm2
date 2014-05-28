@@ -60,10 +60,11 @@ sudo sysv-rc-conf mysql on
 
 setup JDK
 ``` shell 
-sudo apt-get install openjdk-6-jdk
+# install sun java-7 JDK. setup JAVA_HOME
 
 # add below line to .bashrc
 export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JAVA_HOME/jre/lib/amd64:$JAVA_HOME/jre/lib/amd64/client
 ``` 
 
 setup iptables : NAT to 80 from 8080
