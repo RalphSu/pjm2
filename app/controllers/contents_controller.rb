@@ -12,7 +12,7 @@ class ContentsController < ApplicationController
       if not @showall
         now = Time.now
         @projects = projects.select { | p |
-          p.end_time.blank? or (Time.local(p.end_time.year, p.end_time.month, p.end_time.day) <=> now)
+          p.end_time.blank? or ((Time.local(p.end_time.year, p.end_time.month, p.end_time.day) <=> now) > 0)
         }
       else
         @projects = projects
