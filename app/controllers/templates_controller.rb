@@ -329,21 +329,111 @@ class TemplatesController < ApplicationController
 
 	def delete_news_template
 		classifieds = params['names']
+		classifieds.each do |c|
+			nr = NewsRelease.find(:first, :conditions=> {:classified=> c})
+			unless nr.blank?
+				#error
+				respond_to do |format|
+					format.html {
+						flash[:error] = "#{c} 有数据引用，不能删除！请先清理数据！"
+						redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/news'})
+					}
+				end
+				return
+			end
+		end
+
+		classifieds.each do |c|
+			classes = NewsClassified.find(:all, :conditions=> {:classified=>c})
+			classes.each { |cc| NewsClassified.destory!(cc.id) }
+		end
 	end
 
 	def delete_weibo_template
 		classifieds = params['names']
+		classifieds.each do |c|
+			nr = Weibo.find(:first, :conditions=> {:classified=> c})
+			unless nr.blank?
+				#error
+				respond_to do |format|
+					format.html {
+						flash[:error] = "#{c} 有数据引用，不能删除！请先清理数据！"
+						redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/weibo'})
+					}
+				end
+				return
+			end
+		end
+
+		classifieds.each do |c|
+			classes = WeiboClassified.find(:all, :conditions=> {:classified=>c})
+			classes.each { |cc| WeiboClassified.destory!(cc.id) }
+		end
 	end
 
 	def delete_forum_template
 		classifieds = params['names']
+		classifieds.each do |c|
+			nr = Forum.find(:first, :conditions=> {:classified=> c})
+			unless nr.blank?
+				#error
+				respond_to do |format|
+					format.html {
+						flash[:error] = "#{c} 有数据引用，不能删除！请先清理数据！"
+						redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/forum'})
+					}
+				end
+				return
+			end
+		end
+
+		classifieds.each do |c|
+			classes = ForumClassified.find(:all, :conditions=> {:classified=>c})
+			classes.each { |cc| ForumClassified.destory!(cc.id) }
+		end	
 	end
 
 	def delete_blog_template
 		classifieds = params['names']
+		classifieds.each do |c|
+			nr = Blog.find(:first, :conditions=> {:classified=> c})
+			unless nr.blank?
+				#error
+				respond_to do |format|
+					format.html {
+						flash[:error] = "#{c} 有数据引用，不能删除！请先清理数据！"
+						redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/blog'})
+					}
+				end
+				return
+			end
+		end
+
+		classifieds.each do |c|
+			classes = BlogClassified.find(:all, :conditions=> {:classified=>c})
+			classes.each { |cc| BlogClassified.destory!(cc.id) }
+		end	
 	end
 
 	def delete_weixin_template
 		classifieds = params['names']
+		classifieds.each do |c|
+			nr = Weixin.find(:first, :conditions=> {:classified=> c})
+			unless nr.blank?
+				#error
+				respond_to do |format|
+					format.html {
+						flash[:error] = "#{c} 有数据引用，不能删除！请先清理数据！"
+						redirect_to({:controller => 'templates', :action => 'index', :partial => 'templates/weixin'})
+					}
+				end
+				return
+			end
+		end
+
+		classifieds.each do |c|
+			classes = WeixinClassified.find(:all, :conditions=> {:classified=>c})
+			classes.each { |cc| WeixinClassified.destory!(cc.id) }
+		end	
 	end
 end
