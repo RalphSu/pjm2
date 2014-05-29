@@ -12,6 +12,7 @@
 <%= stylesheet_link_tag 'application', :media => 'all' %>
 <%= stylesheet_link_tag 'bootstrap.min', :media => 'all' %>
 <%= stylesheet_link_tag 'print', :media => 'print' %>
+<%= stylesheet_link_tag  "bootstrap-switch.css" %>
 <!-- <%= stylesheet_link_tag 'style.min', :media => 'all'  %> -->
 <%= stylesheet_link_tag 'skin/ui.dynatree', :media => 'all'  %>
 <%= stylesheet_link_tag 'rtl', :media => 'all' if l(:direction) == 'rtl' %>
@@ -26,6 +27,7 @@
 <%= javascript_include_tag 'bootstrap.min.js' %>
 <%= javascript_tag('jQuery.noConflict();') %>
 <%= javascript_include_tag 'modernizr.min.js' %>
+<%= javascript_include_tag 'bootstrap-switch.js'%>
 <%= javascript_include_tag 'jquery.dynatree.min.js' %>
 <!-- <%= javascript_include_tag 'jstree.min.js' %> -->
 <%= javascript_heads %>

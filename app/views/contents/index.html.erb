@@ -1,1 +1,24 @@
+
+<%
+if @showall
+	check_status = "checked"
+	show_switch=""
+else
+	check_status = "unchecked"
+	show_switch="all"
+end
+%>
+
+<%if User.current.employee?%>
+<input type="checkbox" name="my-checkbox" <%= check_status %> data-on-text="全部项目" data-off-text="活跃项目" offColor="danger">
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$("[name='my-checkbox']").bootstrapSwitch();
+	$('[name="my-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
+		window.location="/contents/project_content?show=" + "<%= show_switch %>"
+	});
+});
+</script>
+<%end%>
+
 <%= render :partial=> 'contents/news' %>

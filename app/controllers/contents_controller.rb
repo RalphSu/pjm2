@@ -5,10 +5,16 @@ class ContentsController < ApplicationController
   @show_project_main_menu=false
 
   def index
+    @showall = params[:show] == "all"
+
     if User.current.employee?
-      @projects=User.current.active_projects
+      if @showall
+        @projects=User.current.projects
+      else
+        @projects=User.current.active_projects
+      end
     else 
-      @projects=User.current.active_client_projects
+        @projects=User.current.active_client_projects
     end
     @p = @projects.first unless not @project.nil?
     @project = @p
