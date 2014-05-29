@@ -1,9 +1,15 @@
-<div>
-<div class="contextualtemplate">
 
+<div>
  <a data-toggle="modal" href="#myModal5"><label class="icon icon-add"><%=l(:label_weixin_template_new)%></label></a>
+  <div class="contextual">
+  <% form_tag(url_for(controller: 'templates', action: 'delete_weixin_template') , :method => :post ) do %>
+    <% if User.current.employee?%>
+    <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_deleteselected)%></button>
+    <%end%>
+  <%end%>
+  </div>
 </div>
-</div>
+
 <% news_templates = distinct_weixin_templates%>
 <!-- Modal dialog for upload -->
 <div class="container">
@@ -56,6 +62,9 @@
     <% templates.each do |t| %>
      <th align="center"><%= t.column_name %></th>
     <% end %>
+    <th class="checkboxforremove">
+      <%= link_to_function(image_tag('toggle_check.png'), "toggleCheckboxesBySelector('input.nr')",
+                                                            :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}") %></th> <!-- Place holder column for actions -->
   </tr></thead>
   <tbody>
   <% @weixin_field_map.each do |key, values| -%>
@@ -67,6 +76,13 @@
       
       </td>
     <% end %>
+
+    <% if User.current.employee?%>
+    <td class="checkboxforremove">
+      <span><%= check_box_tag("names[]", key, false, :id => nil,:class => "nr",:class => "nr")%></span>
+    </td>
+    <%end%>
+
     </tr>
   <% end %>
   </tbody>

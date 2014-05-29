@@ -1,9 +1,18 @@
 <div>
-<div class="contextualtemplate">
-  <a data-toggle="modal" href="#myModal1"><label class="icon icon-add"><%=l(:label_weibo_template_new)%></label></a>
+<a data-toggle="modal" href="#myModal1"><label class="icon icon-add"><%=l(:label_weibo_template_new)%></label></a>
+  <div class="contextual">
+  <% form_tag(url_for(controller: 'templates', action: 'delete_weibo_template') , :method => :post ) do %>
+    <% if User.current.employee?%>
+    <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_deleteselected)%></button>
+    <%end%>
+  <%end%>
+  </div>
 </div>
-</div>
+
+
 <% news_templates = distinct_weibo_templates%>
+
+
 <!-- Modal dialog for upload -->
 <div class="container">
   <div class="row">
@@ -50,31 +59,42 @@
     </div><!-- /.modal -->
   </div>
 </div>
+
+
 <% templates = distinct_weibo_templates()%>
 <div class="autoscroll">
 <table class="list">
-  <thead><tr>
-    <th align="center"><%= l(:field_category)%></th>
-    <% templates.each do |t| %>
-      <%if not invisible_column().include?(t.column_name)  %>
-        <th align="center"><%= t.column_name %></th>
-      <%end%>
-    <% end %>
-  </tr></thead>
+  <thead>
+    <tr>
+      <th align="center"><%= l(:field_category)%></th>
+      <% templates.each do |t| %>
+        <%if not invisible_column().include?(t.column_name)  %>
+          <th align="center"><%= t.column_name %></th>
+        <%end%>
+      <% end %>
+      <th class="checkboxforremove">
+      <%= link_to_function(image_tag('toggle_check.png'), "toggleCheckboxesBySelector('input.nr')",
+                                                            :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}") %></th> <!-- Place holder column for actions -->
+    </tr>
+  </thead>
   <tbody>
   <% @weibo_field_map.each do |key, values| -%>
   <tr class="user <%= cycle("odd", "even") %> ">
     <td class="name" title="<%=key%>"><span><%= key %></span></td>
     <% templates.each do |t|%>
-    <%if not invisible_column().include?(t.column_name)  %>
+      <%if not invisible_column().include?(t.column_name)  %>
         <td align="center">
         <%= checked_image values.include?(t.column_name) %>
-      
-      </td>
+        </td>
       <%end%>
-      
     <% end %>
-    </tr>
+
+    <% if User.current.employee?%>
+    <td class="checkboxforremove">
+      <span><%= check_box_tag("names[]", key, false, :id => nil,:class => "nr",:class => "nr")%></span>
+    </td>
+    <%end%>
+  </tr>
   <% end %>
   </tbody>
 </table>

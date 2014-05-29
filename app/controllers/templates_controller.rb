@@ -325,7 +325,25 @@ class TemplatesController < ApplicationController
 			}
 	      	end
     		end
+	end
 
-    	
+	def delete_news_template
+		classifieds = params['names']
+	end
+
+	def delete_weibo_template
+		classifieds = params['names']
+	end
+
+	def delete_forum_template
+		classifieds = params['names']
+	end
+
+	def delete_blog_template
+		classifieds = params['names']
+	end
+
+	def delete_weixin_template
+		classifieds = params['names']
 	end
 end
