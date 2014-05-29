@@ -44,7 +44,7 @@
 		 <% if User.current.employee?%>
 		<th class="checkboxforremove">
   <%= link_to_function(image_tag('toggle_check.png'), "toggleCheckboxesBySelector('input.nr')",
-                                                            :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}") %>
+															:title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}") %>
 		</th> <!-- Place holder column for actions -->
 		<%end%>
 	</thread>
@@ -106,40 +106,40 @@
 <div class="container">
 	<div class="row">
 		<div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
-                    <% title = @p.nil? ? l(:no_project_selected) : l(:label_import_news) %>
-                    <h4 class="modal-title" id="myModalLabel"><%= title %></h4>
-                </div>
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+					<% title = @p.nil? ? l(:no_project_selected) : l(:label_import_news) %>
+					<h4 class="modal-title" id="myModalLabel"><%= title %></h4>
+				</div>
 			<% if @p.nil?%>
-                <div class="modal-body">
-                		<h4 class="modal-title" id="myModalLabel"><%= title %></h4>
-                </div>
-                <div class="modal-footer">
-                    <div class="btn-group">
-                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
-                	</div>
-                </div>
-            <%else%>
-                <div class="modal-body">
-                    <label><%=l(:label_import_type)%></label>
-                    <% form_tag(url_for(controller: 'news_release', action: 'create') , :method => :post, :multipart => true ) do %>
+				<div class="modal-body">
+						<h4 class="modal-title" id="myModalLabel"><%= title %></h4>
+				</div>
+				<div class="modal-footer">
+					<div class="btn-group">
+					<button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+					</div>
+				</div>
+			<%else%>
+				<div class="modal-body">
+					<label><%=l(:label_import_type)%></label>
+					<% form_tag(url_for(controller: 'news_release', action: 'create') , :method => :post, :multipart => true ) do %>
 						<%= hidden_field_tag :category , @category %>
 						<%= hidden_field_tag :project_id , @p.identifier %>
 						<%= select_tag 'import', import_types(@import_type), :class => "large" %>
 						<%= file_field_tag :record %>
-                </div>
-                <div class="modal-footer">
-                    <div class="btn-group">
-                    <button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
-                    <button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
+				</div>
+				<div class="modal-footer">
+					<div class="btn-group">
+					<button class="btn btn-danger" data-dismiss="modal"><%=l(:button_cancel)%></button>
+					<button class="btn btn-primary" onClick="this.form.submit(); return false;"><%=l(:button_upload)%></button>
 					</div>
 				</div>
-                    <% end %>
-            <% end %>
-		    </div><!-- /.modal-content -->
+					<% end %>
+			<% end %>
+			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dalog -->
 		</div><!-- /.modal -->
 	</div>
@@ -148,44 +148,41 @@
 
 <script type="text/javascript">
 
-  	
+	
 
 
 
 jQuery(document).ready(function($) {
 
-    $('img').hover(function(e){
-   		
-  	      		
-  	    xOffset = 10;
-    		yOffset = 30;
-    	   var imagepaths=this.alt;
-    	   var imagepatharray = imagepaths.split(';');
-    	   if(imagepatharray.length==0) return;
-    	    var screenshotstring= "<p id='screenshot'>"
-    	   for(i=0;i<imagepatharray.length;i++){
-    	   	 var  input ="/public";
-    	   	 var imagepath=imagepatharray[i]; 
-    	   	 if (imagepath.substring(0, input.length) === input){
-    	   		imagepath=imagepath.substring(input.length,this.alt.length);
-    	   	}
-    	   	screenshotstring+="<img src='"+imagepath+"' />";
-    	   }
-    	   screenshotstring+="</p>"
-    	 
-    	   
+	$('img').hover(function(e){
+		
+				
+		xOffset = 10;
+		yOffset = 30;
+	   var imagepaths=this.alt;
+	   var imagepatharray = imagepaths.split(';');
+	   if(imagepatharray.length==0) return;
+		var screenshotstring= "<p id='screenshot'>"
+	   for(i=0;i<imagepatharray.length;i++){
+		 var  input ="/public";
+		 var imagepath=imagepatharray[i]; 
+		 if (imagepath.substring(0, input.length) === input){
+			imagepath=imagepath.substring(input.length,this.alt.length);
+		}
+		screenshotstring+="<img src='"+imagepath+"' />";
+		screenshotstring += "<br/>";
+	   }
+	   screenshotstring+="</p>"
 
-
-
-        $("body").append(screenshotstring);
-        $("#screenshot")
-   			.css("top", (e.pageY - xOffset) + "px")
-   			.css("left", (e.pageX + yOffset) + "px")
-   			.fadeIn("fast");
-    	   }, 
-  		function(){
- 		 $("#screenshot").remove();
- 		});
+		$("body").append(screenshotstring);
+		$("#screenshot")
+			.css("top", (e.pageY - xOffset) + "px")
+			.css("left", (e.pageX + yOffset) + "px")
+			.fadeIn("fast");
+		   }, 
+		function(){
+		 $("#screenshot").remove();
+		});
 	screenshotPreview();
 
 

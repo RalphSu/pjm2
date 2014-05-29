@@ -21,4 +21,6 @@ jQuery(document).ready(function($) {
 </script>
 <%end%>
 
+<% if not @project.blank? %>
 <%= render :partial=> 'contents/news' %>
+<% end %>

@@ -8,13 +8,17 @@ class ContentsController < ApplicationController
     @showall = params[:show] == "all"
 
     if User.current.employee?
-      if @showall
-        @projects=User.current.projects
+      projects=User.current.active_projects
+      if not @showall
+        now = Time.now
+        @projects = projects.select { | p |
+          p.end_time.blank? or (Time.local(p.end_time.year, p.end_time.month, p.end_time.day) <=> now)
+        }
       else
-        @projects=User.current.active_projects
+        @projects = projects
       end
     else 
-        @projects=User.current.active_client_projects
+      @projects=User.current.active_client_projects
     end
     @p = @projects.first unless not @project.nil?
     @project = @p
