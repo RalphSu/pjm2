@@ -37,7 +37,7 @@
 
 <!-- show contents table -->
 <% fields = find_weibo_classifieds(@category)%>
-<table class="list">
+<table class="list" id='contents'>
 	<thead>
 		<% fields.each do |f|%>
 			<th><%= f.template.column_name %></th> 
@@ -63,7 +63,11 @@
 				<% weibo_fields = find_field_by_weiboId(nr.id) %>
 				<tr class="user <%= cycle("odd", "even") %>">
 				<%fields.each do |f|%>
-					<% if weibo_fields[f.id].blank? %>
+					<% if f.template.column_name == '点赞' or f.template.column_name == '转发数' or f.template.column_name == '评论数' or f.template.column_name == '粉丝数' %>
+						<% weibo = weibo_fields[f.id] %>
+						<td><div class='edit' weibofieldid='<%= weibo.blank? ? -1 : weibo.id %>' weiboid='<%=nr.id%>' colname='<%=f.template.column_name%>' classified='<%=@category%>'><%= weibo.blank? ? "0" : weibo.body %></div></td>
+
+					<% elsif weibo_fields[f.id].blank? %>
 						<td></td>
 					<% else %>
 					<td title=<%= weibo_fields[f.id].body %>>
@@ -106,6 +110,39 @@
 	<%=will_paginate weibos, :prev_label => l(:label_prev_page), :next_label => l(:label_next_page)%>
 <% end %>
 <% end %>
+
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$('.edit').editable({
+	    type: 'text',
+	    closeOnEnter : true,
+	    callback: function(data) {
+			column_name = data.$el.attr('colname');
+			weibofieldid = data.$el.attr('weibofieldid');
+			weiboid = data.$el.attr('weiboid');
+			classified = data.$el.attr('classified');
+			value = data.content
+			// submit
+			$.ajax({
+			  url: "/weibo/edit_number?classified="+classified+
+			  "&weibofieldid="+weibofieldid+"&weiboid="+weiboid+
+			  "&column_name="+column_name+"&value="+value
+			}).done(function() {
+			  // do anything for done?
+			  ;
+			});
+	    }
+	});
+});
+
+</script>
+
+
+
+
+
+
 <!-- Modal dialog for upload -->
 <div class="container">
 	<div class="row">

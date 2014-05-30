@@ -4,7 +4,7 @@ class WeiboController < ApplicationController
 	include ContentsHelper
 	layout 'content'
 
-	before_filter :find_project_by_project_id
+	before_filter :find_project_by_project_id, :except => [ :edit_number ]
 	
 	@show_project_main_menu=false
 
@@ -518,6 +518,32 @@ class WeiboController < ApplicationController
 			end
 		end
    	end
+
+   	def edit_number()
+   		weiboid = params[:weiboid]
+   		fieldid = params[:weibofieldid]
+   		classified = params[:classified]
+   		column_name = params[:column_name]
+   		value = params[:value]
+
+   		Rails.logger.info "get request parameter: #{weiboid}, #{fieldid}, #{classified}, #{column_name}, #{value} ============================="
+   		if fieldid.blank? or fieldid == -1 or fieldid == "-1"
+   			# create
+   			field = WeiboField.new
+   			field.body = value
+   			field.weibos = Weibo.find(weiboid)
+   			field.weibo_classifieds = find_weibo_classified(classified, column_name)
+   			unless field.weibos.blank? or field.weibo_classifieds.blank?
+   				field.save
+   			end
+   		else
+   			field = WeiboField.find(fieldid)
+   			field.body = value
+   			field.save
+   		end
+   		head :ok
+   	end
+
 
 	def init(params)
 		@category=params[:category]

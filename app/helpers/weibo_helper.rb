@@ -83,7 +83,7 @@ module WeiboHelper
 		 		return f
 		 	end
 		 end
-
+		 return nil
 	end
 
 	def find_field_by_weiboId(weiboId)
