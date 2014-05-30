@@ -39,7 +39,12 @@ module SummaryHelper
 		conditions << sql
 		conditions.concat sql_param
 		Rails.logger.info " conditions for query is #{conditions.inspect}"
-		Summary.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>conditions)
+		if params[:page].blank?
+			page = 1
+		else
+			page = params[:page]
+		end
+		Summary.paginate(:page=>page,:per_page=>20, :order=>'image_date desc',:conditions=>conditions)
 
 		#Summary.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:projects_id => project, :classified => category})
 	end

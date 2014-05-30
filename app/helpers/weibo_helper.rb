@@ -38,7 +38,12 @@ module WeiboHelper
 		conditions << sql
 		conditions.concat sql_param
 		Rails.logger.info " conditions for query is #{conditions.inspect}"
-		Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>conditions)
+		if params[:page].blank?
+			page = 1
+		else
+			page = params[:page]
+		end
+		Weibo.paginate(:page=>page,:per_page=>20, :order=>'image_date desc',:conditions=>conditions)
 
 		#Weibo.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end

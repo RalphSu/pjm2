@@ -35,7 +35,12 @@ module ForumHelper
 		conditions << sql
 		conditions.concat sql_param
 		Rails.logger.info " conditions for query is #{conditions.inspect}"
-		Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date desc',:conditions=>conditions)
+		if params[:page].blank?
+			page = 1
+		else
+			page = params[:page]
+		end
+		Forum.paginate(:page=>page,:per_page=>20, :order=>'image_date desc',:conditions=>conditions)
 
 		#Forum.paginate(:page=>params[:page]||1,:per_page=>20, :order=>'image_date asc',:conditions=>{:project_id => project, :classified => category})
 	end
