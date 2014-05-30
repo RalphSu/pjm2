@@ -346,7 +346,7 @@ class TemplatesController < ApplicationController
 
 			classifieds.each do |c|
 				classes = NewsClassified.find(:all, :conditions=> {:classified=>c})
-				classes.each { |cc| NewsClassified.destory!(cc.id) }
+				classes.each { |cc| NewsClassified.destroy(cc.id) }
 			end
 		end
 
@@ -377,7 +377,7 @@ class TemplatesController < ApplicationController
 
 			classifieds.each do |c|
 				classes = WeiboClassified.find(:all, :conditions=> {:classified=>c})
-				classes.each { |cc| WeiboClassified.destory!(cc.id) }
+				classes.each { |cc| WeiboClassified.destroy(cc.id) }
 			end
 		end
 		respond_to do |format|
@@ -391,6 +391,7 @@ class TemplatesController < ApplicationController
 	def delete_forum_template
 		classifieds = params['names']
 		Rails.logger.info "classifieds that to be deleted are #{classifieds} =========================="
+		Rails.logger.info " #{params.inspect} =========================="
 
 		unless classifieds.blank?
 			classifieds.each do |c|
@@ -409,7 +410,7 @@ class TemplatesController < ApplicationController
 
 			classifieds.each do |c|
 				classes = ForumClassified.find(:all, :conditions=> {:classified=>c})
-				classes.each { |cc| ForumClassified.destory!(cc.id) }
+				classes.each { |cc| ForumClassified.destroy(cc.id) }
 			end	
 		end
 		respond_to do |format|
@@ -439,7 +440,7 @@ class TemplatesController < ApplicationController
 
 			classifieds.each do |c|
 				classes = BlogClassified.find(:all, :conditions=> {:classified=>c})
-				classes.each { |cc| BlogClassified.destory!(cc.id) }
+				classes.each { |cc| BlogClassified.destroy(cc.id) }
 			end	
 		end
 		respond_to do |format|
@@ -469,7 +470,7 @@ class TemplatesController < ApplicationController
 
 			classifieds.each do |c|
 				classes = WeixinClassified.find(:all, :conditions=> {:classified=>c})
-				classes.each { |cc| WeixinClassified.destory!(cc.id) }
+				classes.each { |cc| WeixinClassified.destroy(cc.id) }
 			end	
 		end
 		respond_to do |format|

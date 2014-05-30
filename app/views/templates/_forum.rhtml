@@ -7,10 +7,48 @@
     <% if User.current.employee?%>
     <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_deleteselected)%></button>
     <%end%>
-  <%end%>
+
   </div>
 </div>
 </div>
+
+<% templates = distinct_forum_templates()%>
+<div class="autoscroll">
+<table class="list">
+  <thead><tr>
+    <th align="center"><%= l(:field_category)%></th>
+    <% templates.each do |t| %>
+     <th align="center"><%= t.column_name %></th>
+    <% end %>
+    <th class="checkboxforremove">
+      <%= link_to_function(image_tag('toggle_check.png'), "toggleCheckboxesBySelector('input.nr')",
+                                                            :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}") %></th> <!-- Place holder column for actions -->
+  </tr></thead>
+  <tbody>
+  <% @forum_field_map.each do |key, values| -%>
+  <tr class="user <%= cycle("odd", "even") %> ">
+    <td class="name" title="<%=key%>"><span><%= key %></span></td>
+    <% templates.each do |t|%>
+          <td align="center">
+        <%= checked_image values.include?(t.column_name) %>
+      
+      </td>
+    <% end %>
+
+    <% if User.current.employee?%>
+      <td class="checkboxforremove">
+        <span><%= check_box_tag("names[]", key, false, :id=> nil, :class => "nr")%></span>
+      </td>
+    <%end%>
+
+  </tr>
+  <% end %>
+
+    <%end%> <!--end of forum -->
+  </tbody>
+</table>
+</div>
+
 <% news_templates = distinct_forum_templates%>
 <!-- Modal dialog for upload -->
 <div class="container">
@@ -54,38 +92,4 @@
     </div><!-- /.modal-dalog -->
     </div><!-- /.modal -->
   </div>
-</div>
-<% templates = distinct_forum_templates()%>
-<div class="autoscroll">
-<table class="list">
-  <thead><tr>
-    <th align="center"><%= l(:field_category)%></th>
-    <% templates.each do |t| %>
-     <th align="center"><%= t.column_name %></th>
-    <% end %>
-    <th class="checkboxforremove">
-      <%= link_to_function(image_tag('toggle_check.png'), "toggleCheckboxesBySelector('input.nr')",
-                                                            :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}") %></th> <!-- Place holder column for actions -->
-  </tr></thead>
-  <tbody>
-  <% @forum_field_map.each do |key, values| -%>
-  <tr class="user <%= cycle("odd", "even") %> ">
-    <td class="name" title="<%=key%>"><span><%= key %></span></td>
-    <% templates.each do |t|%>
-          <td align="center">
-        <%= checked_image values.include?(t.column_name) %>
-      
-      </td>
-    <% end %>
-
-    <% if User.current.employee?%>
-    <td class="checkboxforremove">
-      <span><%= check_box_tag("names[]", key, false, :id => nil,:class => "nr",:class => "nr")%></span>
-    </td>
-    <%end%>
-
-    </tr>
-  <% end %>
-  </tbody>
-</table>
 </div>
