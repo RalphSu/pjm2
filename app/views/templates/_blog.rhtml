@@ -6,7 +6,7 @@
     <% if User.current.employee?%>
     <button class= "icon icon-del" onClick="this.form.submit(); return false;"><%=l(:button_deleteselected)%></button>
     <%end%>
-  <%end%>
+
   </div>
 </div>
 </div>
@@ -43,6 +43,7 @@
 
     </tr>
   <% end %>
+    <%end%>
   </tbody>
 </table>
 </div>
