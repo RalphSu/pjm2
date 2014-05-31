@@ -113,9 +113,7 @@
 
 
 <script type="text/javascript">
-jQuery(document).ready(function($) {
-	$.ajaxSetup({cache: false });
-});
+	jQuery.ajaxSetup({cache: false });
 
 jQuery(document).ready(function($) {
 	$('.edit').editable({
@@ -130,9 +128,11 @@ jQuery(document).ready(function($) {
 			// submit
 			$.ajax({
 				type: 'POST',
-			  url: "/weibo/edit_number?classified="+classified+
-			  "&weibofieldid="+weibofieldid+"&weiboid="+weiboid+
-			  "&column_name="+column_name+"&value="+value,
+				contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+				dataType: 'json',
+				data: {'classified': classified, 'weibofieldid': weibofieldid,
+				'weiboid': weiboid, "column_name": column_name, 'value': value},
+			  url: "/weibo/edit_number",
 			  cache:false
 			}).done(function() {
 			  // do anything for done?

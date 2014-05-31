@@ -520,11 +520,11 @@ class WeiboController < ApplicationController
    	end
 
    	def edit_number()
-   		weiboid = params[:weiboid]
-   		fieldid = params[:weibofieldid]
-   		classified = params[:classified]
-   		column_name = params[:column_name]
-   		value = params[:value]
+   		weiboid = params[:weiboid].force_encoding("UTF-8")
+   		fieldid = params[:weibofieldid].force_encoding("UTF-8")
+   		classified = params[:classified].force_encoding("UTF-8")
+   		column_name = params[:column_name].force_encoding("UTF-8")
+   		value = params[:value].force_encoding("UTF-8")
 
    		Rails.logger.info "get request parameter: #{weiboid}, #{fieldid}, #{classified}, #{column_name}, #{value} ============================="
    		if fieldid.blank? or fieldid == -1 or fieldid == "-1"
