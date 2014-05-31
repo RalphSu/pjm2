@@ -909,8 +909,8 @@ module ApplicationHelper
 
   def tag_icon(checked=true,url)
     if checked
-       image_tag('image_s.gif',:alt => url)
-      # "<img alt='img' src='/upload/project1/b798ceb0826e11e3a9bb000c29d2d736--0.png'  onmouseover='alert('您的鼠标在图片上！')'/>"
+       # image_tag('image_s.gif',:alt => url)
+       link_to image_tag('image_s.gif',:alt => url), :controller=>'contents', :action=>'show_image', :imagepaths=> url
     end
   end
   def context_menu(url)

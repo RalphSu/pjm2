@@ -1,7 +1,7 @@
 class ContentsController < ApplicationController
   layout 'content'
   
-  before_filter :find_project_by_project_id, :except => [ :index ]
+  before_filter :find_project_by_project_id, :except => [ :index, :show_image ]
   @show_project_main_menu=false
 
   def index
@@ -44,6 +44,21 @@ class ContentsController < ApplicationController
     @project = @p
     @projects=[]
     @projects << @p unless @p.nil?
+  end
+
+  def show_image
+    imagepaths = params[:imagepaths]
+    image_array = imagepaths.split(';')
+    prefix = "/public"
+    @image_url = []
+    image_array.each do |i|
+      if i.start_with?(prefix)
+        @image_url << i.str(prefix.size, i.size)
+      else
+        @image_url << i
+      end
+    end
+    render :layout => false 
   end
 
 end
