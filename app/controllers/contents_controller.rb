@@ -53,7 +53,7 @@ class ContentsController < ApplicationController
     @image_url = []
     image_array.each do |i|
       if i.start_with?(prefix)
-        @image_url << i.str(prefix.size, i.size)
+        @image_url << i.slice(prefix.size, i.size - prefix.size)
       else
         @image_url << i
       end
