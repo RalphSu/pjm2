@@ -114,6 +114,10 @@
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
+	$.ajaxSetup({cache: false });
+});
+
+jQuery(document).ready(function($) {
 	$('.edit').editable({
 	    type: 'text',
 	    closeOnEnter : true,
@@ -127,7 +131,7 @@ jQuery(document).ready(function($) {
 			$.ajax({
 			  url: "/weibo/edit_number?classified="+classified+
 			  "&weibofieldid="+weibofieldid+"&weiboid="+weiboid+
-			  "&column_name="+column_name+"&value="+value
+			  "&column_name="+column_name+"&value="+value +"&timestamp=" + new Date().getTime()
 			}).done(function() {
 			  // do anything for done?
 			  ;
