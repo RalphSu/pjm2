@@ -129,9 +129,11 @@ jQuery(document).ready(function($) {
 			value = data.content
 			// submit
 			$.ajax({
+				type: 'POST',
 			  url: "/weibo/edit_number?classified="+classified+
 			  "&weibofieldid="+weibofieldid+"&weiboid="+weiboid+
-			  "&column_name="+column_name+"&value="+value +"&timestamp=" + new Date().getTime()
+			  "&column_name="+column_name+"&value="+value,
+			  cache:false
 			}).done(function() {
 			  // do anything for done?
 			  ;
