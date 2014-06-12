@@ -910,7 +910,7 @@ module ApplicationHelper
   def tag_icon(checked=true,url)
     if checked
        # image_tag('image_s.gif',:alt => url)
-       link_to image_tag('image_s.gif',:alt => url), :controller=>'contents', :action=>'show_image', :imagepaths=> url, :target=>"_blank"
+       link_to(image_tag('image_s.gif',:alt => url), {:controller=>'contents', :action=>'show_image', :imagepaths=> url}, {:target=>"_blank"})
     end
   end
   def context_menu(url)
