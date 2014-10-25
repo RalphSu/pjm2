@@ -91,7 +91,7 @@ setup pjm
 ``` shell
 sudo apt-get install libmagickwand-dev 
 sudo apt-get install libmysql-ruby libmysqlclient-dev
-
+gem install execjs # if report no javascript runtime. https://github.com/sstephenson/execjs
 # sudo yum install ImageMagick-devel
 # sudo yum install mysql-devel
 
